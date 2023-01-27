@@ -1,0 +1,46 @@
+*:not(i){
+    font-family: IRANSans !important;
+}
+.panel-heading h3{
+    margin-top:0px !important;
+    margin-bottom: 0px !important;
+}
+.margin-top-60{
+    margin-top: 60px;
+}
+.logo-cms{
+    float: right;
+    width: 250px;
+    font-size: 22px;
+}
+.logo-cms a{
+    font-size: 22px;
+    color: #fff;
+    text-decoration: none;
+}
+
+@media(max-width:768px){
+    .logo-cms{
+        display: none;
+    }
+}
+.active-sidebar{
+    font-weight: bold !important;
+    background-color: #26739f !important;
+}
+.imageArticle{
+    width: 100%;
+}
+.ShowCategorySelect{
+    margin: 10px 0px 10px 0px;
+    border: 1px solid #3D3D3D;
+    border-radius: 4px;
+    padding: 5px;
+    height: 200px;
+    overflow: auto;
+}
+.ShowCategorySelect ul{
+    list-style-type: none;
+    padding-right: 20px;
+    padding-top: 10px;
+}
