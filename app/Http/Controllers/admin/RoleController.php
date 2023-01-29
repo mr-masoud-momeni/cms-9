@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\admin;
-use App\Role;
+use App\Models\Role;
 use Validator;
-use App\Permission;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-md-6">
 
-                            <form action="{{route('register')}}" method="post" >
+                            <form action="{{route('register.store')}}" method="post" >
                                 {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="name">نام</label>
@@ -68,7 +68,7 @@
                                         <td>{{$User->name}}</td>
                                         <td>{{$User->email}}</td>
                                         <td>
-                                            <a href="{{route('register.update',$User->id)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
+                                            <a href="{{route('register.edit',$User->id)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                         </td>
                                         <td>
                                             <a class="deleteAjax" data-toggle="modal" data-target="#DeleteModal" data-id="{{$User->id}}" ><i class="fa fa-2x fa-trash-o" aria-hidden="true"></i></a>

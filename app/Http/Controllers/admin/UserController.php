@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\permission;
 use App\Models\Role;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 class UserController extends Controller
 {
     /**
@@ -40,7 +42,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        if(isset($request['permission'])){
+            $user->attachPermission($request['permission']);
+        }
+        if(isset($request['Role'])){
+            $user->attachRole($request['Role']);
+        }
+        return back()->withInput();
     }
 
     /**
@@ -62,7 +81,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $User = User::all()->where('id' , $id)->first();
+        $permissions = permission::all()->sortBy('id');
+        $Roles = Role::all()->sortBy('id');
+        return view('Backend.auth.EditUser' , compact('User','permissions' , 'Roles'));
     }
 
     /**

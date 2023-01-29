@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-md-6">
 
-                            <form action="{{route('user.update',$User->id)}}" method="post" >
+                            <form action="{{route('register.update',$User->id)}}" method="post" >
                                 {{ csrf_field() }}
                                 {{method_field('patch')}}
                                 <div class="form-group">
@@ -36,19 +36,35 @@
                                 </div>
                                 <div class="form-group">
                                     <label >سطح دسترسی</label><br><br>
-                                    @foreach($permissions as $permission)
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" name="permission[]" value="{{$permission->id}}" {{in_array($permission->id, $User->permissions->pluck('id')->toarray())?'checked':''}} >{{$permission->name}}
-                                        </label>
-                                    @endforeach
+                                    @if($User->permissions)
+                                        @foreach($permissions as $permission)
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="permission[]" value="{{$permission->id}}" {{in_array($permission->id, $User->permissions->pluck('id')->toarray())?'checked':''}} >{{$permission->name}}
+                                            </label>
+                                        @endforeach
+                                    @else
+                                        @foreach($permissions as $permission)
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="permission[]" value="{{$permission->id}}" >{{$permission->name}}
+                                            </label>
+                                        @endforeach
+                                    @endif
                                 </div><br>
                                 <div class="form-group">
                                     <label >نقش کاربر</label><br><br>
-                                    @foreach($Roles as $Role)
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" name="Role[]" value="{{$Role->id}}" {{in_array($Role->id, $User->Roles->pluck('id')->toarray())?'checked':''}}>{{$Role->name}}
-                                        </label>
-                                    @endforeach
+                                    @if(isset($User->Roles))
+                                        @foreach($Roles as $Role)
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="Role[]" value="{{$Role->id}}" {{in_array($Role->id, $User->Roles->pluck('id')->toarray())?'checked':''}}>{{$Role->name}}
+                                            </label>
+                                        @endforeach
+                                    @else
+                                        @foreach($Roles as $Role)
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="Role[]" value="{{$Role->id}}">{{$Role->name}}
+                                            </label>
+                                        @endforeach
+                                    @endif
                                 </div>
 
                                 <button type="submit" class="btn btn-success">ویرایش کاربر</button>
