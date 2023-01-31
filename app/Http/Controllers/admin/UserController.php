@@ -54,10 +54,11 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
         if(isset($request['permission'])){
-            $user->attachPermission($request['permission']);
+            $user->attachPermissions($request['permission']);
         }
+
         if(isset($request['Role'])){
-            $user->attachRole($request['Role']);
+            $user->attachRoles($request['Role']);
         }
         return back()->withInput();
     }
@@ -96,7 +97,40 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => ['string', 'max:255'],
+        ]);
+        $user = new User();
+        $user = $user->find($id);
+        $user->name = $request->name;
+        if($request->email == !$user->email){
+            $request->validate([
+                'email' => ['string', 'email', 'max:255', 'unique:users'],
+            ]);
+            $user->email= $request->email;
+            $user->email_verified_at = NULL;
+        }
+        if($request->password){
+            $request->validate([
+                'password' => ['confirmed', Rules\Password::defaults()],
+            ]);
+            $user->password= Hash::make($request->password);
+        }
+        if(! $request->permission){
+            $permissions = Permission::all();
+            $user->detachPermissions($permissions);
+        }
+        if(! $request->Role){
+            $Roles = Role::all();
+            $user->detachRoles($Roles);
+        }
+        if($request->Role){
+            $user->syncRoles($request->Role);
+        }
+        if($request->permission){
+            $user->syncPermissions($request->permission);
+        }
+        $user->save();
     }
 
     /**

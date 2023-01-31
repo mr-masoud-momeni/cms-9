@@ -61,7 +61,7 @@
                                     @else
                                         @foreach($Roles as $Role)
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" name="Role[]" value="{{$Role->id}}">{{$Role->name}}
+                                                <input type="checkbox" name="Role[]" value="{{$Role->name}}">{{$Role->name}}
                                             </label>
                                         @endforeach
                                     @endif
