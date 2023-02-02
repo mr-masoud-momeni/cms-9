@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,7 +36,10 @@ class category extends Model
     public function article(){
         return $this->morphedByMany(article::class , 'categorizable' );
     }
+    public function product(){
+        return $this->morphedByMany(article::class , 'categorizable' );
+    }
     public function subcategory(){
-        return $this->hasMany('App\category', 'parent_id');
+        return $this->hasMany('App\Models\category', 'parent_id');
     }
 }

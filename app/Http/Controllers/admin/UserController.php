@@ -131,6 +131,7 @@ class UserController extends Controller
             $user->syncPermissions($request->permission);
         }
         $user->save();
+        return redirect(route('register.index'));
     }
 
     /**

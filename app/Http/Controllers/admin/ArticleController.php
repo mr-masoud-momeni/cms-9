@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
-use App\article;
-use App\user;
-use App\category;
+use App\Models\article;
+use App\Models\user;
+use App\Models\category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +19,7 @@ class ArticleController extends AdminController
         return view('Backend.article.edit',compact('article' ,'categories'));
     }
     public function create(){
-        $parentCategories=category::where('parent_id',0)->where('type','App\article')->get();
+        $parentCategories=category::where('parent_id',0)->where('type','article')->get();
         return view('Backend.article.create',compact('parentCategories'));
     }
     public function save(Request $request){
@@ -40,7 +40,7 @@ class ArticleController extends AdminController
     }
     public function edit(article $article){
 //        $categories=category::all()->sortBy('id')->pluck('name','id');
-        $parentCategories=category::where('parent_id',0)->where('type','App\article')->get();
+        $parentCategories=category::where('parent_id',0)->where('type','article')->get();
         return view('Backend.article.edit',compact('article' ,'parentCategories'));
     }
     public function update(Request $request, article $article){

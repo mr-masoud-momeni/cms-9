@@ -92,7 +92,7 @@
                 </div>
             </div>
         </div>
-        <form method="post" action="{{route('menu.update',['id'=>$menu->id])}}" id="menu-submit" >
+        <form method="post" action="{{route('menu.update',$menu->id)}}" id="menu-submit" >
             {!! csrf_field() !!}
             {{method_field('patch')}}
             <input type="hidden" name="content" value="" id="menu-content">

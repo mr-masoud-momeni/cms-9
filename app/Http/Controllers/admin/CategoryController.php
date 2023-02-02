@@ -5,12 +5,11 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use Validator;
 use App\Http\Controllers\Controller;
-use App\category;
+use App\Models\category;
 class CategoryController extends Controller
 {
     public function create(){
-        $LastUrl = request()->segment(count(request()->segments()));
-        $Model = "App\\" . $LastUrl;
+        $Model = request()->segment(count(request()->segments()));
         $categories = category::where('type', $Model)->get();
         return view('Backend.category.create',compact('categories' , 'Model'));
     }

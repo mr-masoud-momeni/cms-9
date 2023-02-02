@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\menu;
+use App\Models\menu;
 
 class MenuController extends Controller
 {

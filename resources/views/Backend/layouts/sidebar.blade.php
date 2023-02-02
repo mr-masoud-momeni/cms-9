@@ -8,25 +8,25 @@
                               || Request::is('admin/register')? 'open' : ''}} ">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">کاربران<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-                <li><a class="{{Request::is('admin/Permission') ? 'active-sidebar' : ''}}" href="{{route('Permission.index')}}">سطح دسترسی</a></li>
+                <li><a class="{{Request::is('admin/Permission') ? 'active-sidebar' : ''}}" href="{{route('Permission.index')}}">سطح دسترسی کاربران</a></li>
                 <li><a class="{{Request::is('admin/Role') ? 'active-sidebar' : ''}}" href="{{route('role.index')}}">نقش کاربر</a></li>
                 <li><a class="{{Request::is('admin/register') ? 'active-sidebar' : ''}}" href="{{route('register.index')}}">ایجاد کاربر</a></li>
             </ul>
         </li>
-        {{--<li class="dropdown {{Request::is('admin/menu') ? 'open' : ''}} ">--}}
-            {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">منو<span class="caret"></span></a>--}}
-            {{--<ul class="dropdown-menu" role="menu">--}}
-                {{--<a class="{{Request::is('admin/menu') ? 'active-sidebar' : ''}}" href="{{route('menu.index')}}">ایجاد منو</a>--}}
-            {{--</ul>--}}
-        {{--</li>--}}
-        {{--<li class="dropdown {{Request::is('admin/article/create') || Request::is('admin/article') || Request::is('admin/category/create/article') ? 'open' : ''}} ">--}}
-            {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">پست ها<span class="caret"></span></a>--}}
-            {{--<ul class="dropdown-menu" role="menu">--}}
-                {{--<a class="{{Request::is('admin/article/create') ? 'active-sidebar' : ''}}" href="{{route('article.create')}}">ارسال پست</a>--}}
-                {{--<li><a class="{{Request::is('admin/article') ? 'active-sidebar' : ''}}"  href="{{route('article.index')}}">لیست پست ها</a></li>--}}
-                {{--<li><a class="{{Request::is('admin/category/create/article') ? 'active-sidebar' : ''}}" href="{{route('catArticle.create')}}">ایجاد دسته بندی</a></li>--}}
-            {{--</ul>--}}
-        {{--</li>--}}
+        <li class="dropdown {{Request::is('admin/menu') ? 'open' : ''}} ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">منو<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <a class="{{Request::is('admin/menu') ? 'active-sidebar' : ''}}" href="{{route('menu.index')}}">ایجاد منو</a>
+            </ul>
+        </li>
+        <li class="dropdown {{Request::is('admin/article/create') || Request::is('admin/article') || Request::is('admin/category/create/article') ? 'open' : ''}} ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">پست ها<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <a class="{{Request::is('admin/article/create') ? 'active-sidebar' : ''}}" href="{{route('article.create')}}">ارسال پست</a>
+                <li><a class="{{Request::is('admin/article') ? 'active-sidebar' : ''}}"  href="{{route('article.index')}}">لیست پست ها</a></li>
+                <li><a class="{{Request::is('admin/category/create/article') ? 'active-sidebar' : ''}}" href="{{route('catArticle.create')}}">ایجاد دسته بندی</a></li>
+            </ul>
+        </li>
         {{--<li class="dropdown {{Request::is('admin/email') || Request::is('admin/email-group/create') || Request::is('admin/category/x') ? 'open' : ''}} ">--}}
             {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">اطلاع رسانی<span class="caret"></span></a>--}}
             {{--<ul class="dropdown-menu" role="menu">--}}
