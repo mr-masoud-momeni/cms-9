@@ -4,8 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\EmailGroup;
-use App\user;
+use App\Models\EmailGroup;
+use App\Models\user;
 use Illuminate\Support\Facades\Auth;
 
 class EmailGroupController extends Controller

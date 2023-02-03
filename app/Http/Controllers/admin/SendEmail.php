@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\admin;
 use App\Jobs\SendMail;
 use App\Mail\EmailSender;
-use App\User;
-use App\EmailGroup;
+use App\Models\User;
+use App\Models\EmailGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
