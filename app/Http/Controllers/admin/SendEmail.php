@@ -42,9 +42,9 @@ class SendEmail extends Controller
      */
     public function store(Request $request)
 {
-    $this->validate($request,[
-        'Received'=>'required',
-    ]);
+//    $this->validate($request,[
+//        'Received'=>'required',
+//    ]);
     $title=Request('title');
     $Received=explode(',',Request('Received'));
     $cc=explode(',',Request('Received-cc'));

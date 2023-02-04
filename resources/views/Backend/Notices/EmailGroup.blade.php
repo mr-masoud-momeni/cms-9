@@ -183,7 +183,6 @@
                 for (i=0; i < email.length; i++ ){
                     if(!regex.test(email[i])){
                         res = false;
-
                     }
                 }
                 return res;

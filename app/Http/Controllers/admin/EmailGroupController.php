@@ -49,7 +49,6 @@ class EmailGroupController extends Controller
         ]);
         session()->flash('CreateEmailGroup','دسته بندی ایمیل با موفقیت ثبت شد.');
         return redirect('/admin/email-group/create');
-
     }
 
     /**
