@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Artisan;
 
 class SendEmail extends Controller
 {
@@ -50,14 +51,14 @@ class SendEmail extends Controller
     $cc=explode(',',Request('Received-cc'));
     $body=Request('body');
     $EmailGroups = Request('EmailGroups');
-    $job = new SendMail($title,$Received,$cc,$body);
-    dispatch($job);
-    foreach ($Received as $Receive){
-        $job = new SendMail($title,$Receive,$cc,$body);
-        dispatch($job)->delay(now()->addSecond(10));
-    }
 
-    if($EmailGroups){
+    if($Received[0]){
+        foreach ($Received as $Receive){
+            $job = new SendMail($title,$Receive,$cc,$body);
+            dispatch($job)->delay(now()->addSecond(10));
+        }
+    }
+    if($EmailGroups[0]){
         foreach ($EmailGroups as $EmailGroup){
             $Emails = EmailGroup::where('id',$EmailGroup)->pluck('emails');
             $Emails = explode(PHP_EOL, $Emails[0]);
@@ -67,6 +68,7 @@ class SendEmail extends Controller
             }
         }
     }
+//    Artisan::call('queue:work');
 
 }
 

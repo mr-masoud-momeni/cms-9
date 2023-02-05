@@ -42,7 +42,6 @@ class SendMail implements ShouldQueue
      */
     public function handle()
     {
-
         Mail::to($this->Received)
             ->cc($this->cc)
             ->send(new EmailSender($this->body,$this->title));

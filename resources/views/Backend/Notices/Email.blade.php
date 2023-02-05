@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="Received">گیرنده</label>
-                                    <input type="email" name="Received" class="form-control" id="title" placeholder="برای تعداد بیشتر از کاما استفاده کنید" value="{{old('slug')}}">
+                                    <input type="text" name="Received" class="form-control" id="title" placeholder="برای تعداد بیشتر از کاما استفاده کنید" value="{{old('slug')}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="category">ایمیل های دسته بندی شده</label>
