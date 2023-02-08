@@ -68,7 +68,8 @@ class SendEmail extends Controller
             }
         }
     }
-//    Artisan::call('queue:work');
+    Artisan::call('queue:work');
+    dd('Done');
 
 }
 

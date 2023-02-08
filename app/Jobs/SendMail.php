@@ -9,10 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailSender;
+use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class SendMail implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, IsMonitored;
 
     /**
      * Create a new job instance.
@@ -42,6 +43,18 @@ class SendMail implements ShouldQueue
      */
     public function handle()
     {
+
+        $this->queueProgress(0);
+
+
+        $this->queueProgress(50);
+
+        // Do something...
+
+        $this->queueProgress(100);
+
+
+
         Mail::to($this->Received)
             ->cc($this->cc)
             ->send(new EmailSender($this->body,$this->title));
