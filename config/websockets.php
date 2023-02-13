@@ -33,7 +33,6 @@ return [
             'enable_statistics' => true,
         ],
     ],
-
     'pusher' => [
         'driver' => 'pusher',
         'key' => env('PUSHER_APP_KEY'),

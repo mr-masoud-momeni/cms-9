@@ -59,9 +59,9 @@ Route::group(
     Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
     Route::get('search','HomeController@search')->name('search');
-    Route::prefix('jobs')->group(function () {
-        Route::queueMonitor();
-    });
+//    Route::prefix('jobs')->group(function () {
+//        Route::queueMonitor();
+//    });
 //    Route::get('/menu' , function (){
 //       return view('Backend.menu.create');
 //    });
