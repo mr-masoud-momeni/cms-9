@@ -81,23 +81,23 @@
                             <h4 class="modal-title">حذف سطح دسترسی</h4>
                         </div>
                         <form method="post" action="" class="RoleFormDelete">
-                            <div class="modal-body">
-                                {!! csrf_field() !!}
-                                {{method_field('delete')}}
-                                <input type="hidden" id="RoleDeleteID" name="id" value="">
-                                <p>آیا از حذف این سطح دسترسی اطمینان دارید؟</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">خیر</button>
-                                <button type="submit"  class="btn btn-success">بله</button>
-                                <span class="pull-right" id="deleteMsg" style="color:#5cb85c;"></span>
-                            </div>
-                        </form>
-                    </div>
-
-                </div>
+            <div class="modal-body">
+                {!! csrf_field() !!}
+                {{method_field('delete')}}
+                <input type="hidden" id="RoleDeleteID" name="id" value="">
+                <p>آیا از حذف این سطح دسترسی اطمینان دارید؟</p>
             </div>
-            <!-- Modal delete Role -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">خیر</button>
+                <button type="submit"  class="btn btn-success">بله</button>
+                <span class="pull-right" id="deleteMsg" style="color:#5cb85c;"></span>
+            </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<!-- Modal delete Role -->
 
 
 

@@ -1,6 +1,6 @@
 @extends('Backend.layouts.Master')
 @section('content')
-    @include('Backend.layouts.errors')
+@include('Backend.layouts.errors')
     <div id="ajaxvalidate"></div>
     <div class="row">
         <div class="col-lg-12">
@@ -12,7 +12,7 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <form method="post" action="{{route('email.store')}}" id="NotificationForm">
+                            <form method="post" action="{{route('email.store')}}" id="SendEmails">
                                 {!! csrf_field() !!}
                                 <div class="form-group">
                                     <label for="title">عنوان پیغام</label>
@@ -38,7 +38,7 @@
                                     <label for="body">متن</label>
                                     <textarea name="body" class="form-control"></textarea>
                                 </div>
-                                <button type="submit"  class="btn btn-success">ارسال ایمیل </button>
+                                <button type="submit"  class="btn btn-success" >ارسال ایمیل </button>
                             </form>
                         </div>
 
@@ -81,8 +81,64 @@
                 <div class="panel-footer"></div>
             </div>
             <!--panel-->
+            <!-- loading modal -->
+            <div class="modal fade" id="loadingModal" role="dialog">
+                <div class="modal-dialog margin-top-60">
 
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">ایمیل ها در صف ارسال قرار گرفتند.</h4>
+                        </div>
+                        <div class="modal-body" style="text-align: center;">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- loading modal -->
         </div>
     </div>
-    <?php //$url=url('/Permission/create'); ?>
-    @endsection
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $('#SendEmails').submit(function (event) {
+                event.preventDefault();
+
+                var $this = $(this);
+                var url = $this.attr('action');
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    datatype: 'JSON',
+                    data: $this.serialize(),
+                    success: function(data) {
+                        if($.isEmptyObject(data.error)){
+                            $('#loadingModal').modal('toggle');
+                        }else{
+
+                            printErrorMsg(data.error);
+
+                        }
+
+                    }
+                });
+            });
+            function printErrorMsg (msg) {
+
+                $("#ajaxvalidate").html('<div class="alert-danger alert"><ul></ul></div>');
+
+                $.each( msg, function( key, value ) {
+
+                    $("#ajaxvalidate").find("ul").append('<li>'+value+'</li>');
+
+                });
+
+            }
+        });
+    </script>
+@endsection

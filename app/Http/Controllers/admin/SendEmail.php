@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Artisan;
+use Validator;
 
 class SendEmail extends Controller
 {
@@ -43,33 +44,44 @@ class SendEmail extends Controller
      */
     public function store(Request $request)
 {
-//    $this->validate($request,[
-//        'Received'=>'required',
-//    ]);
-    $title=Request('title');
-    $Received=explode(',',Request('Received'));
-    $cc=explode(',',Request('Received-cc'));
-    $body=Request('body');
-    $EmailGroups = Request('EmailGroups');
+        if ($request->ajax()){
+            $validator = Validator::make($request->all(), [
+                'title' => 'required',
+                'body' => 'required',
+                'Received' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['error'=>$validator->errors()->all()]);
+            }
+            else{
+                $title=Request('title');
+                $Received=explode(',',Request('Received'));
+                $cc=explode(',',Request('Received-cc'));
+                $body=Request('body');
+                $EmailGroups = Request('EmailGroups');
 
-    if($Received[0]){
-        foreach ($Received as $Receive){
-            $job = new SendMail($title,$Receive,$cc,$body);
-            dispatch($job)->delay(now()->addSecond(10));
-        }
-    }
-    if($EmailGroups[0]){
-        foreach ($EmailGroups as $EmailGroup){
-            $Emails = EmailGroup::where('id',$EmailGroup)->pluck('emails');
-            $Emails = explode(PHP_EOL, $Emails[0]);
-            foreach ($Emails as $Email){
-                $job = new SendMail($title,$Email,$cc,$body);
-                dispatch($job)->delay(now()->addSecond(10));
+                if($Received[0]){
+                    foreach ($Received as $Receive){
+                        $job = new SendMail($title,$Receive,$cc,$body);
+                        dispatch($job)->delay(now()->addSecond(10));
+                    }
+                }
+                if($EmailGroups[0]){
+                    foreach ($EmailGroups as $EmailGroup){
+                        $Emails = EmailGroup::where('id',$EmailGroup)->pluck('emails');
+                        $Emails = explode(PHP_EOL, $Emails[0]);
+                        foreach ($Emails as $Email){
+                            $job = new SendMail($title,$Email,$cc,$body);
+                            dispatch($job)->delay(now()->addSecond(10));
+                        }
+                    }
+                }
+                Artisan::call('queue:work');
+                dd(Artisan::output);
+                return response()->json(['success'=>'ایمیل ها در صف ارسال قرار گرفتند.']);
             }
         }
-    }
-    Artisan::call('queue:work');
-    dd('Done');
+
 
 }
 
