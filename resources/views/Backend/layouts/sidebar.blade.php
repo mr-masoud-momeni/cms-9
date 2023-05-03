@@ -34,6 +34,12 @@
                 <li><a class="{{Request::is('admin/email-group/create') ? 'active-sidebar' : ''}}"  href="{{route('email-group.create')}}">دسته بندی ایمیل</a></li>
             </ul>
         </li>
+        <li class="dropdown {{Request::is('admin/page') ? 'open' : ''}} ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">صفحه ها<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <a class="{{Request::is('admin/page') ? 'active-sidebar' : ''}}" href="{{route('page.index')}}">ایجاد صفحه</a>
+            </ul>
+        </li>
         {{--<li class="dropdown {{Request::is('admin/page') ? 'open' : ''}} ">--}}
             {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">صفحه ها<span class="caret"></span></a>--}}
             {{--<ul class="dropdown-menu" role="menu">--}}

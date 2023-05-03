@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\comment;
+use App\Models\comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
-use App\Page;
-use App\user;
+use App\Models\Page;
+use App\Models\User;
 class PageController extends Controller
 {
     /**
@@ -17,7 +17,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages=page::latest()->paginate(10);
+        $pages=Page::latest()->paginate(10);
         return view('Backend.page.index', compact('pages'));
     }
 
