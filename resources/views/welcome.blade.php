@@ -132,11 +132,10 @@
 </div>
 </body>
     <script src="{{ asset('js/app.js') }}"></script>
-    {{--<script>--}}
-        {{--Echo.join('trades')--}}
-            {{--.listen('NewTrade', function(e){--}}
-                {{--console.log(e.trade);--}}
-        {{--});--}}
-    {{--</script>--}}
+    <script>
+        Echo.join('trades').listen('NewTrade', (e) => {
+            console.log(e);
+        });
+    </script>
 
 </html>
