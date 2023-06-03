@@ -45,6 +45,7 @@ class PageController extends Controller
             $Page = new Page();
             $Page = $Page->find($id);
             $html = request('gjs-html');
+            dd($html);
             $html = str_replace("&#039;", "'", $html);
             $html = str_replace("<code>", "", $html);
             $html = str_replace("</code>", "", $html);
