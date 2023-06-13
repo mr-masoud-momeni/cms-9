@@ -3,9 +3,13 @@
 namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Dotlogics\Grapesjs\App\Traits\EditableTrait;
+use Dotlogics\Grapesjs\App\Contracts\Editable;
 
-class Page extends Model
+
+class Page extends Model implements Editable
 {
+    use EditableTrait;
     use Sluggable;
 
     /**
@@ -14,7 +18,7 @@ class Page extends Model
      * @return array
      */
 
-    public function sluggable()
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -27,11 +31,7 @@ class Page extends Model
         'slug',
         'url',
         'status',
-        'html',
-        'styles',
-        'css',
-        'assets',
-        'components',
+        'gjs_data',
     ];
     public function scopeSearch($query , $search , $staatus)
     {

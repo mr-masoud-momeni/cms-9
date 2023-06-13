@@ -8,8 +8,10 @@ use App\Http\Controllers\Controller;
 use Validator;
 use App\Models\Page;
 use App\Models\User;
+use Dotlogics\Grapesjs\App\Traits\EditorTrait;
 class PageController extends Controller
 {
+    use EditorTrait;
     /**
      * Display a listing of the resource.
      *
@@ -79,7 +81,7 @@ class PageController extends Controller
      */
     public function show(page $page)
     {
-        //
+        return view('Backend.page.show' , compact('page'));
     }
 
     /**
@@ -88,9 +90,10 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(page $page)
+    public function edit(Request $request, Page $page)
     {
-        return view('Backend.page.create' , compact('page'));
+//        return view('Backend.page.create' , compact('page'));
+        return $this->show_gjs_editor($request, $page);
     }
 
     /**
