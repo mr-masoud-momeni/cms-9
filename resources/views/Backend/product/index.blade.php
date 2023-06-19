@@ -2,9 +2,6 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            @if(! Auth::user()->hasPermission('123444'))
-                dwfvwrfgtg
-            @endif
             @if($createproduct=session('createproduct'))
                 <div class="alert alert-success">
                     {{$createproduct}}
@@ -66,11 +63,11 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">حذف گروه</h4>
                             </div>
-                            <form method="post" action="" class="articleFormDelete" id="articleFormDeleteId">
+                            <form method="post" action="" class="FormDelete" id="FormDeleteId">
                                 <div class="modal-body">
                                     {!! csrf_field() !!}
                                     {{method_field('delete')}}
-                                    <input type="hidden" id="articleDeleteID" name="id" value="">
+                                    <input type="hidden" id="ajaxDeleteID" name="id" value="">
                                     <p>آیا از حذف این پست اطمینان دارید؟</p>
                                 </div>
                                 <div class="modal-footer">
@@ -93,17 +90,24 @@
 
 @endsection
 @section('scripts')
+{{--    <script>--}}
+{{--        $(document).on("click", ".deleteAjax", function () {--}}
+{{--            var articleId = $(this).data('id');--}}
+{{--            var action = '{{route('product.destroy' , ['id'=>'string'])}}';--}}
+{{--            action = action.replace('string', articleId);--}}
+{{--            document.getElementById("articleFormDeleteId").action = action;--}}
+{{--        });--}}
+{{--    </script>--}}
     <script>
         $(document).on("click", ".deleteAjax", function () {
-            var articleId = $(this).data('id');
-            var action = '{{route('product.destroy' , ['id'=>'string'])}}';
-            action = action.replace('string', articleId);
-            document.getElementById("articleFormDeleteId").action = action;
+            var DeleteID = $(this).data('id');
+            $("#DeleteModal .modal-body #DeleteID").val( DeleteID );
+            $(".FormDelete").attr("action", "{{url("/admin/product/")}}/" + DeleteID );
         });
     </script>
     <script>
         $(document).ready(function () {
-            $('.articleFormDelete').submit(function (event) {
+            $('.FormDelete').submit(function (event) {
                 event.preventDefault();
                 var $this = $(this);
                 var url = $this.attr('action');

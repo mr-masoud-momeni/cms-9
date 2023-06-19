@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +14,7 @@ class product extends Model
      * @return array
      */
 
-    public function sluggable()
+    public function sluggable(): array
     {
         return [
             'slug' => [

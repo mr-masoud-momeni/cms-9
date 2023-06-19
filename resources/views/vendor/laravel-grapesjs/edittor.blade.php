@@ -22,6 +22,8 @@
         window.editorConfig = @json($editorConfig ?? []);
 
         Object.defineProperty(window, 'grapesjs', {
+
+
             value: {
                 plugins: {
                     plugins: [],
@@ -73,13 +75,40 @@
             }
         })
     </script>
+
 </head>
 
 <body>
     <div id="{{ str_replace('#', '', $editorConfig->container ?? 'editor') }}"></div>
-    
+
     @foreach ($editorConfig->getScripts() as $script)
         <script src="{{ $script }}"></script>
     @endforeach
 </body>
 </html>
+<script>
+    const editor = grapesjs.init({
+        // Indicate where to init the editor. You can also pass an HTMLElement
+        container: 'grapesjs',
+        styleManager: {
+            sectors: [
+                {
+                    name: 'First sector',
+                    properties: [
+                        {
+                            // Default options
+                            // id: 'padding', // The id of the property, if missing, will be the same as `property` value
+                            type: 'number',
+                            label: 'Padding', // Label for the property
+                            property: 'padding', // CSS property to change
+                            default: '0', // Default value to display
+                            // Additonal `number` options
+                            units: ['px', '%'], // Units (available only for the 'number' type)
+                            min: 0, // Min value (available only for the 'number' type)
+                        }
+                    ],
+                },
+            ],
+        },
+    });
+</script>
