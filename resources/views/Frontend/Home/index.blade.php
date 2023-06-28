@@ -28,7 +28,9 @@
 
             <div class="container" data-aos="fade-up">
                 <div class="row">
-
+@php
+    phpinfo();
+@endphp
                     <div class="col-lg-5 col-md-6">
                         <div class="about-img" data-aos="fade-right" data-aos-delay="100">
                             <img src="assets/img/about-img.jpg" alt="">

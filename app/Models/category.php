@@ -37,7 +37,7 @@ class category extends Model
         return $this->morphedByMany(article::class , 'categorizable' );
     }
     public function product(){
-        return $this->morphedByMany(article::class , 'categorizable' );
+        return $this->morphedByMany(product::class , 'categorizable' );
     }
     public function subcategory(){
         return $this->hasMany('App\Models\category', 'parent_id');

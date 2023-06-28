@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\front;
-use App\Order;
-use App\product;
+use App\Models\Order;
+use App\Models\product;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,7 +17,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = auth()->user()->order()->get();
+        $user = Auth::user();
+        if(!$user){
+            $orders = 0;
+        }else{
+            $orders = $user->order()->get();
+        }
         return view('Frontend.Checkout.CheckOrders' , compact('orders'));
     }
 
@@ -47,8 +53,10 @@ class OrderController extends Controller
                 return response()->json(['error'=>$validator->errors()->all()]);
             }
             else{
+                $total = product::all()->find( $request->id_product);
+                $total = $total->price*$request->count_product;
                 $Order = auth()->User()->order()->create([
-                    'total' => '0',
+                    'total' => $total,
                     'status' => '1',
                 ]);
                 $Order->products()->attach($request->id_product , [

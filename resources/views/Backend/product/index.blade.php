@@ -13,12 +13,12 @@
                  </div>
             @endif
             <div class="panel panel-default">
-                <div class="panel-heading">لیست پست ها</div>
+                <div class="panel-heading">لیست محصولات</div>
                 <div class="panel-body">
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>عنوان پست</th>
+                            <th>عنوان محصول</th>
                             <th>تاریخ ارسال</th>
                             <th>دسته ها</th>
                             <th width="50px"></th>
@@ -40,7 +40,7 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a href="{{route('article.edit',$product->slug)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a href="{{route('product.edit',$product->slug)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
                                 <td>
                                     <a class="deleteAjax" data-toggle="modal" data-target="#DeleteModal" data-id="{{$product->id}}"><i class="fa fa-2x fa-trash-o" aria-hidden="true"></i></a>
@@ -68,7 +68,7 @@
                                     {!! csrf_field() !!}
                                     {{method_field('delete')}}
                                     <input type="hidden" id="ajaxDeleteID" name="id" value="">
-                                    <p>آیا از حذف این پست اطمینان دارید؟</p>
+                                    <p>آیا از حذف این محصول اطمینان دارید؟</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">خیر</button>
