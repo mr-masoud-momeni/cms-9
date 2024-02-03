@@ -5,7 +5,7 @@ use Validator;
 use App\Models\category;
 use App\Models\product;
 use App\Models\Order;
-use App\Models\Order_Product;
+use App\Order_Product;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -30,7 +30,7 @@ class ProductController extends AdminController
      */
     public function create()
     {
-        $parentCategories=category::where('parent_id',0)->where('type','App\product')->get();
+        $parentCategories=category::where('parent_id',0)->where('type','product')->get();
         return view('Backend.product.create', compact('parentCategories'));
     }
     public function category()
@@ -94,7 +94,8 @@ class ProductController extends AdminController
      */
     public function edit(product $product)
     {
-        //
+        $parentCategories=category::where('parent_id',0)->where('type','product')->get();
+        return view('Backend.product.edit',compact('product' ,'parentCategories'));
     }
 
     /**
@@ -115,8 +116,16 @@ class ProductController extends AdminController
      * @param  \App\product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(product $product)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->ajax()){
+            $product = new product();
+            $product = $product->find($request->id);
+            $delete = $product->delete();
+            if($delete){
+                return response()->json(['success'=>$product]);
+            }
+
+        }
     }
 }
