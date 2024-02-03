@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\admin;
 use Validator;
-use App\category;
-use App\product;
-use App\Order;
-use App\Order_Product;
+use App\Models\category;
+use App\Models\product;
+use App\Models\Order;
+use App\Models\Order_Product;
 use Illuminate\Http\Request;
-use App\User;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 
 class ProductController extends AdminController
