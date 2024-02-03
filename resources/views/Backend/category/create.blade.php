@@ -61,17 +61,16 @@
                                                         $key = array_search($category->parent_id , array_column($cat , 'id'));
                                                     @endphp
                                                     {{$cat[$key]["name"]}}
+                                                </td>
+                                                <td>
+                                                    <a class="editajax"  data-toggle="modal" data-target="#myModal" data-id="{{$category->id}}"  data-name="{{$category->name}}" data-slug="{{$category->slug}}" data-parent="{{$cat[$key]["name"]}}" data-parent-id="{{$category->parent_id}}" ><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                </td>
                                                 @elseif(!$category->parent_id)
-                                                    @php
-                                                        $cat = 0;
-                                                        $key = 0;
-                                                    @endphp
+                                                <td>
+                                                    <a class="editajax"  data-toggle="modal" data-target="#myModal" data-id="{{$category->id}}"  data-name="{{$category->name}}" data-slug="{{$category->slug}}" data-parent="" data-parent-id="{{$category->parent_id}}" ><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                </td>
                                                 @else
                                                 @endif
-                                            </td>
-                                            <td>
-                                                <a class="editajax"  data-toggle="modal" data-target="#myModal" data-id="{{$category->id}}"  data-name="{{$category->name}}" data-slug="{{$category->slug}}" data-parent="{{$cat[$key]["name"]}}" data-parent-id="{{$category->parent_id}}" ><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
-                                            </td>
                                             <td>
                                                 <a class="deleteAjax" data-toggle="modal" data-target="#DeleteModal" data-id="{{$category->id}}" ><i class="fa fa-2x fa-trash-o" aria-hidden="true"></i></a>
                                             </td>

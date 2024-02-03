@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\comment;
+use App\Models\comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
-use App\Page;
-use App\user;
+use App\Models\Page;
+use App\Models\User;
+use Dotlogics\Grapesjs\App\Traits\EditorTrait;
 class PageController extends Controller
 {
+    use EditorTrait;
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +19,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages=page::latest()->paginate(10);
+        $pages=Page::latest()->paginate(10);
         return view('Backend.page.index', compact('pages'));
     }
 
@@ -45,6 +47,7 @@ class PageController extends Controller
             $Page = new Page();
             $Page = $Page->find($id);
             $html = request('gjs-html');
+            dd($html);
             $html = str_replace("&#039;", "'", $html);
             $html = str_replace("<code>", "", $html);
             $html = str_replace("</code>", "", $html);
@@ -78,7 +81,7 @@ class PageController extends Controller
      */
     public function show(page $page)
     {
-        //
+        return view('Backend.page.show' , compact('page'));
     }
 
     /**
@@ -87,9 +90,10 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(page $page)
+    public function edit(Request $request, Page $page)
     {
-        return view('Backend.page.create' , compact('page'));
+//        return view('Backend.page.create' , compact('page'));
+        return $this->show_gjs_editor($request, $page);
     }
 
     /**

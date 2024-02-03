@@ -13,6 +13,21 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
+//        Schema::create('pages', function (Blueprint $table) {
+//            $table->increments('id');
+//            $table->integer('user_id')->unsingend();
+//            $table->string('title');
+//            $table->string('url');
+//            $table->string('slug');
+//            $table->boolean('status');
+//            $table->text('html')->nullable();
+//            $table->text('styles')->nullable();
+//            $table->text('css')->nullable();
+//            $table->text('assets')->nullable();
+//            $table->text('components')->nullable();
+//            $table->timestamps();
+//        });
+
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsingend();
@@ -20,11 +35,7 @@ class CreatePagesTable extends Migration
             $table->string('url');
             $table->string('slug');
             $table->boolean('status');
-            $table->text('html')->nullable();
-            $table->text('styles')->nullable();
-            $table->text('css')->nullable();
-            $table->text('assets')->nullable();
-            $table->text('components')->nullable();
+            $table->text('gjs_data')->nullable();
             $table->timestamps();
         });
     }

@@ -12,9 +12,21 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
+//Route::get('/user/active/email/{token}','UserController@activation')->name('activation.account');
+Route::group(
+    [
+        'namespace'=> 'App\Http\Controllers\front',
+    ]
+    , function () {
+        Route::get('/','IndexController@index')->name('index.show');
+        Route::get('/blog/{article}', 'blog@show')->name('article.show');
+        Route::get('/page/{page}', 'blog@show1')->name('page.show');
+        Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
+        Route::resource('/order', 'OrderController');
 });
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 Route::get('/event', function () {
     event (new \App\Events\NewTrade('test'));
 });

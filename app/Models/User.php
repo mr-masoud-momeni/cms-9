@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Page;
+use App\Models\product;
+use App\Models\Order;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -71,5 +74,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function EmailGroup(){
         return $this->hasMany(EmailGroup::class);
+    }
+    public function Page(){
+        return $this->hasMany(Page::class);
+    }
+    public function product(){
+        return $this->hasMany(product::class);
+    }
+    public function order()
+    {
+        return $this->hasMany(Order::class);
     }
 }
