@@ -15,6 +15,10 @@ class Order extends Model
     }
     public function products()
     {
-        return $this->belongsToMany(Product::class) ->withPivot('amount');
+        return $this->belongsToMany(Product::class)->withPivot('amount');
+    }
+    public function scopesearch($id){
+        dd($id);
+        return $this->belongsToMany(Product::class)->wherePivot('product_id', $id);
     }
 }

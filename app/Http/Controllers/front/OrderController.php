@@ -55,14 +55,30 @@ class OrderController extends Controller
             else{
                 $total = product::all()->find( $request->id_product);
                 $total = $total->price*$request->count_product;
-                $Order = auth()->User()->order()->create([
-                    'total' => $total,
-                    'status' => '1',
-                ]);
-                $Order->products()->attach($request->id_product , [
-                   'amount' => $request->count_product,
-                ]);
-                return response()->json(['success'=>$Order]);
+//                $test  = Order::find(3);
+//                $test = $test->search($request->id_product);
+//                dd($test->amount);
+                $update = auth()->User()->order()->search($request->id_product)->get('amount');
+
+                dd($update);
+                if($update){
+
+                    $total = $total + $update->pivot->amount;
+                    auth()->User()->order()->updateExistingPivot(
+                        $request->id_product,
+                        ['amount'=>$total]
+                    );
+                    return response()->json(['update'=>1]);
+                }
+                else{
+                    $Order = auth()->User()->order()->create([
+                        'status' => '1'
+                    ]);
+                    $Order->products()->attach($request->id_product , [
+                        'amount' => $total,
+                    ]);
+                    return response()->json(['success'=>$Order]);
+                }
             }
         }
     }
