@@ -17,8 +17,9 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class)->withPivot('amount');
     }
-    public function scopesearch($id){
-        dd($id);
-        return $this->belongsToMany(Product::class)->wherePivot('product_id', $id);
+    public function scopesearch(){
+
+        return $this->belongsToMany(Product::class, 'order_product')->wherePivot('product_id');
+
     }
 }

@@ -57,7 +57,6 @@
         <section style="background-color: #eee;">
             <div class="container py-5">
                 <div class="row">
-
                     @foreach($products as $product)
                         <div class="col-md-6 col-lg-3 mb-3 mb-lg-0">
                             <div class="card text-black">

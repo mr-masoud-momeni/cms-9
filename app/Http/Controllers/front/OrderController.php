@@ -44,6 +44,24 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+//        $query = auth()->User()->order()->with('search')->get();
+//        foreach($query as $h){
+//            echo $h->pivot->amount;
+//        }
+//        $content = $request->id_product;
+//        $Repetitious = auth()->User()->order()->with(['search'=> function($query) use ($content){
+//            $query->wherePivot('product_id', $content);
+//        }])->get()->toArray();
+//        dd($companies[0]['id']);
+//        $pivot = auth()->User()->order()->get()->toArray();
+//        dd($pivot);
+//        foreach($companies as $h){
+//            echo $h->id;
+//        }
+//
+//        $users = auth()->User()->order()->search($request->id_product);
+//        dd($users);
+
         if ($request->ajax()){
             $validator = Validator::make($request->all(), [
                 'id_product' => 'required',
@@ -53,21 +71,15 @@ class OrderController extends Controller
                 return response()->json(['error'=>$validator->errors()->all()]);
             }
             else{
-                $total = product::all()->find( $request->id_product);
-                $total = $total->price*$request->count_product;
-//                $test  = Order::find(3);
-//                $test = $test->search($request->id_product);
-//                dd($test->amount);
-                $update = auth()->User()->order()->search($request->id_product)->get('amount');
-
-                dd($update);
-                if($update){
-
-                    $total = $total + $update->pivot->amount;
-                    auth()->User()->order()->updateExistingPivot(
-                        $request->id_product,
-                        ['amount'=>$total]
-                    );
+                $content = $request->id_product;
+                $Repetitious = auth()->User()->order()->with(['search'=> function($query) use ($content){
+                    $query->wherePivot('product_id', $content);
+                }])->get();
+//                dd($Repetitious[0]['id']);
+                if(isset($Repetitious)){
+                    auth()->User()->order()->sync($request->id_product , [
+                        'amount' => + $request->count_product,
+                    ]);
                     return response()->json(['update'=>1]);
                 }
                 else{
@@ -75,7 +87,7 @@ class OrderController extends Controller
                         'status' => '1'
                     ]);
                     $Order->products()->attach($request->id_product , [
-                        'amount' => $total,
+                        'amount' => $request->count_product,
                     ]);
                     return response()->json(['success'=>$Order]);
                 }
