@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 
 class AdminController extends Controller
 {

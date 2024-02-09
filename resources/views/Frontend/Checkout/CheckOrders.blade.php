@@ -28,6 +28,7 @@
                                         <th><span>محصول</span></th>
                                         <th class="text-center"><span>قیمت</span></th>
                                         <th class="text-center"><span>تعداد</span></th>
+                                        <th class="text-center"><span>قیمت تعداد</span></th>
                                         <th>&nbsp;</th>
                                     </tr>
                                     </thead>
@@ -39,7 +40,7 @@
                                         <tr>
                                             @foreach($order->products as $product)
                                                 @php
-                                                    $productPrice =  $product->price * $product->pivot->amount;
+                                                    $productPrice = $product->pivot->amount;
                                                     $totalPrice = $productPrice+$totalPrice;
                                                 @endphp
                                                 <td>
@@ -48,6 +49,9 @@
                                                 </td>
                                                 <td class="text-center">
                                                     {{$product->price}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="label label-default">{{$order->total}}</span>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="label label-default">{{$product->pivot->amount}}</span>
