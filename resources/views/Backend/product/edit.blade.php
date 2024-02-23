@@ -53,12 +53,12 @@
                                         <label><input type="radio" name="price-type" value="special-membership">اعضای ویژه</label>
                                     </div>
                                     <div class="radio">
-                                        <label><input type="radio" name="price-type" value="cash">نقدی</label>
+                                        <label><input type="radio" name="price-type" @php if($product->price) echo 'checked';@endphp value="cash">نقدی</label>
                                     </div>
                                 </div>
-                                <div class="form-group" id="price" style="display: none;" >
+                                <div class="form-group" id="price" style="display: @php echo $product->price ? '' : 'none'; @endphp" >
                                     <label for="price">قیمت محصول</label>
-                                    <input  type="text" name="price" class="form-control">
+                                    <input  type="text" name="price" class="form-control" value="@php echo $product->price ? $product->price : ''; @endphp">
                                 </div>
                                 <div class="form-group">
                                     <label for="images">تصویر شاخص</label>
@@ -131,6 +131,11 @@
     </script>
     <script>
         $(document).ready(function() {
+//            if($("#price-type input[type='radio']:checked").val() == "cash"){
+//
+//                $("#price").show();
+//            }
+
             $("#price-type input[type='radio']").change(function() {
                 if ($(this).val() == "cash") {
                     $("#price").show();
