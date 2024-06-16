@@ -8,7 +8,9 @@ class Order extends Model
 {
     protected $fillable =[
         'total',
-        'status'
+        'status',
+        'productnumber',
+        'amount'
     ];
     public function user(){
         return $this->belongsTo(User::class);
