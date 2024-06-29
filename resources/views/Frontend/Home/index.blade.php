@@ -783,6 +783,25 @@
             </div>
         </section><!-- End F.A.Q Section -->
 
+
+        <div class="modal" tabindex="-1" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">افزودن محصول به سبد خرید</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>محصول </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </main><!-- End #main -->
 @endsection
 @section('scripts')
@@ -889,11 +908,20 @@
                     datatype: 'JSON',
                     data: $this.serialize(),
                     success: function(data) {
+
                         if($.isEmptyObject(data.error) && data.success.id){
                             var order = $("#cart-val").attr('value');
                             order = Number(order);
                             order = order+1;
                             $("#cart-val").attr('value', order);
+                            $('#myModal .modal-body').empty().append(data.success.name);
+                            $('#myModal').modal('show');
+
+                        }
+                        if($.isEmptyObject(data.error) && data.update.id){
+
+                            // $('#myModal .modal-body').empty().append(data.success.name);
+                            $('#myModal').modal('show');
 
                         }else{
 

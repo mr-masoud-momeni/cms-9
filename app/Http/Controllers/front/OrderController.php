@@ -72,24 +72,15 @@ class OrderController extends Controller
                 return response()->json(['error'=>$validator->errors()->all()]);
             }
             else{
-                $content = $request->id_product;
-//                $Repetitious = auth()->User()->order()->with(['search'=> function($query) use ($content){
-//                    $query->wherePivot('product_id', $content);
-//                }])->get();
-//                $Repetitious = auth()->User()->order()->whereHas('products', function ($query) use($content) {
-//                    $query->where('products.id', $content);
-//                })->get();
                 $Order = auth()->User()->order()->where('productnumber', $request->id_product)->first();
-//                dd($Repetitious->total);
                 if(isset($Order->total)){
                     $count = $request->count_product + $Order->total;
                     $Order->total = $count;
                     $Order->amount = $count*$product->price;
                     $Order->save();
-                    return response()->json(['update'=>1]);
+                    return response()->json(['update'=>$Order]);
                 }
                 else{
-
                     $Order = auth()->User()->order()->create([
                         'status' => '1',
                         'productnumber' => $request->id_product,
