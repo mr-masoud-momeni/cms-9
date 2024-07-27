@@ -40,8 +40,8 @@
                                         <tr>
                                             @foreach($order->products as $product)
                                                 @php
-                                                    $productPrice = $product->pivot->amount;
-                                                    $totalPrice = $productPrice+$totalPrice;
+                                                        $productPrice = $order->amount;
+                                                        $totalPrice = $productPrice+$totalPrice;
                                                 @endphp
                                                 <td>
                                                     <img src="{{ asset($product->images['thum'])}}" alt="">
@@ -54,7 +54,7 @@
                                                     <span class="label label-default">{{$order->total}}</span>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="label label-default">{{$product->pivot->amount}}</span>
+                                                    <span class="label label-default">{{$order->amount}}</span>
                                                 </td>
                                                 <td style="width: 10%; " class="text-center">
                                                     <a href="#" class="table-link danger">
