@@ -8,13 +8,15 @@ class Order extends Model
 {
     protected $fillable =[
         'total',
-        'status'
+        'status',
+        'productnumber',
+        'amount'
     ];
     public function user(){
         return $this->belongsTo(User::class);
     }
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('amount');
+        return $this->belongsToMany(Product::class)->withPivot('order_id');
     }
 }

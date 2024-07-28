@@ -82,7 +82,7 @@
         </nav><!-- .navbar -->
         <div class="social-links">
 {{--developer comment: the orderNumber parameter share with view composer from a provider called "ShareDataServiceProvider".--}}
-            <a href="{{route('order.index')}}" class="shop-ico"><i class="bi bi-cart-fill" id="cart-val" value={{$orderNumber}}></i></a>
+            <span class="badge badge-success">Success</span><a href="{{route('order.index')}}" class="shop-ico"><i class="bi bi-cart-fill" id="cart-val" value={{$orderNumber}}></i></a>
             <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
             <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
             <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
