@@ -47,10 +47,14 @@ class ProductController extends AdminController
     public function store(Request $request)
     {
         $this->validate($request,[
-            'images'=>'mimes:jpeg,jpg,bmp,png',
+            'price-type'=> [new \App\Rules\TypeOfProduct],
+            'price'=>'numeric|nullable',
+            'images'=>'nullable|mimes:jpeg,jpg,bmp,png',
             'title'=>'required',
             'body'=>'required',
         ]);
+
+
         $imageUrl['thum']="/uploads/default/post.png";
         $imageUrl=$this->UploadImages($request->file('images'));
         $products=auth()->User()->product()->create(array_merge($request->all(),['images'=>$imageUrl]));
