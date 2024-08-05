@@ -42,6 +42,7 @@
                         <div class="col-md-4">
                                 <div class="form-group" id="price-type">
                                     <label for="price-type">نوع دسترسی</label>
+
                                     <div class="radio">
                                         <label><input type="radio" name="price-type" value="non-membership" checked>بدون عضویت</label>
                                     </div>

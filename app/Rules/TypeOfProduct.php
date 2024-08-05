@@ -25,9 +25,9 @@ class TypeOfProduct implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($value !== 'non-membership' || $value !== 'membership' || $value !== 'special-membership' || $value !== 'cash') {
 
-            return false;
+        if ($value == "non-membership"  || $value == "membership" || $value == "special-membership" || $value == "cash") {
+           return true;
         }
 
     }
@@ -39,6 +39,6 @@ class TypeOfProduct implements Rule
      */
     public function message()
     {
-        return '$message';
+        return trans('message.TypeOfProduct');
     }
 }
