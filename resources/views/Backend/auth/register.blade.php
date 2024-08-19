@@ -17,7 +17,6 @@
                                     <label for="name">نام</label>
                                     <input type="text" name="name" class="form-control" id="name"  value="{{ old('name') }}" required>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="email">ایمیل</label>
                                     <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" required>
@@ -45,6 +44,18 @@
                                             <input type="checkbox" name="Role[]" value="{{$Role->id}}">{{$Role->name}}
                                         </label>
                                     @endforeach
+                                </div>
+                                <div class="form-group">
+                                    <label for="name-store">نام فروشگاه</label>
+                                    <input type="text" name="nameStore" class="form-control" id="nameStore"  value="{{ old('nameStore') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">نام انگلیسی</label>
+                                    <input type="text" name="nameStoreEn" class="form-control" id="nameStoreEn"  value="{{ old('nameStoreEn') }}" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">نام دامنه</label>
+                                    <input type="text" name="domain" class="form-control" id="domain"  value="{{ old('domain') }}" >
                                 </div>
 
                             <button type="submit" class="btn btn-success">ایجاد کاربر</button>

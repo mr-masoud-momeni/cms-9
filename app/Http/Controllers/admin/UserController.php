@@ -60,6 +60,13 @@ class UserController extends Controller
         if(isset($request['Role'])){
             $user->attachRoles($request['Role']);
         }
+        if(isset($request['nameStore'])){
+            $user->shop()->create([
+               'name' => $request->nameStore,
+               'domain' => $request->domain,
+               'slug' => $request->nameStoreEn,
+            ]);
+        }
         return back()->withInput();
     }
 

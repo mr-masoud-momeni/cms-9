@@ -17,8 +17,8 @@ class CreateShopsTable extends Migration
             $table->id();
             $table->integer('user_id')->unsingend();
             $table->string('name');
-            $table->string('domain');
-            $table->string('slug');
+            $table->string('domain')->nullable();
+            $table->string('slug')->nullable();
             $table->timestamps();
         });
     }
