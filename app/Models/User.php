@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Page;
-use App\Models\product;
-use App\Models\Order;
+//use App\Models\Order;
+//use App\Models\Page;
+//use App\Models\product;
+//use App\Models\Order;
+//use App\Models\Shop;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -84,5 +86,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function order()
     {
         return $this->hasMany(Order::class);
+    }
+    public function shop()
+    {
+        return $this->hasMany(Shop::class);
     }
 }
