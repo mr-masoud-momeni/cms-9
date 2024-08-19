@@ -4,16 +4,17 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class TypeOfProduct implements Rule
+class WhiteList implements Rule
 {
+    protected $params;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $params = [])
     {
-        //
+        $this->params = $params;
     }
 
     /**
@@ -25,11 +26,16 @@ class TypeOfProduct implements Rule
      */
     public function passes($attribute, $value)
     {
-
-        if ($value == "non-membership"  || $value == "membership" || $value == "special-membership" || $value == "cash") {
-           return true;
+        foreach ($this->params as $param){
+            if ($value == $param) {
+                $result = true;
+                break;
+            }
+            else{
+                $result = false;
+            }
         }
-
+        return $result;
     }
 
     /**
@@ -39,6 +45,6 @@ class TypeOfProduct implements Rule
      */
     public function message()
     {
-        return trans('message.TypeOfProduct');
+        return trans('message.WhiteList');
     }
 }

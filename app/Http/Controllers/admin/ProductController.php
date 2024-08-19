@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Order_Product;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Rules\WhiteList;
 use App\Http\Controllers\Controller;
 
 class ProductController extends AdminController
@@ -47,7 +48,14 @@ class ProductController extends AdminController
     public function store(Request $request)
     {
         $this->validate($request,[
-            'price-type'=> [new \App\Rules\TypeOfProduct],
+            // new validation that check values of price-type
+            //for more information visit the link: https://docs.google.com/document/d/1dQGotVLWKT0ezYnV2vb81dl-eWqm8H3cVhIspm80FNs/edit#bookmark=id.x9ao4csj1dp4
+            'price-type'=> [new WhiteList([ 'non-membership' => 'non-membership',
+                                            'membership' => 'membership',
+                                            'special-membership'=>'special-membership',
+                                            'cash'=>'cash'])],
+            'type'=> [new WhiteList(['physical' => 'physical',
+                                     'virtual' => 'virtual'])],
             'price'=>'numeric|nullable',
             'images'=>'nullable|mimes:jpeg,jpg,bmp,png',
             'title'=>'required',
