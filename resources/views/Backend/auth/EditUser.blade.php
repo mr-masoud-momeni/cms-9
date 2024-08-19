@@ -66,6 +66,18 @@
                                         @endforeach
                                     @endif
                                 </div>
+                                <div class="form-group">
+                                    <label for="name-store">نام فروشگاه</label>
+                                    <input type="text" name="nameStore" class="form-control" id="nameStore"  value="@if($User->shop->first()->name){{ $User->shop->first()->name }}@endif" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">نام انگلیسی</label>
+                                    <input type="text" name="nameStoreEn" class="form-control" id="nameStoreEn"  value="{{ old('nameStoreEn') }}" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">نام دامنه</label>
+                                    <input type="text" name="domain" class="form-control" id="domain"  value="{{ old('domain') }}" >
+                                </div>
 
                                 <button type="submit" class="btn btn-success">ویرایش کاربر</button>
                             </form>
