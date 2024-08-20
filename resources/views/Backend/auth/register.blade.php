@@ -79,10 +79,10 @@
                                         <td>{{$User->name}}</td>
                                         <td>{{$User->email}}</td>
                                         <td>
-                                            <a href="{{route('register.edit',$User->id)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
+                                            <a href="{{route('register.edit',$User->uuid)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                         </td>
                                         <td>
-                                            <a class="deleteAjax" data-toggle="modal" data-target="#DeleteModal" data-id="{{$User->id}}" ><i class="fa fa-2x fa-trash-o" aria-hidden="true"></i></a>
+                                            <a class="deleteAjax" data-toggle="modal" data-target="#DeleteModal" data-id="{{$User->uuid}}" ><i class="fa fa-2x fa-trash-o" aria-hidden="true"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach

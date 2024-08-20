@@ -87,9 +87,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($uuid)
     {
-        $User = User::all()->where('id' , $id)->first();
+        $User = User::all()->where('uuid' , $uuid)->first();
         $permissions = permission::all()->sortBy('id');
         $Roles = Role::all()->sortBy('id');
         return view('Backend.auth.EditUser' , compact('User','permissions' , 'Roles'));
@@ -107,7 +107,7 @@ class UserController extends Controller
         $request->validate([
             'name' => ['string', 'max:255'],
         ]);
-        $user = new User();
+        $user = auth()->user();
         $user = $user->find($id);
         $user->name = $request->name;
         if($request->email == !$user->email){
@@ -136,6 +136,13 @@ class UserController extends Controller
         }
         if($request->permission){
             $user->syncPermissions($request->permission);
+        }
+        if(isset($request['nameStore'])){
+            $user->shop()->update([
+                'name' => $request->nameStore,
+                'domain' => $request->domain,
+                'slug' => $request->nameStoreEn,
+            ]);
         }
         $user->save();
         return redirect(route('register.index'));

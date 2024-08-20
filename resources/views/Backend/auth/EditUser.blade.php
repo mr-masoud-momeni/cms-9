@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="password">پسورد</label>
-                                    <input type="password" name="password" class="form-control" id="password" value="" >
+                                    <input type="password" name="password" class="form-control" id="password" value="" autocomplete="new-password">
                                 </div>
                                 <div class="form-group">
                                     <label for="password">تکرار پسورد</label>
@@ -68,17 +68,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="name-store">نام فروشگاه</label>
-                                    <input type="text" name="nameStore" class="form-control" id="nameStore"  value="@if($User->shop->first()->name){{ $User->shop->first()->name }}@endif" required>
+                                    <input type="text" name="nameStore" class="form-control" id="nameStore"  value="@if(isset($User->shop->first()->name)){{ $User->shop->first()->name }}@endif" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="name">نام انگلیسی</label>
-                                    <input type="text" name="nameStoreEn" class="form-control" id="nameStoreEn"  value="{{ old('nameStoreEn') }}" >
+                                    <input type="text" name="nameStoreEn" class="form-control" id="nameStoreEn"  value="@if(isset($User->shop->first()->slug)){{ $User->shop->first()->slug }}@endif" >
                                 </div>
                                 <div class="form-group">
                                     <label for="name">نام دامنه</label>
-                                    <input type="text" name="domain" class="form-control" id="domain"  value="{{ old('domain') }}" >
+                                    <input type="text" name="domain" class="form-control" id="domain"  value="@if(isset($User->shop->first()->domain)){{ $User->shop->first()->domain }}@endif" >
                                 </div>
-
                                 <button type="submit" class="btn btn-success">ویرایش کاربر</button>
                             </form>
 
