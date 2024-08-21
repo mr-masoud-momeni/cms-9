@@ -35,8 +35,9 @@ class Shop extends Model
     public function getRoutekeyName(){
         return 'slug';
     }
-    public function user(){
-        return $this->belongsTo(user::class);
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function product(){
         return $this->hasMany(product::class);

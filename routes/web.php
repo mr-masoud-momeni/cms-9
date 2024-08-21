@@ -79,3 +79,10 @@ Route::group(
 //    });
 });
 require __DIR__.'/auth.php';
+
+
+//seller routs ////////////////////////////////////////////////////////////
+Route::prefix('shop-owner')->middleware('role:shop_owner')->group(function () {
+    Route::get('/dashboard', [ShopController::class, 'dashboard'])->name('shop.dashboard');
+    Route::get('/orders', [ShopController::class, 'manageOrders'])->name('shop.orders');
+});
