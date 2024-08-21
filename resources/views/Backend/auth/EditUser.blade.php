@@ -1,6 +1,5 @@
 @extends('Backend.layouts.Master')
 @section('scripts')
-
 @endsection
 @section('content')
     <div class="row">
@@ -13,7 +12,6 @@
 
                     <div class="row">
                         <div class="col-md-6">
-
                             <form action="{{route('register.update',$User->id)}}" method="post" >
                                 {{ csrf_field() }}
                                 {{method_field('patch')}}

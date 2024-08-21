@@ -47,7 +47,7 @@ class ProductController extends AdminController
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
+        $validated = $request->validate([
             // new validation that check values of price-type
             //for more information visit the link: https://docs.google.com/document/d/1dQGotVLWKT0ezYnV2vb81dl-eWqm8H3cVhIspm80FNs/edit#bookmark=id.x9ao4csj1dp4
             'price-type'=> [new WhiteList([ 'non-membership' => 'non-membership',
@@ -61,27 +61,20 @@ class ProductController extends AdminController
             'title'=>'required',
             'body'=>'required',
         ]);
-
-
+        $userId = auth()->id();
+        $shopId = auth()->user()->shop()->first()->id;
         $imageUrl['thum']="/uploads/default/post.png";
         $imageUrl=$this->UploadImages($request->file('images'));
-        $products=auth()->User()->product()->create(array_merge($request->all(),['images'=>$imageUrl]));
+        $productData = array_merge($validated, [
+            'user_id' => $userId,
+            'shop_id' => $shopId,
+            'images' => $imageUrl
+        ]);
+        $product = Product::create($productData);
         $category=request('category');
         if($category){
-            $products->categories()->attach(request('category'));
+            $product->categories()->attach(request('category'));
         }
-//        $orders= auth()->User()->Order()->create([
-//            "total"=>1,
-//        ]);
-//        $attatchData =
-//            [
-//                '1'  => [ 'amount' =>  20],
-//                '2'  => [ 'amount' =>  40],
-//                '3'  => [ 'amount' =>  50],
-//            ];
-//        $orders->products()->attach($attatchData);
-//        $products=User::find(1)->order;
-//        dd($products);
         session()->flash('createproduct','محصول شما با موفقیت ثبت شد.');
         return redirect('/admin/product');
     }

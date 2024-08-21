@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
@@ -137,8 +136,15 @@ class UserController extends Controller
         if($request->permission){
             $user->syncPermissions($request->permission);
         }
-        if(isset($request['nameStore'])){
+        if(isset($request['nameStore']) && isset($user->shop()->first()->id) ){
             $user->shop()->update([
+                'name' => $request->nameStore,
+                'domain' => $request->domain,
+                'slug' => $request->nameStoreEn,
+            ]);
+        }
+        else{
+            $user->shop()->create([
                 'name' => $request->nameStore,
                 'domain' => $request->domain,
                 'slug' => $request->nameStoreEn,

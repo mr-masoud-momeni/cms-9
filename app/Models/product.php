@@ -24,6 +24,7 @@ class product extends Model
     }
     protected $fillable =[
         'user_id',
+        'shop_id',
         'title',
         'body',
         'images',
@@ -42,6 +43,9 @@ class product extends Model
     }
     public function user(){
         return $this->belongsTo(user::class);
+    }
+    public function shop(){
+        return $this->belongsTo(shop::class);
     }
     public function categories()
     {

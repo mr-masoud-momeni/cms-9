@@ -1,12 +1,8 @@
 <?php
-
+/** read this link for all changes in user CRUD
+https://docs.google.com/document/d/1dQGotVLWKT0ezYnV2vb81dl-eWqm8H3cVhIspm80FNs/edit#bookmark=id.senm0jrcaira
+ */
 namespace App\Models;
-
-//use App\Models\Order;
-//use App\Models\Page;
-//use App\Models\product;
-//use App\Models\Order;
-//use App\Models\Shop;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -26,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+/**create an uuid and save in users table automatically */
     protected static function boot()
     {
         parent::boot();

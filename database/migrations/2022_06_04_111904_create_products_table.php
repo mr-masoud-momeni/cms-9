@@ -15,7 +15,8 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsingend();
+            $table->unsignedBigInteger('shop_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->text('body');
             $table->string('slug');
@@ -27,6 +28,10 @@ class CreateProductsTable extends Migration
             $table->integer('comentCount')->default(0);
             $table->integer('veiwCount')->default(0);
             $table->timestamps();
+
+            //Define foreign keys
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
