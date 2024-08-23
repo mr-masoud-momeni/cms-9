@@ -29,6 +29,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
         static::creating(function ($model) {
             $model->uuid = Str::uuid()->toString();
+            $randomBytes = random_bytes(4);
+            $randomString = bin2hex($randomBytes);
+            $model->path = $randomString;
         });
     }
 
