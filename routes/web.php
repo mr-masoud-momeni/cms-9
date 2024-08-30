@@ -72,23 +72,18 @@ Route::group(
     Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
     Route::get('search','HomeController@search')->name('search');
-//    Route::prefix('jobs')->group(function () {
-//        Route::queueMonitor();
-//    });
-//    Route::get('/menu' , function (){
-//       return view('Backend.menu.create');
-//    });
 });
 require __DIR__.'/auth.php';
 
 Route::get('/customer/login/{token}', [LoginController::class, 'showLoginForm'])->name('customer.login.path');
 Route::post('/customer/login', [LoginController::class, 'login'])->name('customer.login');
 Route::post('customer/logout', [LoginController::class, 'logout'])->name('customer.logout');
-Route::get('/customer/dashboard', [LoginController::class, 'dashboard'])->middleware(['auth' , 'verified'])->name('customer.dashboard');
 
-
-//seller routs ////////////////////////////////////////////////////////////
-//Route::prefix('shop-owner')->middleware( 'role:shop_owner')->group(function () {
-//    Route::get('/dashboard', [ShopController::class, 'dashboard'])->name('shop.dashboard');
-//    Route::get('/orders', [ShopController::class, 'manageOrders'])->name('shop.orders');
-//});
+Route::group(
+    [
+        'middleware'=>['auth' , 'verified', 'role:shop_owner'],
+        'prefix' => 'customer',
+    ]
+    , function () {
+    Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('customer.dashboard');
+});
