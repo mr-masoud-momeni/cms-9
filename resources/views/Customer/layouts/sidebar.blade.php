@@ -44,9 +44,9 @@
         <li class="dropdown {{Request::is('admin/product/create') || Request::is('admin/product') || Request::is('admin/category/create/product') ? 'open' : ''}} ">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">محصولات<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-                <a class="{{Request::is('admin/product/create') ? 'active-sidebar' : ''}}" href="{{route('product.create')}}">ایجاد محصول</a>
-                <li><a class="{{Request::is('admin/product') ? 'active-sidebar' : ''}}"  href="{{route('product.index')}}">لیست محصولات</a></li>
-                <li><a class="{{Request::is('admin/category/create/product') ? 'active-sidebar' : ''}}" href="{{route('catProduct.create')}}">ایجاد دسته بندی</a></li>
+                <a class="{{Request::is('customer/product/create') ? 'active-sidebar' : ''}}" href="{{route('product.create')}}">ایجاد محصول</a>
+                <li><a class="{{Request::is('customer/product') ? 'active-sidebar' : ''}}"  href="{{route('product.index')}}">لیست محصولات</a></li>
+                <li><a class="{{Request::is('customer/category/create/product') ? 'active-sidebar' : ''}}" href="{{route('catProduct.create')}}">ایجاد دسته بندی</a></li>
             </ul>
         </li>
         @endrole

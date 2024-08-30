@@ -18,7 +18,11 @@ class RolesTableSeeder extends Seeder
              'display_name' => 'admin',
              'description' => 'دسترسی کامل به بخش ادمین سایت',
              ],
-//            ['name' => 'Editor'],
+            ['name' => 'shop_owner',
+             'display_name' => 'shop-owner',
+             'description' => 'مدیریت افزودن و ویرایش محصول و دیدن سفارش ها و...',
+            ],
+//            ['name' => 'shop_owner'],
 //            ['name' => 'User'],
         ]);
     }

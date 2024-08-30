@@ -77,13 +77,15 @@ require __DIR__.'/auth.php';
 
 Route::get('/customer/login/{token}', [LoginController::class, 'showLoginForm'])->name('customer.login.path');
 Route::post('/customer/login', [LoginController::class, 'login'])->name('customer.login');
-Route::post('customer/logout', [LoginController::class, 'logout'])->name('customer.logout');
+Route::post('/customer/logout', [LoginController::class, 'logout'])->middleware(['auth' , 'verified'])->name('customer.logout');
+Route::get('/customer/dashboard', [LoginController::class, 'dashboard'])->middleware(['auth' , 'verified'])->name('customer.dashboard');
 
 Route::group(
     [
         'middleware'=>['auth' , 'verified', 'role:shop_owner'],
+        'namespace'=> 'App\Http\Controllers\customer',
         'prefix' => 'customer',
     ]
     , function () {
-    Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('customer.dashboard');
+    Route::resource('/product', 'ProductController');
 });
