@@ -67,8 +67,8 @@ Route::group(
     Route::resource('/email-group', 'EmailGroupController');
     Route::resource('/page', 'PageController');
     Route::resource('/menu', 'MenuController');
-    Route::resource('/product', 'productController');
-    Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
+//    Route::resource('/product', 'productController');
+//    Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
     Route::get('search','HomeController@search')->name('search');
@@ -88,4 +88,8 @@ Route::group(
     ]
     , function () {
     Route::resource('/product', 'ProductController');
+    Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
+    Route::post('/category/create', 'CategoryController@save')->name('catProduct.save');
+    Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');
+    Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
 });

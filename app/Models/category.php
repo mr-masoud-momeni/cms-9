@@ -22,6 +22,8 @@ class category extends Model
         ];
     }
     protected $fillable=[
+        'shop_id',
+        'user_id',
         'name',
         'slug',
         'parent_id',

@@ -27,5 +27,18 @@ class UsersTableSeeder extends Seeder
             'role_id' => 1, // نقش admin
             'user_type' => 'App\Models\User',
         ]);
+        $userId = DB::table('users')->insertGetId([
+            'uuid' => 'f420fbd9-05ea-4cb2-bcc7-8c4c589aca66',
+            'name' => 'test',
+            'email' => 'test@test.com',
+            'password' => '$2a$12$8QEYX7BUv/Ts02oPWQLtgeuyx1RIOFiC0WuwmqAp1LmZUtyy117SO',
+            'email_verified_at' => '2024-08-30 13:52:31'
+        ]);
+        // تخصیص نقش‌ها به یوزر
+        DB::table('role_user')->insert([
+            'user_id' => $userId,
+            'role_id' => 2, // نقش admin
+            'user_type' => 'App\Models\User',
+        ]);
     }
 }
