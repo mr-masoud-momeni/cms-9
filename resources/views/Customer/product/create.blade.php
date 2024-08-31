@@ -77,7 +77,7 @@
                                                             {{$category->name}}
                                                         </label>
                                                         @if(count($category->subcategory))
-                                                            @include('Backend.product.subCategoryList',['subcategories' => $category->subcategory])
+                                                            @include('Customer.product.subCategoryList',['subcategories' => $category->subcategory])
                                                         @endif
                                                     </div>
                                                 </li>

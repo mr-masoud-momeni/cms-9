@@ -101,7 +101,7 @@ class ProductController extends CustomerController
     public function edit(product $product)
     {
         $parentCategories=category::where('parent_id',0)->where('type','product')->get();
-        return view('Backend.product.edit',compact('product' ,'parentCategories'));
+        return view('Customer.product.edit',compact('product' ,'parentCategories'));
     }
 
     /**

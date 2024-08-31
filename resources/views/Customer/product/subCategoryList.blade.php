@@ -7,7 +7,7 @@
             </label>
         </li>
         @if(count($subcategory->subcategory))
-            @include('Backend.article.subCategoryList',['subcategories' => $subcategory->subcategory])
+            @include('Customer.product.subCategoryList',['subcategories' => $subcategory->subcategory])
         @endif
     </ul>
 @endforeach

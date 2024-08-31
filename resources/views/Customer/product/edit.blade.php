@@ -67,17 +67,32 @@
                                 <div class="form-group">
                                     <label for="category">دسته بندی ها : </label>
                                     <div class="ShowCategorySelect">
+                                        {{--@foreach($parentCategories as $category)--}}
+                                            {{--<ul>--}}
+                                                {{--<li>--}}
+                                                    {{--<div class="checkbox">--}}
+                                                        {{--<label>--}}
+                                                            {{--<input type="checkbox" name="category[]" value="{{$category->id}}" >--}}
+                                                            {{--<input type="checkbox" name="category[]" value="{{$category->id}}" >--}}
+                                                            {{--{{$category->name}}--}}
+                                                        {{--</label>--}}
+                                                        {{--@if(count($category->subcategory))--}}
+                                                            {{--@include('Customer.product.subCategoryListEdit',['subcategories' => $category->subcategory])--}}
+                                                        {{--@endif--}}
+                                                    {{--</div>--}}
+                                                {{--</li>--}}
+                                            {{--</ul>--}}
+                                        {{--@endforeach--}}
                                         @foreach($parentCategories as $category)
                                             <ul>
                                                 <li>
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" name="category[]" value="{{$category->id}}" >
-                                                            <input type="checkbox" name="category[]" value="{{$category->id}}" >
+                                                            <input type="checkbox" name="category[]" value="{{$category->id}}" {{in_array($category->id, $product->categories->pluck('id')->toarray())?'checked':''}}>
                                                             {{$category->name}}
                                                         </label>
                                                         @if(count($category->subcategory))
-                                                            @include('Backend.product.subCategoryList',['subcategories' => $category->subcategory])
+                                                            @include('Customer.product.subCategoryListEdit',['subcategories' => $category->subcategory,'product'=>$product])
                                                         @endif
                                                     </div>
                                                 </li>
