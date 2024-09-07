@@ -15,10 +15,10 @@ class CreateBuyersTable extends Migration
     {
         Schema::create('buyers', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->timestamp('sms_verified_at')->nullable();
+            $table->string('email')->nullable();  // عدم الزام به یونیک بودن
+            $table->string('phone')->nullable();  // عدم الزام به یونیک بودن
             $table->timestamps();
         });
     }

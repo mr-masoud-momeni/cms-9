@@ -15,6 +15,7 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('domain')->nullable();
