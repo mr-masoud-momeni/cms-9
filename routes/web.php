@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\customer\LoginController;
+use App\Http\Controllers\front\BuyerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,3 +94,7 @@ Route::group(
     Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');
     Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
 });
+
+Route::get('/buyerregister', [BuyerController::class, 'index'])->name('buyer.show.register');
+Route::post('/buyerregister', [BuyerController::class, 'register'])->name('buyer.register');
+Route::get('/verify-email/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');

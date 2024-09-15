@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->integer('total');
             $table->integer('amount');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('buyers')->onDelete('cascade');
+            $table->foreign('buyer_id')->references('id')->on('buyers')->onDelete('cascade');
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
         });
 

@@ -42,4 +42,8 @@ class Shop extends Model
     public function product(){
         return $this->hasMany(product::class);
     }
+    public function buyers()
+    {
+        return $this->belongsToMany(buyer::class)->withPivot('email', 'phone', 'email_verification_token', 'email_verified_at')->withTimestamps();
+    }
 }

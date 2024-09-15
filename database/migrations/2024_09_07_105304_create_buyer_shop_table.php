@@ -22,8 +22,8 @@ class CreateBuyerShopTable extends Migration
             $table->string('email_verification_token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
-            $table->unique(['store_id', 'email']);  // ترکیب ایمیل و فروشگاه باید یونیک باشد
-            $table->unique(['store_id', 'phone']);  // ترکیب شماره تلفن و فروشگاه باید یونیک باشد
+            $table->unique(['shop_id', 'email']);  // ترکیب ایمیل و فروشگاه باید یونیک باشد
+            $table->unique(['shop_id', 'phone']);  // ترکیب شماره تلفن و فروشگاه باید یونیک باشد
         });
     }
 
