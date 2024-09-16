@@ -13,6 +13,7 @@ use App\Mail\EmailVerificationMail;
 class BuyerController extends Controller
 {
 
+
     public function index()
     {
         return view('Frontend.Register.RegisterUser');
@@ -62,7 +63,7 @@ class BuyerController extends Controller
         ]);
 
         // ایجاد لینک تأیید ایمیل
-        $verificationLink = route('verify.email', ['uuid' => $buyer->uuid, 'token' => $token]);
+        $verificationLink = route('buyer.verify.email', ['uuid' => $buyer->uuid, 'token' => $token]);
 
         // ارسال ایمیل تأیید
         Mail::to($buyer->email)->send(new EmailVerificationMail($verificationLink));

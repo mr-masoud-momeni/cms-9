@@ -16,28 +16,28 @@
             </div>
         </section><!-- End Breadcrumbs -->
 
-        <section class="inner-page pt-4">
+        <section class="inner-page  py-5">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
+                <div class="row ">
+                    <div class="col-lg-4">
+                        @include('Frontend.layouts.errors')
                         <div class="main-box clearfix">
-                            <!-- فرم ثبت‌نام -->
-                            <form action="{{ route('buyer.register') }}" method="POST">
-                                @csrf
-                                <div class="form-group">
-                                    <label for="name">Name:</label>
-                                    <input type="text" id="name" name="name" value="{{ old('name') }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Phone:</label>
-                                    <input type="text" id="phone" name="phone" value="{{ old('phone') }}" required>
-                                </div>
-                                <button type="submit">Register</button>
-                            </form>
+                            <div class="from">
+                                <!-- فرم ثبت‌نام -->
+                                <form action="{{ route('buyer.register') }}" method="POST">
+                                    @csrf
+                                    <div class="form-group">
+                                        <input type="text" id="name" class="form-control" placeholder="نام" name="name" value="{{ old('name') }}">
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <input type="email" id="email" class="form-control" placeholder="ایمیل" name="email" value="{{ old('email') }}">
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <input type="text" id="phone" class="form-control" placeholder="تلفن همراه" name="phone" value="{{ old('phone') }}">
+                                    </div>
+                                    <div class="text-center mt-3"><button type="submit" class="btn btn-success">ثبت نام</button></div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -29,6 +29,7 @@ class UsersTableSeeder extends Seeder
         ]);
         $userId = DB::table('users')->insertGetId([
             'uuid' => 'f420fbd9-05ea-4cb2-bcc7-8c4c589aca66',
+            'path' => 'azq11azq',
             'name' => 'test',
             'email' => 'test@test.com',
             'password' => '$2a$12$8QEYX7BUv/Ts02oPWQLtgeuyx1RIOFiC0WuwmqAp1LmZUtyy117SO',
@@ -39,6 +40,13 @@ class UsersTableSeeder extends Seeder
             'user_id' => $userId,
             'role_id' => 2, // نقش admin
             'user_type' => 'App\Models\User',
+        ]);
+        DB::table('shops')->insert([
+            'uuid' => 'bc5b48d0-ac04-46c3-abf1-d128c15ade2b',
+            'user_id' => $userId,
+            'name' => 'localhost',
+            'domain' => 'localhost',
+            'slug' => 'localhost',
         ]);
     }
 }

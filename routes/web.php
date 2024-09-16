@@ -97,4 +97,4 @@ Route::group(
 
 Route::get('/buyerregister', [BuyerController::class, 'index'])->name('buyer.show.register');
 Route::post('/buyerregister', [BuyerController::class, 'register'])->name('buyer.register');
-Route::get('/verify-email/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
+Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
