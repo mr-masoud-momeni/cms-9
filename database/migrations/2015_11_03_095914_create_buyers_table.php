@@ -19,6 +19,7 @@ class CreateBuyersTable extends Migration
             $table->string('name');
             $table->string('email')->nullable();  // عدم الزام به یونیک بودن
             $table->string('phone')->nullable();  // عدم الزام به یونیک بودن
+            $table->string('password');
             $table->timestamps();
         });
     }

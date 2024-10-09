@@ -18,9 +18,10 @@ class EmailVerificationMail extends Mailable
      */
     public $verificationLink;
 
-    public function __construct($verificationLink)
+    public function __construct($verificationLink, $password)
     {
         $this->verificationLink = $verificationLink;
+        $this->password = $password;
     }
 
     public function build()

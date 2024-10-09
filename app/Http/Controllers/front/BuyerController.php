@@ -12,7 +12,7 @@ use App\Mail\EmailVerificationMail;
 
 class BuyerController extends Controller
 {
-
+    public $pass;
 
     public function index()
     {
@@ -43,32 +43,36 @@ class BuyerController extends Controller
                 return redirect()->back()->withErrors(['email' => 'This buyer has already registered in this store.']);
             }
         } else {
+            $this->pass = Str::random(8);
             // اگر خریدار قبلاً در سیستم نبوده باشد، یک خریدار جدید ایجاد کنید
             $buyer = Buyer::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
+                'password' => bcrypt($this->pass),
                 'uuid' => Str::uuid(),
             ]);
         }
+        if(isset($buyer)){
+            // تولید توکن تأیید ایمیل
+            $token = Str::random(60);
 
-        // تولید توکن تأیید ایمیل
-        $token = Str::random(60);
+            // اتصال خریدار به فروشگاه با اطلاعات ایمیل و توکن تأیید
+            $buyer->shops()->attach($shop->id, [
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'email_verification_token' => $token,
+            ]);
 
-        // اتصال خریدار به فروشگاه با اطلاعات ایمیل و توکن تأیید
-        $buyer->shops()->attach($shop->id, [
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'email_verification_token' => $token,
-        ]);
+            // ایجاد لینک تأیید ایمیل
+            $verificationLink = route('buyer.verify.email', ['uuid' => $buyer->uuid, 'token' => $token]);
 
-        // ایجاد لینک تأیید ایمیل
-        $verificationLink = route('buyer.verify.email', ['uuid' => $buyer->uuid, 'token' => $token]);
+            // ارسال ایمیل تأیید
+            Mail::to($buyer->email)->send(new EmailVerificationMail($verificationLink, $this->pass));
 
-        // ارسال ایمیل تأیید
-        Mail::to($buyer->email)->send(new EmailVerificationMail($verificationLink));
+            return redirect()->back()->with('message', 'Registration successful. Verification email sent.');
+        }
 
-        return redirect()->back()->with('message', 'Registration successful. Verification email sent.');
     }
 
     // تأیید ایمیل
