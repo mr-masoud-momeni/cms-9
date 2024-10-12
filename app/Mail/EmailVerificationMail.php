@@ -17,6 +17,7 @@ class EmailVerificationMail extends Mailable
      * @return void
      */
     public $verificationLink;
+    public $password;
 
     public function __construct($verificationLink, $password)
     {
@@ -26,8 +27,8 @@ class EmailVerificationMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Verify Your Email Address')
+        return $this->subject('اعتبارسنجی ایمیل و پسورد ورود')
             ->view('emails.verify-email')
-            ->with(['verificationLink' => $this->verificationLink]);
+            ->with(['verificationLink' => $this->verificationLink, 'password' => $this->password]);
     }
 }

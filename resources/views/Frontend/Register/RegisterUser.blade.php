@@ -15,12 +15,12 @@
 
             </div>
         </section><!-- End Breadcrumbs -->
-
+        @include('Frontend.layouts.errors')
+        @include('Frontend.layouts.message')
         <section class="inner-page  py-5">
             <div class="container">
                 <div class="row ">
                     <div class="col-lg-4">
-                        @include('Frontend.layouts.errors')
                         <div class="main-box clearfix">
                             <div class="from">
                                 <!-- فرم ثبت‌نام -->
