@@ -96,4 +96,26 @@ class BuyerController extends Controller
 
         return response()->json(['error' => 'Invalid verification token or email already verified'], 422);
     }
+    // نمایش فرم لاگین
+    public function showLoginForm()
+    {
+        return view('Frontend.Login.loginUser');
+    }
+
+    // مدیریت لاگین خریدار
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended('/buyer/dashboard')->with('message', 'Login successful!');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
 }

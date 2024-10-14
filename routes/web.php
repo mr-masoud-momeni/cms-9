@@ -96,6 +96,9 @@ Route::group(
 });
 
 //buyer routes
-Route::get('/buyerregister', [BuyerController::class, 'index'])->name('buyer.show.register');
-Route::post('/buyerregister', [BuyerController::class, 'register'])->name('buyer.register');
+Route::get('/buyer/register', [BuyerController::class, 'index'])->name('buyer.show.register');
+Route::post('/buyer/register', [BuyerController::class, 'register'])->name('buyer.register');
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
+// نمایش فرم لاگین و مدیریت لاگین خریدار
+Route::get('/buyer/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login');
+Route::post('/buyer/login', [BuyerController::class, 'login']);
