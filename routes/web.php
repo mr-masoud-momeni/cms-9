@@ -102,3 +102,6 @@ Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verify
 // نمایش فرم لاگین و مدیریت لاگین خریدار
 Route::get('/buyer/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login');
 Route::post('/buyer/login', [BuyerController::class, 'login']);
+
+// خروج (logout) خریدار
+Route::post('/buyer/logout', [BuyerController::class, 'logout'])->name('buyer.logout');

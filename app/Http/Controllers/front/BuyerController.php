@@ -9,6 +9,7 @@ use App\Models\Shop;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerificationMail;
+use Illuminate\Support\Facades\Auth;
 
 class BuyerController extends Controller
 {
@@ -110,12 +111,20 @@ class BuyerController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // استفاده از گارد buyer برای لاگین
+        if (Auth::guard('buyer')->attempt($credentials)) {
             return redirect()->intended('/buyer/dashboard')->with('message', 'Login successful!');
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
+    }
+    // مدیریت خروج (logout) خریدار
+    public function logout()
+    {
+        Auth::guard('buyer')->logout();
+
+        return redirect()->route('buyer.login')->with('message', 'You have been logged out.');
     }
 }
