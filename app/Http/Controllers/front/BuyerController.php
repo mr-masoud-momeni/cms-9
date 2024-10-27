@@ -42,7 +42,12 @@ class BuyerController extends Controller
             $existingEntry = $buyer->shops()->where('shop_id', $shop->id)->exists();
 
             if ($existingEntry) {
-                return redirect()->back()->withErrors(['email' => 'قبلا در این فروشگاه ثبت نام کرده اید.']);
+                $existingEntry1 = $buyer->shops()->wherePivot('shop_id', $shop->id)->first();
+                if($existingEntry1->pivot->email_verification_token){
+                    return redirect()->back()->withErrors(['email1' => 'قبلا در این فروشگاه ثبت نام کرده اید ولی هنوز روی لینک فعالسازی ارسال شده به ایمیلتان کلیک نکرده اید.']);
+                }else{
+                    return redirect()->back()->withErrors(['email' => 'قبلا در این فروشگاه ثبت نام کرده اید.']);
+                }
             }
         } else {
             $this->pass = Str::random(8);
