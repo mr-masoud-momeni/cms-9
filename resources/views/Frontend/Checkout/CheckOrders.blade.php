@@ -20,8 +20,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
+                    @isset($orders)
                         <div class="main-box clearfix">
                             <div class="table-responsive">
+
                                 <table class="table user-list">
                                     <thead>
                                     <tr>
@@ -89,6 +91,7 @@
                                 <input type="hidden" name="price" value="{{$totalPrice}}">
                                 <button type="submit">تکمیل خرید</button>
                             </form>
+
                             <ul class="pagination pull-right">
                                 <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
                                 <li><a href="#">1</a></li>
@@ -99,6 +102,7 @@
                                 <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
                             </ul>
                         </div>
+                        @endisset
                     </div>
                 </div>
             </div>

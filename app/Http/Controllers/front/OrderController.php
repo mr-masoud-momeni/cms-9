@@ -19,11 +19,11 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         if(!$user){
-            $orders = 0;
+            return view('Frontend.Checkout.CheckOrders');
         }else{
             $orders = $user->order()->get();
+            return view('Frontend.Checkout.CheckOrders' , compact('orders'));
         }
-        return view('Frontend.Checkout.CheckOrders' , compact('orders'));
     }
 
     /**
