@@ -76,8 +76,8 @@ Route::group(
 });
 require __DIR__.'/auth.php';
 
-Route::get('/customer/login/{token}', [LoginController::class, 'showLoginForm'])->name('customer.login.path');
-Route::post('/customer/login', [LoginController::class, 'login'])->name('customer.login');
+Route::get('/customer/login/{path}', [LoginController::class, 'showLoginForm'])->name('customer.login.path');
+Route::post('/customer/login/{path}', [LoginController::class, 'login'])->name('customer.login');
 Route::post('/customer/logout', [LoginController::class, 'logout'])->middleware(['auth' , 'verified'])->name('customer.logout');
 Route::get('/customer/dashboard', [LoginController::class, 'dashboard'])->middleware(['auth' , 'verified'])->name('customer.dashboard');
 
