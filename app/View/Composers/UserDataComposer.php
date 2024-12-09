@@ -18,6 +18,9 @@ class UserDataComposer
         $user = Auth::user();
         if(!$user){
             $orderNumber = 0;
+        }elseif(isset($user->path)){
+            $orderNumber = 0;
+
         }else{
             $orderNumber = $user->order()->get();
             $orderNumber = $orderNumber->count();
