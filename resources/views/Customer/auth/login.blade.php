@@ -12,7 +12,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-        <form method="POST" action="{{ route('customer.login') }}">
+        <form method="POST" action="{{ route('customer.login', ['path' => $path]) }}">
         @csrf
 
         <!-- Email Address -->
