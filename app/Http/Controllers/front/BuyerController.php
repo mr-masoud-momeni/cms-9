@@ -28,9 +28,17 @@ class BuyerController extends Controller
             'email' => 'required|email',
             'phone' => 'required',
         ]);
-
+        $scheme = $request->getScheme();// برمی‌گرداند 'http' یا 'https'
         // استخراج دامنه
         $host = $request->getHost();  // دریافت دامنه از درخواست
+        $port = $request->getPort(); // پورت (مثل 8000 یا null)
+
+        // اضافه کردن پورت فقط اگر پورت پیش‌فرض نباشد
+        if ($port && ($port != 80 && $port != 443)) {
+            $domain = "{$scheme}://{$host}:{$port}";
+        } else {
+            $domain = "{$scheme}://{$host}";
+        }
         $shop = Shop::where('domain', $host)->firstOrFail(); // پیدا کردن فروشگاه با استفاده از دامنه
 
         // بررسی اینکه آیا خریدار قبلاً ثبت‌نام کرده است یا نه
@@ -72,7 +80,9 @@ class BuyerController extends Controller
             ]);
 
             // ایجاد لینک تأیید ایمیل
-            $verificationLink = route('buyer.verify.email', ['uuid' => $buyer->uuid, 'token' => $token]);
+            $verificationLink = "{$domain}/verify-email-user/{$buyer->uuid}/{$token}";
+
+//                route('buyer.verify.email', ['uuid' => $buyer->uuid, 'token' => $token]);
 
             // ارسال ایمیل تأیید
             Mail::to($buyer->email)->send(new EmailVerificationMail($verificationLink, $this->pass));
@@ -83,24 +93,46 @@ class BuyerController extends Controller
     }
 
     // تأیید ایمیل
-    public function verifyEmail($uuid, $token)
+    public function verifyEmail(Request $request, $uuid, $token)
     {
-        // پیدا کردن خریدار با UUID
-        $buyer = Buyer::where('uuid', $uuid)->firstOrFail();
+        $scheme = $request->getScheme(); // 'http' یا 'https'
+        $host = $request->getHost(); // نام دامنه (مثل 'localhost' یا 'example.com')
+        $port = $request->getPort(); // پورت (مثل 8000 یا null)
 
-        // پیدا کردن رکورد در جدول واسط با استفاده از توکن
-        $buyerShop = $buyer->shops()->where('email_verification_token', $token)->first();
+        // اضافه کردن پورت فقط اگر پورت پیش‌فرض نباشد
+        if ($port && ($port != 80 && $port != 443)) {
+            $domain = "{$scheme}://{$host}:{$port}";
+        } else {
+            $domain = "{$scheme}://{$host}";
+        }
+        $shop = Shop::where('domain', $domain)->firstOrFail(); // پیدا کردن فروشگاه با استفاده از دامنه
 
-        if ($buyerShop  && !$buyerShop ->pivot->email_verified_at) {
-            // تأیید ایمیل و حذف توکن تأیید
-            $buyerShop ->pivot->email_verified_at = now();
-            $buyerShop ->pivot->email_verification_token = null;
-            $buyerShop ->pivot->save();
+        // پیدا کردن خریدار در فروشگاه مرتبط
+        $buyer = Buyer::where('uuid', $uuid)->first();
 
-            return response()->json(['message' => 'Email verified successfully']);
+        if ($buyer && $shop) {
+            // بررسی اینکه آیا این خریدار در این فروشگاه قبلاً ثبت‌نام کرده است یا نه
+            $existingEntry = $buyer->shops()->where('shop_id', $shop->id)->exists();
+
+            if ($existingEntry) {
+                // پیدا کردن رکورد در جدول واسط با استفاده از توکن
+                $buyerShop = $buyer->shops()->where('email_verification_token', $token)->first();
+
+                if ($buyerShop  && !$buyerShop ->pivot->email_verified_at) {
+                    // تأیید ایمیل و حذف توکن تأیید
+                    $buyerShop ->pivot->email_verified_at = now();
+                    $buyerShop ->pivot->email_verification_token = null;
+                    $buyerShop ->pivot->save();
+
+                    return response()->json(['message' => 'Email verified successfully']);
+                }
+
+                return response()->json(['error' => 'Invalid verification token or email already verified'], 422);
+            }
+        } else {
+            return response()->json(['message' => 'domain or user does not exist']);
         }
 
-        return response()->json(['error' => 'Invalid verification token or email already verified'], 422);
     }
     // نمایش فرم لاگین
     public function showLoginForm()
