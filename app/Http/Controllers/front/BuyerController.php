@@ -95,29 +95,28 @@ class BuyerController extends Controller
     // تأیید ایمیل
     public function verifyEmail(Request $request, $uuid, $token)
     {
-        $scheme = $request->getScheme(); // 'http' یا 'https'
         $host = $request->getHost(); // نام دامنه (مثل 'localhost' یا 'example.com')
-        $port = $request->getPort(); // پورت (مثل 8000 یا null)
 
-        // اضافه کردن پورت فقط اگر پورت پیش‌فرض نباشد
-        if ($port && ($port != 80 && $port != 443)) {
-            $domain = "{$scheme}://{$host}:{$port}";
-        } else {
-            $domain = "{$scheme}://{$host}";
+        // حذف www. در صورت وجود
+        $parsedHost = preg_replace('/^www\./', '', $host);
+
+        $parts = explode('.', $parsedHost);
+        if (count($parts) > 2) {
+            // اگر بیش از دو بخش وجود دارد، یعنی زیر دامنه است
+            abort(403, 'Subdomains are not allowed');
         }
-        $shop = Shop::where('domain', $domain)->firstOrFail(); // پیدا کردن فروشگاه با استفاده از دامنه
-
+        // استخراج دامنه اصلی
+        $mainDomain = implode('.', array_slice($parts, -2)); // مثل example.com
+        $shop = Shop::where('domain','like', "%$mainDomain%")->firstOrFail(); // پیدا کردن فروشگاه با استفاده از دامنه
         // پیدا کردن خریدار در فروشگاه مرتبط
         $buyer = Buyer::where('uuid', $uuid)->first();
-
         if ($buyer && $shop) {
             // بررسی اینکه آیا این خریدار در این فروشگاه قبلاً ثبت‌نام کرده است یا نه
             $existingEntry = $buyer->shops()->where('shop_id', $shop->id)->exists();
 
             if ($existingEntry) {
                 // پیدا کردن رکورد در جدول واسط با استفاده از توکن
-                $buyerShop = $buyer->shops()->where('email_verification_token', $token)->first();
-
+                $buyerShop = $buyer->shops()->wherePivot('email_verification_token', $token)->first();
                 if ($buyerShop  && !$buyerShop ->pivot->email_verified_at) {
                     // تأیید ایمیل و حذف توکن تأیید
                     $buyerShop ->pivot->email_verified_at = now();
