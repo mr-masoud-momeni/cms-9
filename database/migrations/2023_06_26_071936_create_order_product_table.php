@@ -20,10 +20,6 @@ class CreateOrderProductTable extends Migration
             $table->timestamps();
         });
 
-
-        // اجرای Seeder بعد از ایجاد جدول
-        Artisan::call('db:seed', ['--class' => 'RolesTableSeeder']);
-        Artisan::call('db:seed', ['--class' => 'UsersTableSeeder']);
     }
 
     /**

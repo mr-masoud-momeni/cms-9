@@ -38,7 +38,7 @@ class UsersTableSeeder extends Seeder
         // تخصیص نقش‌ها به یوزر
         DB::table('role_user')->insert([
             'user_id' => $userId,
-            'role_id' => 2, // نقش admin
+            'role_id' => 2, // نقش shop-owner
             'user_type' => 'App\Models\User',
         ]);
         DB::table('shops')->insert([
@@ -47,6 +47,27 @@ class UsersTableSeeder extends Seeder
             'name' => 'localhost',
             'domain' => 'localhost',
             'slug' => 'localhost',
+        ]);
+        $buyerId = DB::table('buyers')->insertGetId([
+            'uuid' => '163d08bd-1d0e-4a0b-8f63-9314ae43616e',
+            'name' => 'masoud',
+            'email' => 'masoud2525@gmail.com',
+            'phone' => '09120136329',
+            'password' => '$2a$12$8QEYX7BUv/Ts02oPWQLtgeuyx1RIOFiC0WuwmqAp1LmZUtyy117SO',
+        ]);
+        // تخصیص نقش‌ها به یوزر
+        DB::table('role_user')->insert([
+            'user_id' =>$buyerId,
+            'role_id' => 3, // نقش buyer
+            'user_type' => 'App\Models\buyer',
+        ]);
+        // تخصیص نقش‌ها به یوزر
+        DB::table('buyer_shop')->insert([
+            'buyer_id' =>$buyerId,
+            'shop_id' => 1, // نقش buyer
+            'email' => 'masoud2525@gmail.com',
+            'phone' => '09120136329',
+            'email_verified_at' => '2024-08-30 13:52:31'
         ]);
     }
 }

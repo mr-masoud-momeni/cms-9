@@ -19,6 +19,9 @@ class BuyerController extends Controller
     {
         return view('Frontend.Register.RegisterUser');
     }
+    public function dashboard(){
+        return view('Frontend.Dashboard.DashboardUser');
+    }
     // ثبت‌نام خریدار و ارسال ایمیل تأیید
     public function register(Request $request)
     {

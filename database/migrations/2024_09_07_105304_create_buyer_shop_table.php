@@ -25,6 +25,9 @@ class CreateBuyerShopTable extends Migration
             $table->unique(['shop_id', 'email']);  // ترکیب ایمیل و فروشگاه باید یونیک باشد
             $table->unique(['shop_id', 'phone']);  // ترکیب شماره تلفن و فروشگاه باید یونیک باشد
         });
+        // اجرای Seeder بعد از ایجاد جدول
+        Artisan::call('db:seed', ['--class' => 'RolesTableSeeder']);
+        Artisan::call('db:seed', ['--class' => 'UsersTableSeeder']);
     }
 
     /**

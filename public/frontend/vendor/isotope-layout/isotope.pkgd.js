@@ -290,7 +290,7 @@ return EvEmitter;
 })( window, function factory() {
 'use strict';
 
-// -------------------------- helpers -------------------------- //
+// -------------------------- Helpers -------------------------- //
 
 // get a number from a string, not a percentage
 function getStyleSize( value ) {
@@ -802,7 +802,7 @@ return utils;
 }( window, function factory( EvEmitter, getSize ) {
 'use strict';
 
-// ----- helpers ----- //
+// ----- Helpers ----- //
 
 function isEmptyObj( obj ) {
   for ( var prop in obj ) {
@@ -2230,7 +2230,7 @@ function subclass( Parent ) {
   return SubClass;
 }
 
-// ----- helpers ----- //
+// ----- Helpers ----- //
 
 // how many milliseconds are in each unit
 var msUnits = {
@@ -3006,7 +3006,7 @@ return Vertical;
 
 var jQuery = window.jQuery;
 
-// -------------------------- helpers -------------------------- //
+// -------------------------- Helpers -------------------------- //
 
 var trim = String.prototype.trim ?
   function( str ) {

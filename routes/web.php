@@ -100,8 +100,9 @@ Route::get('/buyer/register', [BuyerController::class, 'index'])->name('buyer.sh
 Route::post('/buyer/register', [BuyerController::class, 'register'])->name('buyer.register');
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 // نمایش فرم لاگین و مدیریت لاگین خریدار
-Route::get('/buyer/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login');
-Route::post('/buyer/login', [BuyerController::class, 'login']);
+Route::get('/buyer/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
+Route::post('/buyer/login', [BuyerController::class, 'login'])->name('buyer.login');
 
 // خروج (logout) خریدار
-Route::post('/buyer/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
+Route::get('/buyer/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
+Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth.buyer','buyer.verified'])->name('buyer.dashboard');

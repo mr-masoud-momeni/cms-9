@@ -22,8 +22,10 @@ class RolesTableSeeder extends Seeder
              'display_name' => 'shop-owner',
              'description' => 'مدیریت افزودن و ویرایش محصول و دیدن سفارش ها و...',
             ],
-//            ['name' => 'shop_owner'],
-//            ['name' => 'User'],
+            ['name' => 'buyer',
+             'display_name' => 'buyer',
+             'description' => 'مدیریت پنل خرید و دیدن سفارش در حال انجام...',
+            ],
         ]);
     }
 }

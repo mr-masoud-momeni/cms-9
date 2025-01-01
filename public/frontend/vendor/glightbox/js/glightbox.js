@@ -5,7 +5,7 @@
 }(this, (function () { 'use strict';
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
+    "@babel/Helpers - typeof";
 
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function (obj) {
