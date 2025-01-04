@@ -84,9 +84,6 @@ class BuyerController extends Controller
 
             // ایجاد لینک تأیید ایمیل
             $verificationLink = "{$domain}/verify-email-user/{$buyer->uuid}/{$token}";
-
-//                route('buyer.verify.email', ['uuid' => $buyer->uuid, 'token' => $token]);
-
             // ارسال ایمیل تأیید
             Mail::to($buyer->email)->send(new EmailVerificationMail($verificationLink, $this->pass));
 
@@ -125,7 +122,7 @@ class BuyerController extends Controller
                     $buyerShop ->pivot->email_verified_at = now();
                     $buyerShop ->pivot->email_verification_token = null;
                     $buyerShop ->pivot->save();
-
+                    $buyer->attachRole('buyer');
                     return response()->json(['message' => 'Email verified successfully']);
                 }
 
@@ -154,7 +151,6 @@ class BuyerController extends Controller
         if (Auth::guard('buyer')->attempt($credentials)) {
             return redirect()->intended('/buyer/dashboard')->with('message', 'Login successful!');
         }
-
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);

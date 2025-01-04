@@ -10,7 +10,7 @@ return [
     | are going to be used are the ones inside the 'user_models' array.
     |
     */
-    'use_morph_map' => false,
+    'use_morph_map' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -74,7 +74,7 @@ return [
     */
     'user_models' => [
         'users' => \App\Models\User::class,
-        'buyer' => App\Models\Buyer::class,
+        'buyers' => \App\Models\Buyer::class,
     ],
 
     /*
