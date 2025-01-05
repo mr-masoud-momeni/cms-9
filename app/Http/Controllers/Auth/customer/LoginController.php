@@ -15,6 +15,7 @@ class LoginController extends Controller
     {
         $user = User::where('path', $path)->first();
 
+
         if (!$user) {
             abort(404); // اگر توکن معتبر نیست، خطای 404 نمایش دهید
         }

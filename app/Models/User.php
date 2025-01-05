@@ -34,6 +34,10 @@ class User extends Authenticatable implements MustVerifyEmail
             $model->path = $randomString;
         });
     }
+    public function getMorphClass()
+    {
+        return static::class; // یعنی App\Models\User
+    }
 
     /**
      * The attributes that are mass assignable.

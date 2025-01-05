@@ -14,9 +14,10 @@ class CheckRole
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, $role, $guard = null)
     {
-        $user = Auth::guard('buyer')->user();
+        $guard = $guard ?: config('auth.defaults.guard');
+        $user = Auth::guard($guard)->user();
 
         if (!$user || !$user->hasRole($role)) {
             abort(403, 'Unauthorized');

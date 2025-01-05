@@ -105,7 +105,7 @@ Route::post('/buyer/login', [BuyerController::class, 'login'])->name('buyer.logi
 
 // خروج (logout) خریدار
 Route::get('/buyer/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
-Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth.buyer','buyer.verified','checkRole:buyer'])->name('buyer.dashboard');
+Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth.buyer','buyer.verified','checkRole:buyer,buyer'])->name('buyer.dashboard');
 //Route::group(
 //    [
 //        'middleware'=>['auth.buyer' , 'buyer.verified', 'role:buyer'],
