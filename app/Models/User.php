@@ -21,7 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-
+    use HasApiTokens, Notifiable;
 /**create an uuid and save in users table automatically */
     protected static function boot()
     {
