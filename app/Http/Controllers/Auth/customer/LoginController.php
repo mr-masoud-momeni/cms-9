@@ -35,15 +35,13 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-
             $pathuser = $user->path;
-            if($path == $pathuser){
+            $domain = $user->shop()->first()->domain;
+            $host = $request->getHost();
+            if($path == $pathuser && $domain == $host){
                 // اگر لاگین موفق بود
                 $request->session()->regenerate();
-                $token = $user->createToken('auth-token')->plainTextToken;
-                // ارسال توکن به صورت کوکی
-                $cookie = cookie('token', $token, 60*24); // 60*24 برای 1 روز اعتبار
-                return redirect()->intended('customer/dashboard')->withCookie($cookie);;
+                return redirect()->intended('customer/dashboard');
 
             }
             else{

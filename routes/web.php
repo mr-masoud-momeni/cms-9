@@ -83,7 +83,7 @@ Route::get('/customer/dashboard', [LoginController::class, 'dashboard'])->middle
 
 Route::group(
     [
-        'middleware'=>['auth:sanctum' , 'verified', 'role:shop_owner'],
+        'middleware'=>['auth' , 'verified', 'role:shop_owner'],
         'namespace'=> 'App\Http\Controllers\customer',
         'prefix' => 'customer',
     ]
