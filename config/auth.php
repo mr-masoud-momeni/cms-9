@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'buyers',
         ],
+//        'api' => [
+//            'driver' => 'sanctum',
+//            'provider' => 'users',
+//        ],
     ],
 
     /*
@@ -70,7 +74,7 @@ return [
         ],
         'buyers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\buyer::class,
+            'model' => App\Models\Buyer::class,
         ],
     ],
 

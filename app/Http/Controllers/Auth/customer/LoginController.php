@@ -15,6 +15,7 @@ class LoginController extends Controller
     {
         $user = User::where('path', $path)->first();
 
+
         if (!$user) {
             abort(404); // اگر توکن معتبر نیست، خطای 404 نمایش دهید
         }
@@ -35,11 +36,13 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $pathuser = $user->path;
-            if($path == $pathuser){
+            $domain = $user->shop()->first()->domain;
+            $host = $request->getHost();
+            if($path == $pathuser && $domain == $host){
                 // اگر لاگین موفق بود
                 $request->session()->regenerate();
-
                 return redirect()->intended('customer/dashboard');
+
             }
             else{
                 Auth::logout();

@@ -7,13 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Authenticatable;
 use Laratrust\Traits\LaratrustUserTrait;
 
-class buyer extends Model implements AuthenticatableContract
+class Buyer extends Model implements AuthenticatableContract
 {
     use Authenticatable;
     use LaratrustUserTrait;
     use HasFactory;
     protected $fillable = ['name', 'email', 'phone', 'uuid', 'password'];
-
+    /**
+     * تعیین نوع مدل برای جدول واسط role_user
+     */
+    public function getMorphClass()
+    {
+        return static::class; // یعنی App\Models\Buyer
+    }
     public function shops()
     {
         return $this->belongsToMany(shop::class)->withPivot('email', 'phone', 'email_verification_token', 'email_verified_at')->withTimestamps();

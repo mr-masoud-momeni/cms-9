@@ -9,19 +9,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use LaratrustUserTrait;
-    use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-
 /**create an uuid and save in users table automatically */
     protected static function boot()
     {
@@ -33,6 +30,10 @@ class User extends Authenticatable implements MustVerifyEmail
             $randomString = bin2hex($randomBytes);
             $model->path = $randomString;
         });
+    }
+    public function getMorphClass()
+    {
+        return static::class; // یعنی App\Models\User
     }
 
     /**

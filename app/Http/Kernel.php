@@ -39,11 +39,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
     ];
 
     /**
@@ -65,5 +60,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.buyer' => \App\Http\Middleware\AuthBuyer::class,
         'buyer.verified' => \App\Http\Middleware\BuyerVerified::class,
+        'checkRole' => \App\Http\Middleware\CheckRole::class,
     ];
 }

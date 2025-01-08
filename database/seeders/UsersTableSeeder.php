@@ -59,7 +59,7 @@ class UsersTableSeeder extends Seeder
         DB::table('role_user')->insert([
             'user_id' =>$buyerId,
             'role_id' => 3, // نقش buyer
-            'user_type' => 'App\Models\buyer',
+            'user_type' => 'App\Models\Buyer',
         ]);
         // تخصیص نقش‌ها به یوزر
         DB::table('buyer_shop')->insert([
