@@ -26,6 +26,7 @@ class BuyerVerified
             if ($user && $user->shops()->where('shop_id', $shopId)
                     ->wherePivot('email_verified_at', '!=', null)
                     ->exists()) {
+
                 return $next($request);  // ادامه درخواست
             }
             return redirect()->route('buyer.login')->with('error', 'Please verify your email.');
