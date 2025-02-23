@@ -22,6 +22,7 @@ Route::group(
     , function () {
         Route::get('/','IndexController@index')->name('index.show');
         Route::get('/shop','IndexController@shop')->name('index.shop');
+        Route::get('/shop/{product}', 'ProductController@show')->name('front.product.show');
         Route::get('/blog/{article}', 'blog@show')->name('article.show');
         Route::get('/page/{page}', 'blog@show1')->name('page.show');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
@@ -69,8 +70,6 @@ Route::group(
     Route::resource('/email-group', 'EmailGroupController');
     Route::resource('/page', 'PageController');
     Route::resource('/menu', 'MenuController');
-//    Route::resource('/product', 'productController');
-//    Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
     Route::get('search','HomeController@search')->name('search');
