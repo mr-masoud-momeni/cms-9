@@ -25,6 +25,11 @@ class IndexController extends Controller
         $products= product::latest()->take(3)->get();
         return view('Frontend.Home.index',compact('articles' , 'menu' , 'products'));
     }
+    public function shop()
+    {
+        $products= product::latest()->take(3)->get();
+        return view('Frontend.Shop.index',compact( 'products'));
+    }
 
     /**
      * Show the form for creating a new resource.
