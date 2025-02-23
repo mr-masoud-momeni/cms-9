@@ -146,7 +146,6 @@ class BuyerController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
         // استفاده از گارد buyer برای لاگین
         if (Auth::guard('buyer')->attempt($credentials)) {
             return redirect()->intended('/buyer/dashboard')->with('message', 'Login successful!');
