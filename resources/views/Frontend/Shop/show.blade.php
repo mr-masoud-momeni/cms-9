@@ -1,7 +1,7 @@
 @extends('Frontend.Shop.layouts.Master')
 @section('Main')
     <!-- صفحه محصول -->
-    <div class="container my-5">
+    <div class="content container my-5">
         <div class="row align-items-center">
             <!-- تصویر محصول -->
             <div class="col-md-6 text-center">

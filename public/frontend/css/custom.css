@@ -6,8 +6,16 @@
     font-weight: normal;
     font-style: normal;
 }
-body {
+html,body {
     font-family: 'IRANsans' !important;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+/* محتوای اصلی صفحه */
+.content {
+    flex: 1; /* فضای خالی رو پر می‌کنه */
 }
 .product-image {
     width: 100%;

@@ -113,7 +113,51 @@ class ProductController extends CustomerController
      */
     public function update(Request $request, product $product)
     {
-        //
+        $validated = $request->validate([
+            // new validation that check values of price-type
+            //for more information visit the link: https://docs.google.com/document/d/1dQGotVLWKT0ezYnV2vb81dl-eWqm8H3cVhIspm80FNs/edit#bookmark=id.x9ao4csj1dp4
+            'price-type'=> [new WhiteList([ 'non-membership' => 'non-membership',
+                'membership' => 'membership',
+                'special-membership'=>'special-membership',
+                'cash'=>'cash'])],
+            'type'=> [new WhiteList(['physical' => 'physical',
+                'virtual' => 'virtual'])],
+            'price'=>'numeric|nullable',
+            'images'=>'nullable|mimes:jpeg,jpg,bmp,png',
+            'title'=>'required',
+            'body'=>'required',
+        ]);
+        $userId = auth()->id();
+        $shopId = auth()->user()->shop()->first()->id;
+        if($request->input('price-type') != 'cash'){
+            $validated['price']=null;
+        }
+        if($request->file('images')){
+            $imageUrl['thum']="/uploads/default/post.png";
+            $imageUrl=$this->UploadImages($request->file('images'));
+            $productData = array_merge($validated, [
+                'user_id' => $userId,
+                'shop_id' => $shopId,
+                'images' => $imageUrl
+            ]);
+        }else{
+            $productData = array_merge($validated, [
+                'user_id' => $userId,
+                'shop_id' => $shopId,
+            ]);
+        }
+
+        $product->update($productData);
+        $category=request('category');
+        if($category){
+            $product->categories()->sync(request('category'));
+        }
+        else{
+            $product->categories()->detach();
+        }
+
+        session()->flash('createproduct','محصول شما با موفقیت ویرایش شد.');
+        return redirect('/customer/product');
     }
 
     /**

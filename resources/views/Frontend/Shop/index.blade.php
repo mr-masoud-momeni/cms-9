@@ -1,7 +1,7 @@
 @extends('Frontend.Shop.layouts.Master')
 @section('Main')
 <!-- بخش محصولات -->
-<section class="container my-4">
+<section class="content container my-4">
     <div class="row">
         @foreach($products as $product)
         <div class="col-md-4 col-sm-6 col-12 mb-3">

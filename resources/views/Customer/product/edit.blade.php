@@ -44,13 +44,13 @@
                                 <div class="form-group" id="price-type">
                                     <label for="price-type">نوع دسترسی</label>
                                     <div class="radio">
-                                        <label><input type="radio" name="price-type" value="non-membership" checked>بدون عضویت</label>
+                                        <label><input type="radio" name="price-type" @php if($product['price-type'] =='non-membership') echo 'checked';@endphp  value="non-membership" checked>بدون عضویت</label>
                                     </div>
                                     <div class="radio">
-                                        <label><input type="radio" name="price-type" value="membership">عضویت</label>
+                                        <label><input type="radio" name="price-type" @php if($product['price-type']=='membership') echo 'checked';@endphp value="membership">عضویت</label>
                                     </div>
                                     <div class="radio">
-                                        <label><input type="radio" name="price-type" value="special-membership">اعضای ویژه</label>
+                                        <label><input type="radio" name="price-type" @php if($product['price-type']=='special-membership') echo 'checked';@endphp value="special-membership">اعضای ویژه</label>
                                     </div>
                                     <div class="radio">
                                         <label><input type="radio" name="price-type" @php if($product->price) echo 'checked';@endphp value="cash">نقدی</label>
