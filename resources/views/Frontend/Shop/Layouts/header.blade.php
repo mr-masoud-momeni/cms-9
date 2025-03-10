@@ -22,8 +22,8 @@
                 <img src="logo.png" alt="لوگو" height="40">
             </div>
             <div>
-                <button class="btn btn-outline-secondary">👤</button>
-                <button class="btn btn-outline-primary mx-2">🛒</button>
+                <span class="badge badge-success"></span><a href="{{route('order.index')}}" class="shop-ico"><i class="fa fa-shopping-cart fa-2x" id="cart-val" value={{$orderNumber}}></i></a>
+
             </div>
 
         </div>

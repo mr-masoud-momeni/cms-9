@@ -100,7 +100,7 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-success">افزودن محصول</button>
+                                <button type="submit" class="btn btn-primary">ویرایش محصول</button>
                             </div>
                         </form>
                     </div>
