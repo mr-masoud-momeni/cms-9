@@ -4,7 +4,7 @@
 <section class="content container my-4">
     <div class="row">
         @foreach($products as $product)
-        <div class="col-md-4 col-sm-6 col-12 mb-3">
+        <div class="col-md-6 col-lg-4 col-6 mb-3">
             <a href="{{ route('front.product.show', $product) }}">
             <div class="card">
                 <img src="{{ asset($product->images['thum'])}}" class="card-img-top" alt="محصول 1">

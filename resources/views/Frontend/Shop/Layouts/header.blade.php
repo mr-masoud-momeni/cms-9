@@ -11,6 +11,7 @@
     <script src="{{asset('/frontend/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <link href="{{asset('/fonts/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all">
     <link href="{{asset('/frontend/css/custom.css')}}" rel="stylesheet">
+    <script src="{{asset('/frontend/js/jquery-3-5-0.js')}}"></script>
 </head>
 <body>
 

@@ -44,53 +44,58 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-//        $query = auth()->User()->order()->with('search')->get();
-//        foreach($query as $h){
-//            echo $h->pivot->amount;
-//        }
-//        $content = $request->id_product;
-//        $Repetitious = auth()->User()->order()->with(['search'=> function($query) use ($content){
-//            $query->wherePivot('product_id', $content);
-//        }])->get()->toArray();
-//        dd($companies[0]['id']);
-//        $pivot = auth()->User()->order()->get()->toArray();
-//        dd($pivot);
-//        foreach($companies as $h){
-//            echo $h->id;
-//        }
-//
-//        $users = auth()->User()->order()->search($request->id_product);
-//        dd($users);
 
         if ($request->ajax()){
             $validator = Validator::make($request->all(), [
-                'id_product' => 'required',
+                'product_id' => 'required',
                 'count_product' => 'required|integer',
             ]);
-            $product = product::find($request->id_product);
+            $product = product::find($request->product_id);
+            $product_id = $request->product_id;
             if ($validator->fails()) {
                 return response()->json(['error'=>$validator->errors()->all()]);
             }
-            else{
-                $Order = auth()->User()->order()->where('productnumber', $request->id_product)->first();
-                if(isset($Order->total)){
-                    $count = $request->count_product + $Order->total;
-                    $Order->total = $count;
-                    $Order->amount = $count*$product->price;
-                    $Order->save();
-                    return response()->json(['update'=>$Order]);
-                }
-                else{
-                    $Order = auth()->User()->order()->create([
-                        'status' => '1',
-                        'productnumber' => $request->id_product,
-                        'total' => $request->count_product,
-                        'amount' => $request->count_product*$product->price,
-                    ]);
-                    $Order->products()->attach($request->id_product);
-                    return response()->json(['success'=>$Order]);
-                }
+            if (auth('buyer')->check()) {
+                // اگر خریدار لاگین کرده باشد، ذخیره در جدول مرتبط
+                $buyer = auth('buyer')->user();
+                $buyer->orders()->create([
+                    'product_id' => $product_id,
+                    'quantity' => 1,
+                ]);
+                return response()->json(['message' => 'محصول برای خریدار ثبت شد.']);
             }
+            elseif (auth('web')->check()) {
+
+                // اگر ادمین یا یوزر لاگین باشد
+                return response()->json(['message' => 'ادمین نمی‌تواند محصول به سبد خرید اضافه کند.']);
+            }
+            else {
+                // ذخیره در سشن برای کاربران مهمان
+                $cart = session()->get('cart', []);
+                $cart[$product_id] = ($cart[$product_id] ?? 0) + 1;
+                session()->put('cart', $cart);
+                return response()->json(['message' => 'محصول به سبد خرید مهمان اضافه شد.']);
+            }
+//            else{
+//                $Order = auth()->User()->order()->where('productnumber', $request->id_product)->first();
+//                if(isset($Order->total)){
+//                    $count = $request->count_product + $Order->total;
+//                    $Order->total = $count;
+//                    $Order->amount = $count*$product->price;
+//                    $Order->save();
+//                    return response()->json(['update'=>$Order]);
+//                }
+//                else{
+//                    $Order = auth()->User()->order()->create([
+//                        'status' => '1',
+//                        'productnumber' => $request->id_product,
+//                        'total' => $request->count_product,
+//                        'amount' => $request->count_product*$product->price,
+//                    ]);
+//                    $Order->products()->attach($request->id_product);
+//                    return response()->json(['success'=>$Order]);
+//                }
+//            }
         }
     }
 
