@@ -18,9 +18,6 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('buyer_id');
             $table->unsignedBigInteger('shop_id');
             $table->integer('status')->default('0');
-            $table->integer('productnumber');
-            $table->integer('total');
-            $table->integer('amount');
             $table->timestamps();
             $table->foreign('buyer_id')->references('id')->on('buyers')->onDelete('cascade');
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');

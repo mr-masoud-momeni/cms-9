@@ -24,5 +24,10 @@ class Buyer extends Model implements AuthenticatableContract
     {
         return $this->belongsToMany(shop::class)->withPivot('email', 'phone', 'email_verification_token', 'email_verified_at')->withTimestamps();
     }
+    // سفارش‌هایی که خریدار ثبت کرده
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 
 }

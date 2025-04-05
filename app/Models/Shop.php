@@ -46,4 +46,14 @@ class Shop extends Model
     {
         return $this->belongsToMany(buyer::class)->withPivot('email', 'phone', 'email_verification_token', 'email_verified_at')->withTimestamps();
     }
+    public static function current()
+    {
+        $host = request()->getHost(); // مثلاً: shop.example.com
+        return self::where('domain', $host)->first();
+    }
+    // سفارش‌هایی که در این فروشگاه ثبت شده
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

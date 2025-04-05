@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\front;
 use App\Models\Order;
 use App\Models\product;
+use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -50,20 +51,45 @@ class OrderController extends Controller
                 'product_id' => 'required',
                 'count_product' => 'required|integer',
             ]);
-            $product = product::find($request->product_id);
-            $product_id = $request->product_id;
             if ($validator->fails()) {
                 return response()->json(['error'=>$validator->errors()->all()]);
             }
+            $shop = Shop::current();
+            $product = Product::findOrFail($request->product_id);
+            $quantity = $request->count_product; // جلوگیری از مقادیر نامعتبر
+
+
+            // اگر خریدار لاگین کرده بود
             if (auth('buyer')->check()) {
-                // اگر خریدار لاگین کرده باشد، ذخیره در جدول مرتبط
                 $buyer = auth('buyer')->user();
-                $buyer->orders()->create([
-                    'product_id' => $product_id,
-                    'quantity' => 1,
-                ]);
-                return response()->json(['message' => 'محصول برای خریدار ثبت شد.']);
+                // پیدا کردن آخرین سفارش باز (در حال پرداخت) یا ساخت سفارش جدید
+                $order = Order::firstOrCreate(
+                    [
+                        'buyer_id' => $buyer->id,
+                        'shop_id' => $shop->id,
+                        'status' => 0,
+                    ],
+                    ['created_at' => now()]
+                );
+
+                // اگر محصول قبلاً در سفارش بود، فقط تعداد رو زیاد کن
+                if ($order->products()->where('product_id', $product->id)->exists()) {
+                    $pivot = $order->products()->where('product_id', $product->id)->first()->pivot;
+                    $order->products()->updateExistingPivot($product->id, [
+                        'quantity' => $pivot->quantity + $quantity,
+                        'price' => $product->price, // قیمت لحظه‌ای
+                    ]);
+                } else {
+                    // در غیر این صورت، محصول جدید اضافه کن
+                    $order->products()->attach($product->id, [
+                        'quantity' => $quantity,
+                        'price' => $product->price,
+                    ]);
+                }
+
+                return response()->json(['status' => 'success', 'message' => 'به سبد خرید شما اضافه شد.']);
             }
+
             elseif (auth('web')->check()) {
 
                 // اگر ادمین یا یوزر لاگین باشد
@@ -72,7 +98,12 @@ class OrderController extends Controller
             else {
                 // ذخیره در سشن برای کاربران مهمان
                 $cart = session()->get('cart', []);
-                $cart[$product_id] = ($cart[$product_id] ?? 0) + 1;
+                // اگر محصول از قبل در سبد بود، تعداد را به‌روز می‌کنیم
+                if (isset($cart[$product_id])) {
+                    $cart[$product_id] += $quantity;
+                } else {
+                    $cart[$product_id] = $quantity;
+                }
                 session()->put('cart', $cart);
                 return response()->json(['message' => 'محصول به سبد خرید مهمان اضافه شد.']);
             }
