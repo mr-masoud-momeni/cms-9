@@ -14,7 +14,7 @@
     <script src="{{asset('/frontend/js/jquery-3-5-0.js')}}"></script>
 </head>
 <body>
-
+<div id="toastContainer" class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999"></div>
 <!-- هدر -->
 <header class="bg-light py-3 shadow">
     <div class="container">

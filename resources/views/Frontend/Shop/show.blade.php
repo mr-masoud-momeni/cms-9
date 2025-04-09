@@ -41,39 +41,36 @@
                     data: $this.serialize(),
                     success: function(data) {
 
-                        if($.isEmptyObject(data.error) && data.success.id){
+                        if($.isEmptyObject(data.error)){
                             var order = $("#cart-val").attr('value');
                             order = Number(order);
-                            order = order+1;
+                            order = order+data.success;
                             $("#cart-val").attr('value', order);
-                            $('#myModal .modal-body').empty().append(data.success.name);
-                            $('#myModal').modal('show');
-
-                        }
-                        if($.isEmptyObject(data.error) && data.update.id){
-
-                            // $('#myModal .modal-body').empty().append(data.success.name);
-                            $('#myModal').modal('show');
+                            showToast(data.message, "success");
 
                         }else{
 
-                            printErrorMsg(data.error);
+                            showToast(data.message, "danger");
 
                         }
 
                     }
                 });
             });
-            function printErrorMsg (msg) {
+            function showToast(message, type) {
+                const toastHTML = `
+                                    <div class="toast align-items-center bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                                      <div class="d-flex">
+                                        <div class="toast-body">${message}</div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                      </div>
+                                    </div>
+                                  `;
 
-                $("#ajaxvalidate").html('<div class="alert-danger alert"><ul></ul></div>');
-
-                $.each( msg, function( key, value ) {
-
-                    $("#ajaxvalidate").find("ul").append('<li>'+value+'</li>');
-
-                });
-
+                const container = document.querySelector('#toastContainer');
+                container.innerHTML = toastHTML;
+                const toast = new bootstrap.Toast(container.querySelector('.toast'), { delay: 3000 });
+                toast.show();
             }
         });
 

@@ -79,15 +79,17 @@ class OrderController extends Controller
                         'quantity' => $pivot->quantity + $quantity,
                         'price' => $product->price, // قیمت لحظه‌ای
                     ]);
+                    $addToCart= 0;
                 } else {
                     // در غیر این صورت، محصول جدید اضافه کن
                     $order->products()->attach($product->id, [
                         'quantity' => $quantity,
                         'price' => $product->price,
                     ]);
+                    $addToCart= 1;
                 }
 
-                return response()->json(['status' => 'success', 'message' => 'به سبد خرید شما اضافه شد.']);
+                return response()->json(['ُsuccess' => $addToCart, 'message' => 'به سبد خرید شما اضافه شد.']);
             }
 
             elseif (auth('web')->check()) {
@@ -96,16 +98,21 @@ class OrderController extends Controller
                 return response()->json(['message' => 'ادمین نمی‌تواند محصول به سبد خرید اضافه کند.']);
             }
             else {
+                // استخراج مقادیر از درخواست
+                $product_id = $request->input('product_id');
+                $quantity = $request->input('count_product', 1);
                 // ذخیره در سشن برای کاربران مهمان
                 $cart = session()->get('cart', []);
                 // اگر محصول از قبل در سبد بود، تعداد را به‌روز می‌کنیم
                 if (isset($cart[$product_id])) {
                     $cart[$product_id] += $quantity;
+                    $addToCart= 0;
                 } else {
                     $cart[$product_id] = $quantity;
+                    $addToCart= 1;
                 }
                 session()->put('cart', $cart);
-                return response()->json(['message' => 'محصول به سبد خرید مهمان اضافه شد.']);
+                return response()->json(['success' => $addToCart,'message' => 'محصول به سبد خرید مهمان اضافه شد.']);
             }
 //            else{
 //                $Order = auth()->User()->order()->where('productnumber', $request->id_product)->first();
