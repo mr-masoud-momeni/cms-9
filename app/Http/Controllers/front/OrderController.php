@@ -114,26 +114,6 @@ class OrderController extends Controller
                 session()->put('cart', $cart);
                 return response()->json(['success' => $addToCart,'message' => 'محصول به سبد خرید مهمان اضافه شد.']);
             }
-//            else{
-//                $Order = auth()->User()->order()->where('productnumber', $request->id_product)->first();
-//                if(isset($Order->total)){
-//                    $count = $request->count_product + $Order->total;
-//                    $Order->total = $count;
-//                    $Order->amount = $count*$product->price;
-//                    $Order->save();
-//                    return response()->json(['update'=>$Order]);
-//                }
-//                else{
-//                    $Order = auth()->User()->order()->create([
-//                        'status' => '1',
-//                        'productnumber' => $request->id_product,
-//                        'total' => $request->count_product,
-//                        'amount' => $request->count_product*$product->price,
-//                    ]);
-//                    $Order->products()->attach($request->id_product);
-//                    return response()->json(['success'=>$Order]);
-//                }
-//            }
         }
     }
 

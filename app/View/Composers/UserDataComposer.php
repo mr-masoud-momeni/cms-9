@@ -15,15 +15,22 @@ class UserDataComposer
 
     }
     public function compose(View $view) {
-        $user = Auth::user();
-        if(!$user){
-            $orderNumber = 0;
-        }elseif(isset($user->path)){
-            $orderNumber = 0;
 
-        }else{
-            $orderNumber = $user->order()->get();
+        // اگر خریدار لاگین کرده بود
+        if (auth('buyer')->check()) {
+            $buyer = auth('buyer')->user();
+            $orderNumber = $buyer->order()->get();
             $orderNumber = $orderNumber->count();
+        }
+
+        elseif (auth('web')->check()) {
+            // اگر ادمین یا یوزر لاگین باشد
+            $orderNumber = 0;
+        }
+        else {
+            //دریافت اطلاعات محصول کاربر از سشن
+            $cart = session()->get('cart', []);
+            $orderNumber = count($cart);
         }
         $view->with('orderNumber', $orderNumber);
     }
