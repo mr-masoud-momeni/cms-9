@@ -8,6 +8,7 @@
     <!-- بوت‌استرپ RTL -->
     <link href="{{asset('/frontend/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('/frontend/vendor/bootstrap/css/bootstrap-rtl.css')}}" rel="stylesheet">
+    <link href="{{asset('/frontend/vendor/bootstrap/css/bootstrap-icons.css')}}" rel="stylesheet">
     <script src="{{asset('/frontend/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <link href="{{asset('/fonts/font-awesome.min.css')}}" rel="stylesheet" type="text/css" media="all">
     <link href="{{asset('/frontend/css/custom.css')}}" rel="stylesheet">
@@ -23,8 +24,9 @@
                 <img src="logo.png" alt="لوگو" height="40">
             </div>
             <div>
-                <span class="badge badge-success"></span><a href="{{route('order.index')}}" class="shop-ico"><i class="fa fa-shopping-cart fa-2x" id="cart-val" value={{$orderNumber}}></i></a>
 
+                <a href="{{route('order.index')}}" class="shop-ico"><i class="bi bi-cart-fill" id="cart-val" value={{$orderNumber}}></i></a>
+                <a href="{{route('buyer.show.register')}}" >عضویت / ورود</a>
             </div>
 
         </div>
