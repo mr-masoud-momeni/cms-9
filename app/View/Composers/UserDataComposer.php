@@ -19,7 +19,7 @@ class UserDataComposer
         // اگر خریدار لاگین کرده بود
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
-            $orderNumber = $buyer->order()->get();
+            $orderNumber = $buyer->orders()->get();
             $orderNumber = $orderNumber->count();
         }
 

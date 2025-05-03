@@ -10,17 +10,18 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerificationMail;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Hash;
+use App\Helpers\ShopHelper;
 class BuyerController extends Controller
 {
     public $pass;
 
     public function index()
     {
-        return view('Frontend.Register.RegisterUser');
+        return view('Frontend.Shop.Register.RegisterUser');
     }
     public function dashboard(){
-        return view('Frontend.Dashboard.DashboardUser');
+        return view('Frontend.Shop.Dashboard.DashboardUser');
     }
     // ثبت‌نام خریدار و ارسال ایمیل تأیید
     public function register(Request $request)
@@ -136,7 +137,7 @@ class BuyerController extends Controller
     // نمایش فرم لاگین
     public function showLoginForm()
     {
-        return view('Frontend.Login.loginUser');
+        return view('Frontend.Shop.Login.loginUser');
     }
 
     // مدیریت لاگین خریدار
@@ -146,13 +147,24 @@ class BuyerController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        // استفاده از گارد buyer برای لاگین
-        if (Auth::guard('buyer')->attempt($credentials)) {
-            return redirect()->intended('/buyer/dashboard')->with('message', 'Login successful!');
+        $credentials = $request->only('email', 'password');
+        $shop = ShopHelper::getShop();
+
+        if (!$shop) {
+            return back()->withErrors(['shop' => 'فروشگاه پیدا نشد.']);
         }
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+
+        $buyer = Buyer::where('email', $credentials['email'])
+            ->whereHas('shops', function ($q) use ($shop) {
+                $q->where('shops.id', $shop->id);
+            })->first();
+
+        if ($buyer && Hash::check($credentials['password'], $buyer->password)) {
+            Auth::guard('buyer')->login($buyer);
+            return redirect()->intended('/buyer/dashboard');
+        }
+
+        return back()->withErrors(['email' => 'ایمیل یا رمز عبور نادرست یا دسترسی غیرمجاز به این فروشگاه.']);
     }
     // مدیریت خروج (logout) خریدار
     public function logout()

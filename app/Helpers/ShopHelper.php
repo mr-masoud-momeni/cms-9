@@ -7,14 +7,18 @@ use App\Models\Shop;
 
 class ShopHelper
 {
-    // تابع برای گرفتن shop_id از روی دامنه
-    public static function getShopIdFromDomain()
+
+    // گرفتن مدل فروشگاه از دامنه
+    public static function getShop()
     {
-        // استخراج دامنه
-        $host = request()->getHost();  // دریافت دامنه از درخواست
+        $host = request()->getHost();
+        return Shop::where('domain', $host)->first(); // orFail نذار که 500 نده
+    }
 
-        $shop = Shop::where('domain', $host)->firstOrFail(); // پیدا کردن فروشگاه با استفاده از دامنه
-
-        return $shop ? $shop->id : null;  // اگر فروشگاه پیدا شد، id آن را برمی‌گرداند
+    // گرفتن فقط id فروشگاه
+    public static function getShopId()
+    {
+        $shop = self::getShop();
+        return $shop ? $shop->id : null;
     }
 }

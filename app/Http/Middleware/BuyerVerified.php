@@ -17,7 +17,7 @@ class BuyerVerified
      */
     public function handle(Request $request, Closure $next)
     {
-        $shopId = ShopHelper::getShopIdFromDomain();
+        $shopId = ShopHelper::getShopId();
 
         if ($shopId) {
             $user = Auth::guard('buyer')->user();  // گرفتن خریدار از گارد buyer
@@ -29,7 +29,7 @@ class BuyerVerified
 
                 return $next($request);  // ادامه درخواست
             }
-            return redirect()->route('buyer.login')->with('error', 'Please verify your email.');
+            return redirect()->route('buyer.login')->with('error', 'شما اجازه دسترسی به این فروشگاه را ندارید یا ایمیل خود را تایید نکرده‌اید.');
         } else {
             return redirect()->route('home')->with('error', 'Shop not found');
         }
