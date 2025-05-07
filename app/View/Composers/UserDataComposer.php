@@ -8,7 +8,7 @@
 namespace App\View\Composers;
 use Illuminate\Support\Facades\Auth;
 use illuminate\View\View;
-
+use App\Helpers\ShopHelper;
 class UserDataComposer
 {
     public function __construct(){
@@ -20,6 +20,8 @@ class UserDataComposer
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
             $orderNumber = $buyer->orders()->get();
+            $shopid = ShopHelper::getShopId();
+            dd($shopid );
             $orderNumber = $orderNumber->count();
         }
 

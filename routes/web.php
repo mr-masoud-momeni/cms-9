@@ -22,7 +22,7 @@ Route::group(
     , function () {
         Route::get('/','IndexController@index')->name('index.show');
         Route::get('/shop','IndexController@shop')->name('index.shop');
-        Route::get('/shop/{product}', 'ProductController@show')->name('front.product.show');
+        Route::get('/{product}', 'ProductController@show')->name('front.product.show');
         Route::get('/blog/{article}', 'blog@show')->name('article.show');
         Route::get('/page/{page}', 'blog@show1')->name('page.show');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');

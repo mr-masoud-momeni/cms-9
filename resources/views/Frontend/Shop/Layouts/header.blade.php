@@ -28,10 +28,10 @@
                 <a href="{{route('order.index')}}" class="shop-ico"><i class="bi bi-cart-fill" style="font-size: 1.5rem;" id="cart-val" value={{$orderNumber}}></i></a>
 
                 @auth('buyer')
-                    <span style="margin-left: 10px;">سلام {{ auth('buyer')->user()->name }} عزیز!</span>
-                    <a href="{{route('buyer.logout')}}" >خروج</a>
+                    <span style="margin-left: 10px;">{{ __('ui.hello')}} {{ auth('buyer')->user()->name }} {{ __('ui.dear')}}</span>
+                    <a href="{{route('buyer.logout')}}" >{{ __('ui.logout')}}</a>
                 @else
-                    <a href="{{route('buyer.show.register')}}" >عضویت / ورود</a>
+                    <a href="{{route('buyer.login.path')}}" >{{ __('ui.login')}}</a> / <a href="{{route('buyer.show.register')}}" >{{ __('ui.membership')}}</a>
                 @endauth
             </div>
 

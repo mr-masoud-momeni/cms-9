@@ -171,6 +171,6 @@ class BuyerController extends Controller
     {
         Auth::guard('buyer')->logout();
 
-        return redirect()->route('buyer.login')->with('message', 'You have been logged out.');
+        return redirect()->route('buyer.login')->with('message', __('message.logout_msg'));
     }
 }
