@@ -18,7 +18,7 @@ class CreateShopsTable extends Migration
             $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->string('domain')->nullable();
+            $table->string('domain')->unique()->nullable(false);
             $table->string('slug')->nullable();
             $table->timestamps();
         });

@@ -19,9 +19,30 @@ class UserDataComposer
         // اگر خریدار لاگین کرده بود
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
-            $orderNumber = $buyer->orders()->get();
-            $shopid = ShopHelper::getShopId();
-            dd($shopid );
+            $shopId = ShopHelper::getShopId();
+            $order = $buyer->orders()
+                ->where('status', 0)
+                ->where('shop_id', $shopId)
+                ->with('products') // پیش‌بارگذاری برای دسترسی راحت‌تر
+                ->first();
+            //دریافت اطلاعات محصول کاربر از سشن
+            $cart = session()->get('cart', []);
+            if($order){
+                foreach ($cart as $productId => $quantity) {
+                    $existing = $order->products->firstWhere('id', $productId);
+
+                    if ($existing) {
+                        $existing->quantity += $quantity;
+                        $existing->save();
+                    } else {
+                        CartItem::create([
+                            'user_id' => $user->id,
+                            'product_id' => $productId,
+                            'quantity' => $quantity,
+                        ]);
+                    }
+                }
+            }
             $orderNumber = $orderNumber->count();
         }
 
