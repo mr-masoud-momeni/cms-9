@@ -89,7 +89,7 @@ class OrderController extends Controller
                     $addToCart= 1;
                 }
 
-                return response()->json(['ُsuccess' => $addToCart, 'message' => 'به سبد خرید شما اضافه شد.']);
+                return response()->json(['success' => $addToCart, 'message' => 'به سبد خرید شما اضافه شد.']);
             }
 
             elseif (auth('web')->check()) {
