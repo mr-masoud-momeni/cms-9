@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\customer\LoginController;
 use App\Http\Controllers\front\BuyerController;
-
+use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\customer\GatewayController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,15 +23,14 @@ Route::group(
     , function () {
         Route::get('/','IndexController@index')->name('index.show');
         Route::get('/shop','IndexController@shop')->name('index.shop');
-        Route::get('/{product}', 'ProductController@show')->name('front.product.show');
+        Route::get('/product/{product}', 'ProductController@show')->name('front.product.show');
         Route::get('/blog/{article}', 'blog@show')->name('article.show');
-        Route::get('/page/{page}', 'blog@show1')->name('page.show');
+        Route::get('/page/{page}', 'blog@show1')->name('page.showw');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
         Route::resource('/order', 'OrderController');
+
 });
-//Route::get('/', function () {
-//    return view('welcome');
-//});
+
 Route::get('/event', function () {
     event (new \App\Events\NewTrade('test'));
 });
@@ -38,10 +38,6 @@ Route::get('/event', function () {
 Route::get('/dashboard', function () {
     return view('Backend.layouts.Master');
 })->middleware(['auth' , 'verified'])->name('dashboard');
-//Route::name('admin.')->group(function () {
-//    Route::resource('/Permission', 'PermissionController');
-//    Route::resource('/role', 'RoleController');
-//});
 
 Route::group(
     [
@@ -52,7 +48,7 @@ Route::group(
     , function () {
     Route::resource('/register' , 'UserController');
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/test','RoleController@create');
+//    Route::get('/test','RoleController@create');
     Route::get('/article', 'ArticleController@index')->name('article.index');
     Route::get('/article/edit/{article}', 'ArticleController@edit')->name('article.edit');
     Route::get('/article/create', 'ArticleController@create')->name('article.create');
@@ -89,6 +85,8 @@ Route::group(
     ]
     , function () {
     Route::resource('/product', 'ProductController');
+    Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
+    Route::post('/gateways', [GatewayController::class, 'update'])->name('gateways.update');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
     Route::post('/category/create', 'CategoryController@save')->name('catProduct.save');
     Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');
@@ -106,4 +104,7 @@ Route::post('/buyer/login', [BuyerController::class, 'login'])->name('buyer.logi
 // خروج (logout) خریدار
 Route::get('/buyer/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
 Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth.buyer','buyer.verified','checkRole:buyer,buyer'])->name('buyer.dashboard');
+
+
+
 

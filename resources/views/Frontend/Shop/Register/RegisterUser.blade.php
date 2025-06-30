@@ -17,7 +17,7 @@
                     <div class="form-group mt-3">
                         <input type="text" id="phone" class="form-control" placeholder="تلفن همراه" name="phone" value="{{ old('phone') }}">
                     </div>
-                    <div class="text-center mt-3"><button type="submit" class="btn btn-success">ثبت نام</button></div>
+                    <div class="text-center mt-3"><button type="submit" class="btn btn-success">{{ __('ui.register')}}</button></div>
                 </form>
             </div>
             <!-- خالی -->

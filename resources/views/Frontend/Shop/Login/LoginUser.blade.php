@@ -18,7 +18,7 @@
                         <div class="form-group mt-3">
                             <input type="password" id="password" class="form-control" placeholder="گذرواژه" name="password" value="{{ old('password') }}">
                         </div>
-                        <div class="text-center mt-3"><button type="submit" class="btn btn-success">ثبت نام</button></div>
+                        <div class="text-center mt-3"><button type="submit" class="btn btn-success">{{ __('ui.login')}}</button></div>
                     </form>
                 </div>
             </div>

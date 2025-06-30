@@ -56,4 +56,8 @@ class Shop extends Model
     {
         return $this->hasMany(Order::class);
     }
+    public function gateways()
+    {
+        return $this->hasMany(Gateway::class);
+    }
 }
