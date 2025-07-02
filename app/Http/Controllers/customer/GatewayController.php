@@ -23,7 +23,7 @@ class GatewayController extends Controller
         foreach ($request->gateways as $data) {
             Gateway::updateOrCreate(
                 [
-                    'shop_id' => $shop->id,
+                    'shop_id' => auth()->user()->shop->id ?? null,
                     'gateway' => $data['gateway'],
                 ],
                 [

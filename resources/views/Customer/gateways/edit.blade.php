@@ -10,7 +10,7 @@
 
                     <div class="row">
 
-
+                        <div class="col-md-4 col-sm-12">
                         <form action="{{ route('gateways.update', $shop) }}" method="POST">
                             @csrf
 
@@ -22,43 +22,39 @@
                                 <h4>{{ ucfirst($g) }}</h4>
 
                                 <input type="hidden" name="gateways[{{ $loop->index }}][gateway]" value="{{ $g }}">
-
-                                <div>
-                                    <label>Merchant ID</label>
-                                    <input type="text" name="gateways[{{ $loop->index }}][merchant_id]"
+                                <div class="form-group">
+                                    <label for="title">Merchant ID</label>
+                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][merchant_id]"
                                            value="{{ $gateways[$g]->merchant_id ?? '' }}">
                                 </div>
-
-                                <div>
-                                    <label>API Key</label>
-                                    <input type="text" name="gateways[{{ $loop->index }}][api_key]"
+                                <div class="form-group">
+                                    <label for="title">API Key</label>
+                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][api_key]"
                                            value="{{ $gateways[$g]->api_key ?? '' }}">
                                 </div>
-
-                                <div>
-                                    <label>Secret</label>
-                                    <input type="text" name="gateways[{{ $loop->index }}][secret]"
+                                <div class="form-group">
+                                    <label for="title">Secret</label>
+                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][secret]"
                                            value="{{ $gateways[$g]->secret ?? '' }}">
                                 </div>
-
-                                <div>
-                                    <label>Callback URL</label>
-                                    <input type="url" name="gateways[{{ $loop->index }}][callback_url]"
+                                <div class="form-group">
+                                    <label for="title">Callback UR</label>
+                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][callback_url]"
                                            value="{{ $gateways[$g]->callback_url ?? '' }}">
                                 </div>
-
-                                <div>
-                                    <label>Sandbox Mode</label>
+                                <div class="form-group">
+                                    <label for="title">Sandbox Mode</label>
                                     <input type="checkbox" name="gateways[{{ $loop->index }}][sandbox]"
                                            @if($gateways[$g]->sandbox ?? false) checked @endif>
                                 </div>
+
 
                                 <hr>
                             @endforeach
 
                             <button type="submit">ذخیره درگاه‌ها</button>
                         </form>
-
+                        </div>
 
                     </div>
 
