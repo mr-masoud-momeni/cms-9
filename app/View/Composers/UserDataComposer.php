@@ -6,55 +6,77 @@
 // in fact, this class is called with provider named "ShareDataServiceProvider".
 
 namespace App\View\Composers;
+
 use Illuminate\Support\Facades\Auth;
-use illuminate\View\View;
+use Illuminate\View\View;
 use App\Helpers\ShopHelper;
+use App\Models\Order;
+
 class UserDataComposer
 {
-    public function __construct(){
+    public function __construct(){}
 
-    }
-    public function compose(View $view) {
+    public function compose(View $view)
+    {
+        $order = null;
+        $orderCount = 0;
 
-        // اگر خریدار لاگین کرده بود
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
             $shopId = ShopHelper::getShopId();
-            $order = $buyer->orders()
+
+            $loginCart = $buyer->orders()
                 ->where('status', 0)
                 ->where('shop_id', $shopId)
-                ->with('products') // پیش‌بارگذاری برای دسترسی راحت‌تر
+                ->with('products')
                 ->first();
-            //دریافت اطلاعات محصول کاربر از سشن
-            $cart = session()->get('cart', []);
-            if($order){
-                foreach ($cart as $productId => $quantity) {
-                    $existing = $order->products->firstWhere('id', $productId);
 
+            $sessionCart = session()->get('cart', []);
+
+            if ($loginCart) {
+                foreach ($sessionCart as $productId => $quantity) {
+                    $existing = $loginCart->products->firstWhere('id', $productId);
                     if ($existing) {
-                        $existing->quantity += $quantity;
-                        $existing->save();
-                    } else {
-                        CartItem::create([
-                            'user_id' => $user->id,
-                            'product_id' => $productId,
-                            'quantity' => $quantity,
+                        $loginCart->products()->updateExistingPivot($productId, [
+                            'quantity' => $existing->pivot->quantity + $quantity
                         ]);
+                    } else {
+                        $loginCart->products()->attach($productId, ['quantity' => $quantity]);
                     }
                 }
+            } else {
+                $loginCart = $buyer->orders()->create([
+                    'shop_id' => $shopId,
+                    'status' => 0,
+                ]);
+
+                foreach ($sessionCart as $productId => $quantity) {
+                    $loginCart->products()->attach($productId, ['quantity' => $quantity]);
+                }
             }
-            $orderNumber = $orderNumber->count();
+
+            session()->forget('cart');
+            $order = $loginCart;
+            $orderCount = $order->products->sum(fn($p) => $p->pivot->quantity);
         }
 
         elseif (auth('web')->check()) {
-            // اگر ادمین یا یوزر لاگین باشد
-            $orderNumber = 0;
+            $order = 0;
+            $orderCount = 0;
         }
+
         else {
-            //دریافت اطلاعات محصول کاربر از سشن
-            $cart = session()->get('cart', []);
-            $orderNumber = count($cart);
+            $sessionCart = session()->get('cart', []);
+            $order = $sessionCart;
+
+            // ساختار session: [productId => quantity]
+            $orderCount = is_array($sessionCart)
+                ? array_sum($sessionCart)
+                : 0;
         }
-        $view->with('orderNumber', $orderNumber);
+
+        $view->with('order', $order);
+        $view->with('orderCount', $orderCount);
     }
 }
+
