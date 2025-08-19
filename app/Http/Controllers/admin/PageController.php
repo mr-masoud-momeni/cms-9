@@ -8,10 +8,10 @@ use App\Http\Controllers\Controller;
 use Validator;
 use App\Models\Page;
 use App\Models\User;
-use Dotlogics\Grapesjs\App\Traits\EditorTrait;
+//use Dotlogics\Grapesjs\App\Traits\EditorTrait;
 class PageController extends Controller
 {
-    use EditorTrait;
+//    use EditorTrait;
     /**
      * Display a listing of the resource.
      *

@@ -18,12 +18,13 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if(!$user){
-            return view('Frontend.Checkout.CheckOrders');
+
+        $buyer = auth('buyer')->user();
+        if(!$buyer){
+            return view('Frontend.Shop.Pay.Cart');
         }else{
-            $orders = $user->order()->get();
-            return view('Frontend.Checkout.CheckOrders' , compact('orders'));
+            $orders = $buyer->orders()->where('status',0)->get();
+            return view('Frontend.Shop.Pay.Cart' , compact('orders'));
         }
     }
 
@@ -89,7 +90,7 @@ class OrderController extends Controller
                     $addToCart= 1;
                 }
 
-                return response()->json(['ُsuccess' => $addToCart, 'message' => 'به سبد خرید شما اضافه شد.']);
+                return response()->json(['success' => $addToCart, 'message' => 'به سبد خرید شما اضافه شد.']);
             }
 
             elseif (auth('web')->check()) {

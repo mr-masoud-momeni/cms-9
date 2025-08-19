@@ -42,7 +42,8 @@
                                         <tr>
                                             @foreach($order->products as $product)
                                                 @php
-                                                        $productPrice = $order->amount;
+                                                        $productPrice = $product->pivot->price*$product->pivot->quantity;
+                                                        dd($productPrice);
                                                         $totalPrice = $productPrice+$totalPrice;
                                                 @endphp
                                                 <td>

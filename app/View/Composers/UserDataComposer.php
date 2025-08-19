@@ -22,6 +22,7 @@ class UserDataComposer
         $orderCount = 0;
 
         if (auth('buyer')->check()) {
+<<<<<<< HEAD
             $buyer = auth('buyer')->user();
             $shopId = ShopHelper::getShopId();
 
@@ -58,6 +59,15 @@ class UserDataComposer
             session()->forget('cart');
             $order = $loginCart;
             $orderCount = $order->products->sum(fn($p) => $p->pivot->quantity);
+=======
+            $cartOrder = auth('buyer')->user()->orders()
+                ->where('status', 0)
+                ->with('products') // اگر لازم داشتی
+                ->latest()
+                ->first();
+
+            $orderNumber = $cartOrder ? $cartOrder->products()->count() : 0;
+>>>>>>> 297761ff61621ad906c5aa631ec33b63a35c006e
         }
 
         elseif (auth('web')->check()) {
