@@ -8,6 +8,7 @@ use App\Models\menu;
 use App\Models\Order;
 use App\Models\product;
 use Illuminate\Http\Request;
+use App\Helpers\ShopHelper;
 use function view;
 
 class IndexController extends Controller
@@ -19,10 +20,12 @@ class IndexController extends Controller
      */
     public function index()
     {
+        $shopId = ShopHelper::getShopId();
+
 
         $menu = menu::where('id', 1)->first();
         $articles= article::latest()->take(3)->get();
-        $products= product::latest()->take(3)->get();
+        $products= product::latest()->take(3)->where('shop_id', $shopId)->get();
         return view('Frontend.Home.index',compact('articles' , 'menu' , 'products'));
     }
     public function shop()

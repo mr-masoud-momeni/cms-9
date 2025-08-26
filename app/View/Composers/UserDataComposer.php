@@ -20,6 +20,7 @@ class UserDataComposer
     {
         $order = null;
         $orderCount = 0;
+        $orderNumber = 0;
 
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
@@ -84,6 +85,7 @@ class UserDataComposer
 
         $view->with('order', $order);
         $view->with('orderCount', $orderCount);
+        $view->with('orderNumber', $orderNumber);
     }
 }
 
