@@ -30,7 +30,8 @@ class IndexController extends Controller
     }
     public function shop()
     {
-        $products= product::latest()->take(3)->get();
+        $shopId = ShopHelper::getShopId();
+        $products= product::latest()->take(3)->where('shop_id', $shopId)->get();
         return view('Frontend.Shop.index',compact( 'products'));
     }
 

@@ -13,6 +13,7 @@ class ShopHelper
     {
         $host = request()->getHost();
         return Shop::where('domain', $host)->first(); // orFail نذار که 500 نده
+
     }
 
     // گرفتن فقط id فروشگاه

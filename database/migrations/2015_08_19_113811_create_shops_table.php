@@ -21,6 +21,9 @@ class CreateShopsTable extends Migration
             $table->string('domain')->unique()->nullable(false);
             $table->string('slug')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
