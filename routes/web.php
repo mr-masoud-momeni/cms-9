@@ -86,7 +86,7 @@ Route::group(
     , function () {
     Route::resource('/product', 'ProductController');
     Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
-    Route::post('/gateways', [GatewayController::class, 'update'])->name('gateways.update');
+    Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
     Route::post('/category/create', 'CategoryController@save')->name('catProduct.save');
     Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');

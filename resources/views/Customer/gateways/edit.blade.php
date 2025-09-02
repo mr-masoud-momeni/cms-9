@@ -11,48 +11,41 @@
                     <div class="row">
 
                         <div class="col-md-4 col-sm-12">
-                        <form action="{{ route('gateways.update', $shop) }}" method="POST">
+                        <form action="{{ route('gateways.store') }}" method="POST">
                             @csrf
 
-                            @php
-                                $defaultGateways = ['zarinpal', 'payir', 'nextpay'];
-                            @endphp
-
-                            @foreach($defaultGateways as $g)
-                                <h4>{{ ucfirst($g) }}</h4>
-
-                                <input type="hidden" name="gateways[{{ $loop->index }}][gateway]" value="{{ $g }}">
                                 <div class="form-group">
-                                    <label for="title">Merchant ID</label>
-                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][merchant_id]"
-                                           value="{{ $gateways[$g]->merchant_id ?? '' }}">
+                                    <label for="title">عنوان درگاه</label>
+                                    <input type="text" class="form-control" name="title"
+                                           value="{{ old('title') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="title">API Key</label>
-                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][api_key]"
-                                           value="{{ $gateways[$g]->api_key ?? '' }}">
+                                    <label for="title">Terminal ID</label>
+                                    <input type="text" class="form-control" name="terminal_id"
+                                           value="{{ old('terminal_id') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="title">Secret</label>
-                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][secret]"
-                                           value="{{ $gateways[$g]->secret ?? '' }}">
+                                    <label for="title">Username</label>
+                                    <input type="text" class="form-control" name="username"
+                                           value="{{ old('username') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="title">Callback UR</label>
-                                    <input type="text" class="form-control" name="gateways[{{ $loop->index }}][callback_url]"
-                                           value="{{ $gateways[$g]->callback_url ?? '' }}">
+                                    <label for="title">Password</label>
+                                    <input type="password" class="form-control" name="password"
+                                           value="{{ old('password') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="title">Sandbox Mode</label>
-                                    <input type="checkbox" name="gateways[{{ $loop->index }}][sandbox]"
-                                           @if($gateways[$g]->sandbox ?? false) checked @endif>
+                                    <label for="title">WSDL URL</label>
+                                    <input type="url" class="form-control" name="wsdl_url"
+                                           value="{{ old('wsdl_url') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="title">Gateway URL</label>
+                                    <input type="url" class="form-control" name="gateway_url"
+                                           value="{{ old('gateway_url') }}">
                                 </div>
 
-
-                                <hr>
-                            @endforeach
-
-                            <button type="submit">ذخیره درگاه‌ها</button>
+                            <button type="submit">ذخیره درگاه</button>
                         </form>
                         </div>
 

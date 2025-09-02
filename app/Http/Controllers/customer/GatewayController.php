@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Gateway;
 use App\Models\Shop;
+use Illuminate\Support\Facades\Auth;
 
 class GatewayController extends Controller
 {
@@ -13,28 +14,25 @@ class GatewayController extends Controller
     {
         $shop = auth()->user()->shop;
         // لود همه درگاه‌های این فروشگاه
-        $gateways = $shop->gateways()->get()->keyBy('gateway');
+        $gateways = $shop->gateways()->get();
 
         return view('Customer.gateways.edit', compact('shop', 'gateways'));
     }
 
-    public function update(Request $request, Shop $shop)
+    public function store(Request $request)
     {
-        foreach ($request->gateways as $data) {
-            Gateway::updateOrCreate(
-                [
-                    'shop_id' => auth()->user()->shop->id ?? null,
-                    'gateway' => $data['gateway'],
-                ],
-                [
-                    'merchant_id' => $data['merchant_id'] ?? null,
-                    'api_key' => $data['api_key'] ?? null,
-                    'secret' => $data['secret'] ?? null,
-                    'callback_url' => $data['callback_url'] ?? null,
-                    'sandbox' => isset($data['sandbox']),
-                ]
-            );
-        }
+        $validated = $request->validate([
+            'title'       => 'required|string',
+            'terminal_id' => 'required|string',
+            'username'    => 'required|string',
+            'password'    => 'required|string',
+            'wsdl_url'    => 'required|url',
+            'gateway_url' => 'required|url',
+        ]);
+
+        $shop = Auth::user()->shop; // فرض بر اینه هر یوزر یک فروشگاه داره
+
+        $shop->gateways()->create($validated);
 
         return back()->with('success', 'اطلاعات درگاه‌ها ذخیره شدند');
     }

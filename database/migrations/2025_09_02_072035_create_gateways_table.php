@@ -15,14 +15,17 @@ class CreateGatewaysTable extends Migration
     {
         Schema::create('gateways', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('shop_id')->constrained()->onDelete('cascade');
-            $table->string('gateway'); // zarinpal, payir, nextpay
-            $table->string('merchant_id')->nullable();
-            $table->string('api_key')->nullable();
-            $table->string('secret')->nullable();
-            $table->string('callback_url')->nullable();
-            $table->boolean('sandbox')->default(false);
+            $table->unsignedBigInteger('shop_id'); // شناسه فروشگاه
+            $table->string('title'); // نام درگاه (مثلا Mellat)
+            $table->string('terminal_id');
+            $table->string('username');
+            $table->string('password');
+            $table->string('wsdl_url');
+            $table->string('gateway_url');
+            $table->boolean('active')->default(true);
             $table->timestamps();
+
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
         });
     }
 

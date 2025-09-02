@@ -8,10 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Gateway extends Model
 {
     protected $fillable = [
-        'shop_id', 'gateway', 'merchant_id', 'api_key', 'secret', 'callback_url', 'sandbox'
+        'shop_id',
+        'title',
+        'terminal_id',
+        'username',
+        'password',
+        'wsdl_url',
+        'gateway_url',
+        'active',
     ];
 
-    public function shop()
+    public function store()
     {
         return $this->belongsTo(Shop::class);
     }
