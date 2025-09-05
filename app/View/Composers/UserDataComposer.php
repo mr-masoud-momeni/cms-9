@@ -32,60 +32,21 @@ class UserDataComposer
                 ->with('products')
                 ->first();
 
-            $sessionCart = session()->get('cart', []);
-
             if ($loginCart) {
-                foreach ($sessionCart as $productId => $quantity) {
-                    $existing = $loginCart->products->firstWhere('id', $productId);
-                    if ($existing) {
-                        $loginCart->products()->updateExistingPivot($productId, [
-                            'quantity' => $existing->pivot->quantity + $quantity
-                        ]);
-                    } else {
-                        $loginCart->products()->attach($productId, ['quantity' => $quantity]);
-                    }
-                }
-            } else {
-                $loginCart = $buyer->orders()->create([
-                    'shop_id' => $shopId,
-                    'status' => 0,
-                ]);
-
-                foreach ($sessionCart as $productId => $quantity) {
-                    $loginCart->products()->attach($productId, ['quantity' => $quantity]);
-                }
-            }
-
-            session()->forget('cart');
-            $order = $loginCart;
-            $orderCount = $order->products->sum(fn($p) => $p->pivot->quantity);
-            $cartOrder = auth('buyer')->user()->orders()
-                ->where('status', 0)
-                ->with('products') // اگر لازم داشتی
-                ->latest()
-                ->first();
-
-            $orderNumber = $cartOrder ? $cartOrder->products()->count() : 0;
+                $order = $loginCart;
+                $orderCount = $loginCart->products->sum(fn($p) => $p->pivot->quantity);
+            $orderNumber = $loginCart->products()->count();
         }
-
-        elseif (auth('web')->check()) {
+        } elseif (auth('web')->check()) {
             $order = 0;
-            $orderCount = 0;
-        }
-
-        else {
+        } else {
             $sessionCart = session()->get('cart', []);
             $order = $sessionCart;
-
-            // ساختار session: [productId => quantity]
-            $orderCount = is_array($sessionCart)
-                ? array_sum($sessionCart)
-                : 0;
+            $orderCount = is_array($sessionCart) ? array_sum($sessionCart) : 0;
         }
 
-        $view->with('order', $order);
-        $view->with('orderCount', $orderCount);
-        $view->with('orderNumber', $orderNumber);
+        $view->with(compact('order','orderCount', 'orderNumber'));
     }
+
 }
 

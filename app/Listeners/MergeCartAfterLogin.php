@@ -3,59 +3,82 @@
 namespace App\Listeners;
 
 use App\Helpers\ShopHelper;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use App\Models\product;
+use App\Models\Product;          // مطمئن شو نام کلاس دقیق همین است (P بزرگ!)
+use Illuminate\Support\Facades\Session;
+
 class MergeCartAfterLogin
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
     public function __construct()
     {
         //
     }
 
-    /**
-     * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
-     */
     public function handle($event)
     {
-        // اگر خریدار لاگین کرده بود
-        if (auth('buyer')->check()) {
-            $buyer = auth('buyer')->user();
-            $shopId = ShopHelper::getShopId();
-            $order = $buyer->orders()
-                ->where('status', 0)
-                ->where('shop_id', $shopId)
-                ->with('products') // پیش‌بارگذاری برای دسترسی راحت‌تر
-                ->first();
-            //دریافت اطلاعات محصول کاربر از سشن
-            $cart = session()->get('cart', []);
-            if($cart){
-                foreach ($cart as $productId => $quantity) {
-                    $existing = $order->products->firstWhere('id', $productId);
-                    if ($existing) {
-                        // گرفتن مقدار قبلی از pivot
-                        $oldQty = $existing->pivot->quantity ?? 0;
-                        $order->products()->updateExistingPivot($productId, [
-                            'quantity' => $oldQty + $quantity
-                        ]);
-                    } else {
-                        $product= product::where('id', $productId)->first();
-                        $order->products()->attach($productId, [
-                            'quantity' => $quantity,
-                            'price' => $product->price,
-                        ]);
-                    }
+        // فقط وقتی کاربر buyer لاگین است
+        if (!auth('buyer')->check()) {
+            return;
+        }
+
+        $buyer  = auth('buyer')->user();
+        $shopId = ShopHelper::getShopId();
+
+        // سفارش باز کاربر
+        $loginCart = $buyer->orders()
+            ->where('status', 0)
+            ->where('shop_id', $shopId)
+            ->with('products')
+            ->first();
+
+        $sessionCart = Session::get('cart', []);
+
+        if (!$sessionCart) {
+            return;
+        }
+
+        if ($loginCart) {
+            // اگر سفارش باز موجود است، محصولات سشن را با آن ادغام کن
+            foreach ($sessionCart as $productId => $quantity) {
+                // قیمت محصول را از جدول محصول بگیر
+                $product = Product::find($productId);
+                if (!$product) {
+                    continue; // اگر محصول پیدا نشد
+                }
+
+                $existing = $loginCart->products->firstWhere('id', $productId);
+
+                if ($existing) {
+                    $loginCart->products()->updateExistingPivot($productId, [
+                        'quantity' => $existing->pivot->quantity + $quantity,
+                        'price'    => $product->price,  // قیمت را ذخیره کن
+                    ]);
+                } else {
+                    $loginCart->products()->attach($productId, [
+                        'quantity' => $quantity,
+                        'price'    => $product->price,
+                    ]);
                 }
             }
+        } else {
+            // اگر سفارش باز نداریم، بساز
+            $loginCart = $buyer->orders()->create([
+                'shop_id' => $shopId,
+                'status'  => 0,
+            ]);
+
+            foreach ($sessionCart as $productId => $quantity) {
+                $product = Product::find($productId);
+                if (!$product) {
+                    continue;
+                }
+
+                $loginCart->products()->attach($productId, [
+                    'quantity' => $quantity,
+                    'price'    => $product->price,
+                ]);
+            }
         }
-        session()->forget('cart');
+
+        Session::forget('cart');
     }
 }
