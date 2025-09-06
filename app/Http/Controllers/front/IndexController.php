@@ -31,8 +31,15 @@ class IndexController extends Controller
     public function shop()
     {
         $shopId = ShopHelper::getShopId();
-        $products= product::latest()->take(3)->where('shop_id', $shopId)->get();
+        // به جای get از paginate استفاده می‌کنیم
+        $products = Product::where('shop_id', $shopId)
+            ->latest()
+            ->paginate(6); // مثلاً هر صفحه 12 محصول
         return view('Frontend.Shop.index',compact( 'products'));
+    }
+
+    public function product(product $product){
+        return view('Frontend.Shop.show',compact('product'));
     }
 
     /**
