@@ -51,9 +51,10 @@
                                 </tbody>
                             </table>
                         </div>
-                        <form method="post" action="/start-payment">
+                        <form method="post" action="{{ route('payment') }}">
                             {{ csrf_field() }}
                             <input type="hidden" name="amount" value="{{ $totalPrice }}">
+                            <input type="hidden" name="order_id" value="{{ $order->id }}">
                             <button type="submit">تکمیل خرید</button>
                         </form>
                     </div>

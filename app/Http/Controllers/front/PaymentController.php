@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\Gateway;
+use App\Helpers\ShopHelper;
 use SoapClient;
 
 class PaymentController extends Controller
@@ -13,12 +14,13 @@ class PaymentController extends Controller
     public function init(Request $request)
     {
         $shopId = ShopHelper::getShopId();
-        $gateway = Gateway::where('store_id', $shopId)
+        dd($shopId);
+        $gateway = Gateway::where('shop_id', $shopId)
             ->where('active', true)
             ->firstOrFail();
 
         $payment = Payment::create([
-            'shop_id'  => $gateway->store_id,
+            'shop_id'  => $gateway->shop_id,
             'gateway_id'=> $gateway->id,
             'order_id'  => $request->order_id ?? null,
             'amount'    => $request->amount,

@@ -22,8 +22,8 @@ Route::group(
     ]
     , function () {
         Route::get('/','IndexController@index')->name('index.show');
-        Route::get('/shop','IndexController@shop')->name('index.shop');
         Route::get('/product/{product}', 'IndexController@product')->name('front.product.show');
+        Route::post('/pay','PaymentController@init')->name('payment');
         Route::get('/blog/{article}', 'blog@show')->name('article.show');
         Route::get('/page/{page}', 'blog@show1')->name('page.showw');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
