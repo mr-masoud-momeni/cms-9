@@ -23,7 +23,7 @@ class Payment extends Model
         return $this->belongsTo(Gateway::class);
     }
 
-    public function store()
+    public function shop()
     {
         return $this->belongsTo(Shop::class);
     }

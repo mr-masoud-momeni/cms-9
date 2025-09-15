@@ -14,7 +14,7 @@ class PaymentController extends Controller
     public function init(Request $request)
     {
         $shopId = ShopHelper::getShopId();
-        dd($shopId);
+
         $gateway = Gateway::where('shop_id', $shopId)
             ->where('active', true)
             ->firstOrFail();
@@ -50,10 +50,73 @@ class PaymentController extends Controller
                 'ref_id' => $result[1],
                 'status' => 'redirected'
             ]);
-            return view('payments.redirect', ['gatewayUrl' => $gateway->gateway_url, 'refId' => $result[1]]);
+            return view('Frontend.Shop.pay.redirect', ['gatewayUrl' => $gateway->gateway_url, 'refId' => $result[1]]);
         }
 
         $payment->update(['status' => 'failed']);
         return back()->withErrors('خطا در ارتباط با درگاه. کد خطا: ' . $result[0]);
     }
+
+    public function callback(Request $request)
+    {
+        $resCode = $request->input('ResCode');
+        $orderId = $request->input('SaleOrderId');
+        $refId   = $request->input('RefId');
+        $saleRefId = $request->input('SaleReferenceId');
+
+        $payment = Payment::where('id', $orderId)->firstOrFail();
+
+        if ($resCode == 0) {
+            // SOAP Verify
+            $gateway = $payment->gateway;
+            $client = new SoapClient($gateway->wsdl_url);
+            $verify = $client->bpVerifyRequest([
+                'terminalId'      => $gateway->terminal_id,
+                'userName'        => $gateway->username,
+                'userPassword'    => $gateway->password,
+                'orderId'         => $payment->order_id,
+                'saleOrderId'     => $orderId,
+                'saleReferenceId' => $saleRefId,
+            ]);
+            $result = (int) $verify->return;
+
+            if ($result === 0) {
+                // SOAP Settle
+                $settle = $client->bpSettleRequest([
+                    'terminalId'      => $gateway->terminal_id,
+                    'userName'        => $gateway->username,
+                    'userPassword'    => $gateway->password,
+                    'orderId'         => $payment->order_id,
+                    'saleOrderId'     => $orderId,
+                    'saleReferenceId' => $saleRefId,
+                ]);
+
+                $resultsettle = (int) $settle->return;
+                if ($resultsettle === 0) {
+                    $payment->update([
+                        'status'  => 'paid',
+                        'ref_id'  => $refId,
+                        'bank_ref'=> $saleRefId,
+                    ]);
+
+                    return redirect()->route('payments.success', $payment);
+                }
+            }
+        }
+
+        // اگر به هر دلیلی موفق نبود
+        $payment->update(['status' => 'failed']);
+        return redirect()->route('payments.failed', $payment);
+    }
+    public function success(Payment $payment)
+    {
+        return view('Frontend.Shop.pay.success', compact('payment'));
+    }
+
+    public function failed(Payment $payment)
+    {
+        return view('Frontend.Shop.pay.failed', compact('payment'));
+    }
+
+
 }
