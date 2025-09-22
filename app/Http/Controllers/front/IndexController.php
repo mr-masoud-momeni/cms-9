@@ -42,6 +42,7 @@ class IndexController extends Controller
         return view('Frontend.Shop.show',compact('product'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
