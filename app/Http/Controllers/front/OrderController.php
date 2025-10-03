@@ -19,16 +19,18 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('Frontend.Shop.Pay.Cart');
 
         $buyer = auth('buyer')->user();
         if(!$buyer){
             $orders = session('cart');
-            return view('Frontend.Shop.Pay.Cart' , compact('orders'));
+            if($orders){
+                return redirect()->route('buyer.show.register')
+                    ->with('message', 'برای ادامه خرید باید ثبت‌نام کنید.');
+            }
+            return view('Frontend.Shop.Pay.Cart');
         }else{
             $orders = $buyer->orders()->where('status',0)->get();
             return view('Frontend.Shop.Pay.Cart' , compact('orders'));
-
         }
     }
 

@@ -98,7 +98,12 @@ class PaymentController extends Controller
                         'ref_id'  => $refId,
                         'bank_ref'=> $saleRefId,
                     ]);
-
+                    $order = $payment->order;
+                    $order->update([
+                       'status' => '1'
+                    ]);
+                    // 🔥 ایونت رو اینجا فایر می‌کنیم
+                    event(new \App\Events\PaymentWasSuccessful($order));
                     return redirect()->route('payments.success', $payment);
                 }
             }
