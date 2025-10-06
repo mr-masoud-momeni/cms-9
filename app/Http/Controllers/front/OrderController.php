@@ -22,15 +22,36 @@ class OrderController extends Controller
 
         $buyer = auth('buyer')->user();
         if(!$buyer){
-            $orders = session('cart');
-            if($orders){
+            if(session()->has('cart') && count(session('cart')) > 0){
                 return redirect()->route('buyer.show.register')
                     ->with('message', 'برای ادامه خرید باید ثبت‌نام کنید.');
             }
-            return view('Frontend.Shop.Pay.Cart');
+            $cart = session('cart', []);
+            return view('Frontend.Shop.Pay.Cart', compact('cart'));
         }else{
-            $orders = $buyer->orders()->where('status',0)->get();
-            return view('Frontend.Shop.Pay.Cart' , compact('orders'));
+            $orders = $buyer->orders()->where('status', 0)->with('products')->get();
+            $totalAmount = 0;
+            foreach ($orders as $order) {
+                foreach ($order->products as $product) {
+                    $found = Product::find($product->id);
+                    $price = $found ? $found->price : null;
+
+                    // به‌روزرسانی قیمت در جدول واسط
+                    $order->products()->updateExistingPivot($product->id, [
+                        'price' => $price,
+                    ]);
+
+                    // جمع کل فقط اگر قیمت معتبره
+                    if (!is_null($price)) {
+                        $totalAmount += $price * $product->pivot->quantity;
+                    }
+
+                }
+                $order->update(['total' => $totalAmount]);
+            }
+
+
+            return view('Frontend.Shop.Pay.Cart' , compact('orders','totalAmount'));
         }
     }
 
