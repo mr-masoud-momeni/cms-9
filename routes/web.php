@@ -41,17 +41,17 @@ Route::get('/event', function () {
 
 Route::get('/dashboard', function () {
     return view('Backend.layouts.Master');
-})->middleware(['auth' , 'verified'])->name('dashboard');
+})->middleware(['auth:admin' , 'verified'])->name('dashboard');
 
 Route::group(
     [
-        'middleware'=>['auth' , 'verified', 'role:admin'],
+        'middleware'=>['auth:admin' , 'verified', 'role:admin'],
         'namespace'=> 'App\Http\Controllers\admin',
         'prefix' => 'admin',
     ]
     , function () {
     Route::resource('/register' , 'UserController');
-    Route::get('/home', 'HomeController@index')->name('home');
+
 //    Route::get('/test','RoleController@create');
     Route::get('/article', 'ArticleController@index')->name('article.index');
     Route::get('/article/edit/{article}', 'ArticleController@edit')->name('article.edit');
@@ -70,7 +70,6 @@ Route::group(
     Route::resource('/email-group', 'EmailGroupController');
     Route::resource('/page', 'PageController');
     Route::resource('/menu', 'MenuController');
-    Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
     Route::get('search','HomeController@search')->name('search');
 });

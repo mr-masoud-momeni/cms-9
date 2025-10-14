@@ -36,7 +36,6 @@ class BuyerController extends Controller
         // استخراج دامنه
         $host = $request->getHost();  // دریافت دامنه از درخواست
         $port = $request->getPort(); // پورت (مثل 8000 یا null)
-
         // اضافه کردن پورت فقط اگر پورت پیش‌فرض نباشد
         if ($port && ($port != 80 && $port != 443)) {
             $domain = "{$scheme}://{$host}:{$port}";
@@ -96,44 +95,48 @@ class BuyerController extends Controller
     // تأیید ایمیل
     public function verifyEmail(Request $request, $uuid, $token)
     {
-        $host = $request->getHost(); // نام دامنه (مثل 'localhost' یا 'example.com')
+        $host = preg_replace('/^www\./', '', $request->getHost());
+        $parts = explode('.', $host);
 
-        // حذف www. در صورت وجود
-        $parsedHost = preg_replace('/^www\./', '', $host);
-
-        $parts = explode('.', $parsedHost);
         if (count($parts) > 2) {
-            // اگر بیش از دو بخش وجود دارد، یعنی زیر دامنه است
             abort(403, 'Subdomains are not allowed');
         }
-        // استخراج دامنه اصلی
-        $mainDomain = implode('.', array_slice($parts, -2)); // مثل example.com
-        $shop = Shop::where('domain','like', "%$mainDomain%")->firstOrFail(); // پیدا کردن فروشگاه با استفاده از دامنه
-        // پیدا کردن خریدار در فروشگاه مرتبط
+
+        $mainDomain = implode('.', array_slice($parts, -2));
+
+        $shop = Shop::where('domain', $mainDomain)->firstOrFail();
         $buyer = Buyer::where('uuid', $uuid)->first();
-        if ($buyer && $shop) {
-            // بررسی اینکه آیا این خریدار در این فروشگاه قبلاً ثبت‌نام کرده است یا نه
-            $existingEntry = $buyer->shops()->where('shop_id', $shop->id)->exists();
 
-            if ($existingEntry) {
-                // پیدا کردن رکورد در جدول واسط با استفاده از توکن
-                $buyerShop = $buyer->shops()->wherePivot('email_verification_token', $token)->first();
-                if ($buyerShop  && !$buyerShop ->pivot->email_verified_at) {
-                    // تأیید ایمیل و حذف توکن تأیید
-                    $buyerShop ->pivot->email_verified_at = now();
-                    $buyerShop ->pivot->email_verification_token = null;
-                    $buyerShop ->pivot->save();
-                    $buyer->attachRole('buyer');
-                    return response()->json(['message' => 'Email verified successfully']);
-                }
-
-                return response()->json(['error' => 'Invalid verification token or email already verified'], 422);
-            }
-        } else {
-            return response()->json(['message' => 'domain or user does not exist']);
+        if (!$buyer) {
+            return response()->json(['message' => 'کاربر مورد نظر وجود ندارد!']);
         }
 
+        if (!$buyer->shops()->where('shop_id', $shop->id)->exists()) {
+            return response()->json(['message' => 'این کاربر در این فروشگاه ثبت‌نام نکرده است!'], 422);
+        }
+
+        $buyerShop = $buyer->shops()
+            ->wherePivot('email_verification_token', $token)
+            ->first();
+
+        if (!$buyerShop) {
+            return response()->json(['error' => 'توکن معتبر نیست!'], 422);
+        }
+
+        if ($buyerShop->pivot->email_verified_at) {
+            return response()->json(['error' => 'ایمیل شما قبلا اعتبارسنجی شده!'], 422);
+        }
+
+        $buyer->shops()->updateExistingPivot($shop->id, [
+            'email_verified_at' => now(),
+            'email_verification_token' => null,
+        ]);
+
+        $buyer->attachRole('buyer');
+
+        return response()->json(['message' => 'ایمیل با موفقیت اعتبارسنجی شد.']);
     }
+
     // نمایش فرم لاگین
     public function showLoginForm()
     {
@@ -147,25 +150,31 @@ class BuyerController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        $credentials = $request->only('email', 'password');
+
         $shop = ShopHelper::getShop();
 
         if (!$shop) {
             return back()->withErrors(['shop' => 'فروشگاه پیدا نشد.']);
         }
 
+        // خریدار را بر اساس ایمیل و فروشگاه پیدا کن
         $buyer = Buyer::where('email', $credentials['email'])
-            ->whereHas('shops', function ($q) use ($shop) {
-                $q->where('shops.id', $shop->id);
-            })->first();
+            ->whereHas('shops', fn($q) => $q->where('shops.id', $shop->id))
+            ->first();
 
-        if ($buyer && Hash::check($credentials['password'], $buyer->password)) {
-            Auth::guard('buyer')->login($buyer);
+        if (!$buyer) {
+            return back()->withErrors(['email' => 'این ایمیل در این فروشگاه ثبت نشده است.']);
+        }
+
+        // استفاده از attempt برای هندل درست لاگین
+        if (Auth::guard('buyer')->attempt($credentials)) {
+            $request->session()->regenerate(); // جلوگیری از session fixation
             return redirect()->intended('/buyer/dashboard');
         }
 
-        return back()->withErrors(['email' => 'ایمیل یا رمز عبور نادرست یا دسترسی غیرمجاز به این فروشگاه.']);
+        return back()->withErrors(['email' => 'ایمیل یا رمز عبور نادرست است.']);
     }
+
     // مدیریت خروج (logout) خریدار
     public function logout()
     {

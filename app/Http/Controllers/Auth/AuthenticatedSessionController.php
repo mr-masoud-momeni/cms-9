@@ -28,11 +28,25 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
 
-        $request->session()->regenerate();
+        $credentials = $request->only('email', 'password');
+        if (Auth::guard('admin')->attempt($credentials)) {
+            $request->session()->regenerate();
+            $user = Auth::guard('admin')->user();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+            if ($user->hasRole('admin')) {
+                return redirect('/dashboard'); // مسیر ادمین اصلی
+            }
+        }
+
+        return back()->withErrors([
+            'email' => 'اطلاعات وارد شده صحیح نیست.'
+        ]);
+//        $request->authenticate();
+//
+//        $request->session()->regenerate();
+//
+//        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

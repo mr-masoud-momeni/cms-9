@@ -96,8 +96,16 @@ class PaymentController extends Controller
                     $payment->update([
                         'status'  => 'paid',
                         'ref_id'  => $refId,
-                        'bank_ref'=> $saleRefId,
+                        'sale_order_id'      => $orderId,
+                        'sale_reference_id'  => $saleRefId,
                     ]);
+                    // آپدیت سفارش مربوطه
+                    if ($payment->order) {
+                        $payment->order->update([
+                            'status'  => 'paid',
+                            'paid_at' => now(),
+                        ]);
+                    }
 
                     return redirect()->route('payments.success', $payment);
                 }
