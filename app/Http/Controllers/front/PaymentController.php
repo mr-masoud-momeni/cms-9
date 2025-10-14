@@ -99,6 +99,7 @@ class PaymentController extends Controller
                         'sale_order_id'      => $orderId,
                         'sale_reference_id'  => $saleRefId,
                     ]);
+<<<<<<< HEAD
                     // آپدیت سفارش مربوطه
                     if ($payment->order) {
                         $payment->order->update([
@@ -107,6 +108,14 @@ class PaymentController extends Controller
                         ]);
                     }
 
+=======
+                    $order = $payment->order;
+                    $order->update([
+                       'status' => '1'
+                    ]);
+                    // 🔥 ایونت رو اینجا فایر می‌کنیم
+                    event(new \App\Events\PaymentWasSuccessful($order));
+>>>>>>> 81ab0e8d93447b4b6916c1bfee1db0820318c545
                     return redirect()->route('payments.success', $payment);
                 }
             }

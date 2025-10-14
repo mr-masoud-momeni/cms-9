@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Helpers\ShopHelper;
-use App\Models\Product;          // مطمئن شو نام کلاس دقیق همین است (P بزرگ!)
+use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 
 class MergeCartAfterLogin
