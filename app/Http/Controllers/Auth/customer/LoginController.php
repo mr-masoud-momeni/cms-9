@@ -33,8 +33,8 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+        if (Auth::guard('admin')->attempt($credentials)) {
+            $user = Auth::guard('admin')->user();
             $pathuser = $user->path;
             $domain = $user->shop()->first()->domain;
             $host = $request->getHost();
@@ -42,7 +42,6 @@ class LoginController extends Controller
                 // اگر لاگین موفق بود
                 $request->session()->regenerate();
                 return redirect()->intended('customer/dashboard');
-
             }
             else{
                 Auth::logout();
@@ -62,7 +61,7 @@ class LoginController extends Controller
     // خروج مشتری
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         $request->session()->invalidate();
 
