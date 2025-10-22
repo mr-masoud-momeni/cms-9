@@ -6,7 +6,7 @@
 <div id="wrapper"  >
     <div class="top-bar">
         <div class="nav " style="float: left; margin-top: 5px; ">
-            <form action="{{route('customer.logout')}}" method="post">
+            <form action="{{ route('shop.logout', ['path' => Auth::user()->path]) }}" method="post">
                 {!! csrf_field() !!}
                 <button class="  btn-xs btn">خروج از حساب کاربری</button>
             </form>

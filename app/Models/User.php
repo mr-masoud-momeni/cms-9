@@ -7,8 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
 use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Support\Str;
 
@@ -16,9 +14,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use LaratrustUserTrait;
     use HasFactory;
-    use HasProfilePhoto;
     use Notifiable;
-    use TwoFactorAuthenticatable;
 /**create an uuid and save in users table automatically */
     protected static function boot()
     {

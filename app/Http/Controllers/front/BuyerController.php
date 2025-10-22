@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\front;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Buyer;
@@ -140,7 +139,7 @@ class BuyerController extends Controller
     // نمایش فرم لاگین
     public function showLoginForm()
     {
-        return view('Frontend.Shop.Login.loginUser');
+        return view('auth.login-buyer');
     }
 
     // مدیریت لاگین خریدار

@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\customer\LoginController;
 use App\Http\Controllers\front\BuyerController;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\customer\GatewayController;
+use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\Auth\ShopAdminLoginController;
+use App\Http\Controllers\Auth\BuyerLoginController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,24 +37,22 @@ Route::group(
 
 });
 
-Route::get('/event', function () {
-    event (new \App\Events\NewTrade('test'));
+// ادمین اصلی
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminLoginController::class, 'login']);
+    Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 });
-
-Route::get('/dashboard', function () {
-    return view('Backend.layouts.Master');
-})->middleware(['auth:admin' , 'verified'])->name('dashboard');
-
 Route::group(
     [
-        'middleware'=>['auth:admin' , 'verified', 'role:admin'],
+        'middleware'=>['auth' , 'verified', 'role:admin'],
         'namespace'=> 'App\Http\Controllers\admin',
         'prefix' => 'admin',
     ]
     , function () {
-    Route::resource('/register' , 'UserController');
 
-//    Route::get('/test','RoleController@create');
+    Route::get('/dashboard', function () {return view('Backend.layouts.Master');})->name('admin.dashboard');
+    Route::resource('/register' , 'UserController');
     Route::get('/article', 'ArticleController@index')->name('article.index');
     Route::get('/article/edit/{article}', 'ArticleController@edit')->name('article.edit');
     Route::get('/article/create', 'ArticleController@create')->name('article.create');
@@ -73,20 +73,20 @@ Route::group(
     Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
     Route::get('search','HomeController@search')->name('search');
 });
-require __DIR__.'/auth.php';
-
-Route::get('/customer/login/{path}', [LoginController::class, 'showLoginForm'])->name('customer.login.path');
-Route::post('/customer/login/{path}', [LoginController::class, 'login'])->name('customer.login');
-Route::post('/customer/logout', [LoginController::class, 'logout'])->middleware(['auth:admin' , 'verified'])->name('customer.logout');
-Route::get('/customer/dashboard', [LoginController::class, 'dashboard'])->middleware(['auth:admin' , 'verified'])->name('customer.dashboard');
-
+// ادمین فروشگاه
+Route::prefix('shop/{path}')->group(function () {
+    Route::get('/login', [ShopAdminLoginController::class, 'showLoginForm'])->name('shop.login');
+    Route::post('/login', [ShopAdminLoginController::class, 'login']);
+    Route::post('/logout', [ShopAdminLoginController::class, 'logout'])->name('shop.logout');
+});
 Route::group(
     [
-        'middleware'=>['auth:admin' , 'verified', 'role:shop_owner'],
-        'namespace'=> 'App\Http\Controllers\customer',
-        'prefix' => 'customer',
+        'middleware'=>['auth:shop_admin' , 'verified', 'role:shop_owner'],
+        'prefix' => 'shop',
+        'as' => 'shop.',
     ]
     , function () {
+    Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
     Route::resource('/product', 'ProductController');
     Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
     Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
@@ -95,19 +95,24 @@ Route::group(
     Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');
     Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
 });
-
-//buyer routes
-Route::get('/buyer/register', [BuyerController::class, 'index'])->name('buyer.show.register');
-Route::post('/buyer/register', [BuyerController::class, 'register'])->name('buyer.register');
+// خریدار
+Route::prefix('buyer')->group(function () {
+    Route::get('/register', [BuyerController::class, 'index'])->name('buyer.show.register');
+    Route::post('/register', [BuyerController::class, 'register'])->name('buyer.register');
+    Route::get('/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
+    Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
+    Route::get('/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
+});
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
-// نمایش فرم لاگین و مدیریت لاگین خریدار
-Route::get('/buyer/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
-Route::post('/buyer/login', [BuyerController::class, 'login'])->name('buyer.login');
-
-// خروج (logout) خریدار
-Route::get('/buyer/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
-Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth.buyer','buyer.verified','checkRole:buyer,buyer'])->name('buyer.dashboard');
-
+Route::group(
+    [
+        'middleware'=>['auth:buyer' , 'verified', 'role:buyer'],
+        'prefix' => 'buyer',
+        'as' => 'buyer.',
+    ]
+    , function () {
+    Route::get('/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth:buyer','buyer.verified','role:buyer'])->name('dashboard');
+});
 
 
 

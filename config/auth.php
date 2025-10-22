@@ -40,18 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'admin' => [
+        'shop_admin' => [
             'driver' => 'session',
-            'provider' => 'users', // ادمین‌ها
+            'provider' => 'users',
         ],
         'buyer' => [
             'driver' => 'session',
             'provider' => 'buyers',
         ],
-//        'api' => [
-//            'driver' => 'sanctum',
-//            'provider' => 'users',
-//        ],
     ],
 
     /*

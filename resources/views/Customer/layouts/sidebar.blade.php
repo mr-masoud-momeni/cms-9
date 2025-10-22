@@ -8,10 +8,10 @@
         <li class="dropdown ">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">فروشگاه<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-                <li><a class="{{Route::currentRouteName() == 'product.create' ? 'active-sidebar' : ''}}" href="{{route('product.create')}}">ایجاد محصول</a></li>
-                <li><a class="{{Route::currentRouteName() == 'product.index' ? 'active-sidebar' : ''}}"  href="{{route('product.index')}}">لیست محصولات</a></li>
-                <li><a class="{{Route::currentRouteName() == 'catProduct.create' ? 'active-sidebar' : ''}}" href="{{route('catProduct.create')}}">ایجاد دسته بندی</a></li>
-                <li><a class="{{Route::currentRouteName() == 'gateways.edit' ? 'active-sidebar' : ''}}" href="{{route('gateways.edit')}}">مدیریت درگاه پرداخت</a></li>
+                <li><a class="{{Route::currentRouteName() == 'product.create' ? 'active-sidebar' : ''}}" href="{{route('shop.product.create')}}">ایجاد محصول</a></li>
+                <li><a class="{{Route::currentRouteName() == 'product.index' ? 'active-sidebar' : ''}}"  href="{{route('shop.product.index')}}">لیست محصولات</a></li>
+                <li><a class="{{Route::currentRouteName() == 'catProduct.create' ? 'active-sidebar' : ''}}" href="{{route('shop.catProduct.create')}}">ایجاد دسته بندی</a></li>
+                <li><a class="{{Route::currentRouteName() == 'gateways.edit' ? 'active-sidebar' : ''}}" href="{{route('shop.gateways.edit')}}">مدیریت درگاه پرداخت</a></li>
             </ul>
         </li>
         @endrole
