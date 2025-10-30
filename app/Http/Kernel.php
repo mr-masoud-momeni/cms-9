@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'auth.buyer' => \App\Http\Middleware\AuthBuyer::class,
         'buyer.verified' => \App\Http\Middleware\BuyerVerified::class,
         'checkRole' => \App\Http\Middleware\CheckRole::class,
+        'check.shop' => \App\Http\Middleware\CheckShopContext::class,
     ];
 }

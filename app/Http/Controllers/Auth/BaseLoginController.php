@@ -20,6 +20,7 @@ abstract class BaseLoginController extends Controller
             if (!$user) {
                 abort(404);
             }
+
             return view($this->view);
         }
         return view($this->view);
@@ -28,16 +29,59 @@ abstract class BaseLoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $currentDomain = $request->getHost();
 
+        // پیدا کردن کاربر بر اساس ایمیل
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (! $user) {
+            return back()->withErrors(['email' => 'کاربر یافت نشد']);
+        }
+
+        // اگر کاربر نقش ادمین اصلی دارد
+        if ($user->role === 'admin') {
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                return redirect()->intended($this->redirectTo);
+            }
+
+            return back()->withErrors(['email' => 'اطلاعات ورود اشتباه است']);
+        }
+
+        // اگر ادمین فروشگاه است آیا به فروشگاهی وصل است؟
+        if (! method_exists($user, 'shop')) {
+            return back()->withErrors(['domain' => 'حساب شما به فروشگاه خاصی متصل نیست.']);
+        }
+
+        $shop = $user->shop()->first();
+        if (! $shop) {
+            return back()->withErrors(['domain' => 'حساب شما به هیچ فروشگاهی متصل نیست.']);
+        }
+
+        // بررسی دامنه
+        if ($shop->domain !== $currentDomain) {
+            return back()->withErrors(['domain' => 'ورود از این دامنه مجاز نیست.']);
+        }
+
+        // حالا لاگین کن و سشن بساز
         if (Auth::guard($this->guard)->attempt($credentials)) {
-            $request->session()->regenerate();
+            $user = Auth::guard($this->guard)->user();
+
+            session([
+                'shop_context' => [
+                    'id' => $shop->id,
+                    'domain' => $shop->domain,
+                    'user_id' => $user->id,
+                    'created_at' => now()->toDateTimeString(),
+                ],
+            ]);
+
             return redirect()->intended($this->redirectTo);
         }
 
-        return back()->withErrors([
-            'email' => 'ایمیل یا رمز عبور اشتباه است.',
-        ])->onlyInput('email');
+        return back()->withErrors(['email' => 'اطلاعات ورود اشتباه است']);
     }
+
 
     public function logout(Request $request)
     {
