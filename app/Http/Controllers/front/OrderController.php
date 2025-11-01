@@ -120,7 +120,7 @@ class OrderController extends Controller
                 return response()->json(['success' => $addToCart, 'message' => 'به سبد خرید شما اضافه شد.']);
             }
 
-            elseif (auth('web')->check()) {
+            elseif (auth('shop_admin')->check()) {
 
                 // اگر ادمین یا یوزر لاگین باشد
                 return response()->json(['message' => 'ادمین نمی‌تواند محصول به سبد خرید اضافه کند.']);
