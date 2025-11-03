@@ -8,7 +8,7 @@ class Order extends Model
 {
     protected $fillable =['buyer_id', 'shop_id', 'status','total'];
     public function buyer(){
-        return $this->belongsTo(Buyer::class, 'user_id');
+        return $this->belongsTo(Buyer::class, 'buyer_id');
     }
     public function products()
     {
@@ -17,5 +17,9 @@ class Order extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+    public function payment()
+    {
+        return $this->hasOne(Payment::class); // یک سفارش یک پرداخت نهایی دارد
     }
 }

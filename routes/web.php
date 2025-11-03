@@ -82,12 +82,14 @@ Route::prefix('shop/{path}')->group(function () {
 Route::group(
     [
         'middleware'=>['auth:shop_admin' , 'verified', 'role:shop_owner' , 'check.shop'],
+        'namespace'=> 'App\Http\Controllers\customer',
         'prefix' => 'shop',
         'as' => 'shop.',
     ]
     , function () {
     Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
     Route::resource('/product', 'ProductController');
+    Route::resource('/orders', 'OrderController');
     Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
     Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');

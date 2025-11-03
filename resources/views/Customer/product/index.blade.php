@@ -40,7 +40,7 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a href="{{route('product.edit',$product->slug)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a href="{{route('shop.product.edit',$product->slug)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
                                 <td>
                                     <a class="deleteAjax" data-toggle="modal" data-target="#DeleteModal" data-id="{{$product->id}}"><i class="fa fa-2x fa-trash-o" aria-hidden="true"></i></a>

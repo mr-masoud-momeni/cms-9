@@ -12,7 +12,7 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <form method="post" action="{{route("catProduct.save")}}" id="CategoryForm">
+                            <form method="post" action="{{route("shop.catProduct.save")}}" id="CategoryForm">
                                 {!! csrf_field() !!}
                                 <div class="form-group">
                                     <label for="title">عنوان گروه</label>
@@ -99,7 +99,7 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">ویرایش گروه</h4>
                         </div>
-                        <form method="post" action="{{route("catProduct.edit")}}" class="CategoryFormEdit">
+                        <form method="post" action="{{route("shop.catProduct.edit")}}" class="CategoryFormEdit">
                             <div class="modal-body">
                                 {!! csrf_field() !!}
                                 {{method_field("patch")}}
@@ -144,7 +144,7 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">حذف گروه</h4>
                         </div>
-                        <form method="post" action="{{route("catProduct.delete")}}" class="CategoryFormDelete">
+                        <form method="post" action="{{route("shop.catProduct.delete")}}" class="CategoryFormDelete">
                             <div class="modal-body">
                                 {!! csrf_field() !!}
                                 {{method_field('delete')}}
