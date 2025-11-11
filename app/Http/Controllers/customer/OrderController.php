@@ -39,7 +39,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -48,9 +48,11 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
-        //
+        // لود کردن روابط خریدار، پرداخت و محصولات
+        $order->load(['buyer', 'payment', 'products']);
+        return view('Customer.orders.show', compact('order'));
     }
 
     /**

@@ -108,12 +108,12 @@ Route::prefix('buyer')->group(function () {
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 Route::group(
     [
-        'middleware'=>['auth:buyer' , 'verified', 'role:buyer'],
+        'middleware'=>['auth.buyer','buyer.verified','role.buyer:buyer'],
         'prefix' => 'buyer',
         'as' => 'buyer.',
     ]
     , function () {
-    Route::get('/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth:buyer','buyer.verified','role:buyer'])->name('dashboard');
+    Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
 });
 
 

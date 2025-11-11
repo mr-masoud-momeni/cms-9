@@ -29,7 +29,7 @@ class BuyerVerified
 
                 return $next($request);  // ادامه درخواست
             }
-            return redirect()->route('buyer.login')->with('error', 'شما اجازه دسترسی به این فروشگاه را ندارید یا ایمیل خود را تایید نکرده‌اید.');
+            return redirect()->route('buyer.login.path')->with('error', 'شما اجازه دسترسی به این فروشگاه را ندارید یا ایمیل خود را تایید نکرده‌اید.');
         } else {
             return redirect()->route('home')->with('error', 'Shop not found');
         }
