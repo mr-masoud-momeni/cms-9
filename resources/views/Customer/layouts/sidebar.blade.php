@@ -12,7 +12,7 @@
                 <li><a class="{{Route::currentRouteName() == 'shop.product.index' ? 'active-sidebar' : ''}}"  href="{{route('shop.product.index')}}">لیست محصولات</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.catProduct.create' ? 'active-sidebar' : ''}}" href="{{route('shop.catProduct.create')}}">ایجاد دسته بندی</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.gateways.edit' ? 'active-sidebar' : ''}}" href="{{route('shop.gateways.edit')}}">مدیریت درگاه پرداخت</a></li>
-                <li><a class="{{Route::currentRouteName() == 'shop.orders.index' ? 'active-sidebar' : ''}}" href="{{route('shop.orders.index')}}">سفارش ها</a></li>
+                <li><a class="{{Route::currentRouteName() == 'shop.Orders.index' ? 'active-sidebar' : ''}}" href="{{route('shop.Orders.index')}}">سفارش ها</a></li>
             </ul>
         </li>
         @endrole

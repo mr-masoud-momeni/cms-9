@@ -34,7 +34,7 @@
                     </tbody>
                 </table>
 
-                <a href="{{ route('shop.orders.index') }}" class="btn btn-secondary">بازگشت به لیست</a>
+                <a href="{{ route('shop.Orders.index') }}" class="btn btn-secondary">بازگشت به لیست</a>
             </div>
             <div class="panel-footer">Panel Footer</div>
 

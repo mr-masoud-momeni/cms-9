@@ -24,7 +24,7 @@
                                 <td>{{$order->status ? 'پرداخت شده' : 'پرداخت نشده'}}</td>
                                 <td>{{ $order->paid_at ? $order->paid_at->format('Y/m/d') : '-' }}</td>
                                 <td>
-                                    <a href="{{ route('shop.orders.show', $order->id) }}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a href="{{ route('shop.Orders.show', $order->id) }}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         @endforeach
