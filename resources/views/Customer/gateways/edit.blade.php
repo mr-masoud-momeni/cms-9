@@ -11,7 +11,7 @@
                     <div class="row">
 
                         <div class="col-md-4 col-sm-12">
-                        <form action="{{ route('gateways.store') }}" method="POST">
+                        <form action="{{ route('shop.gateways.store') }}" method="POST">
                             @csrf
 
                                 <div class="form-group">

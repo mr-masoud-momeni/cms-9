@@ -9,7 +9,7 @@
 
 
                     <div class="row">
-                        <form action="{{route('product.store')}}" method="post" enctype="multipart/form-data">
+                        <form action="{{route('shop.product.store')}}" method="post" enctype="multipart/form-data">
                         <div class="col-md-8">
                                 {!! csrf_field() !!}
                                 <div class="form-group">
