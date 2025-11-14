@@ -27,7 +27,9 @@ class ShareDataServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer(['Frontend.*'], UserDataComposer::class);
+        if (!request()->is('admin/*') && !request()->is('api/*')) {
+            View::composer(['Frontend.*'], UserDataComposer::class);
+        }
 
     }
 }

@@ -21,6 +21,7 @@ class OrderController extends Controller
     {
 
         $buyer = auth('buyer')->user();
+        $currentShop = Shop::current(); // دامنه یا فروشگاه فعلی
         if(!$buyer){
             if(session()->has('cart') && count(session('cart')) > 0){
                 return redirect()->route('buyer.show.register')
@@ -29,29 +30,26 @@ class OrderController extends Controller
             $cart = session('cart', []);
             return view('Frontend.Shop.Pay.Cart', compact('cart'));
         }else{
-            $orders = $buyer->orders()->where('status', 0)->with('products')->get();
+            $orderss = $buyer->orders()->where('status', 0)->where('shop_id', $currentShop->id)->with('products')->first();
+
             $totalAmount = 0;
-            foreach ($orders as $order) {
-                foreach ($order->products as $product) {
+            if ($orderss) {
+                foreach ($orderss->products as $product) {
                     $found = Product::find($product->id);
                     $price = $found ? $found->price : null;
 
-                    // به‌روزرسانی قیمت در جدول واسط
-                    $order->products()->updateExistingPivot($product->id, [
+                    $orderss->products()->updateExistingPivot($product->id, [
                         'price' => $price,
                     ]);
 
-                    // جمع کل فقط اگر قیمت معتبره
                     if (!is_null($price)) {
                         $totalAmount += $price * $product->pivot->quantity;
                     }
-
                 }
-                $order->update(['total' => $totalAmount]);
             }
 
 
-            return view('Frontend.Shop.Pay.Cart' , compact('orders','totalAmount'));
+            return view('Frontend.Shop.Pay.Cart' , compact('orderss','totalAmount'));
         }
     }
 
@@ -120,7 +118,7 @@ class OrderController extends Controller
                 return response()->json(['success' => $addToCart, 'message' => 'به سبد خرید شما اضافه شد.']);
             }
 
-            elseif (auth('web')->check()) {
+            elseif (auth('shop_admin')->check()) {
 
                 // اگر ادمین یا یوزر لاگین باشد
                 return response()->json(['message' => 'ادمین نمی‌تواند محصول به سبد خرید اضافه کند.']);
@@ -144,6 +142,22 @@ class OrderController extends Controller
             }
         }
     }
+
+    public function completedOrders()
+    {
+        $buyer = auth('buyer')->user();
+        $currentShop = Shop::current(); // دامنه یا فروشگاه فعلی
+        if (!$buyer) {
+            return redirect()->route('buyer.show.register')
+                ->with('message', 'برای مشاهده سفارش‌ها باید وارد شوید.');
+        }
+
+        // فقط سفارش‌هایی که وضعیتشون 1 (پرداخت شده) هست
+        $orders = $buyer->orders()->where('status', 1)->where('shop_id', $currentShop->id)->with('products')->get();
+
+        return view('Frontend.Shop.Orders.completeOrders', compact('orders'));
+    }
+
 
     /**
      * Display the specified resource.

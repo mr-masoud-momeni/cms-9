@@ -9,7 +9,7 @@
 
 
                     <div class="row">
-                        <form action="{{route('product.update',['product'=>$product->slug])}}" method="post" enctype="multipart/form-data">
+                        <form action="{{route('shop.product.update',['product'=>$product->slug])}}" method="post" enctype="multipart/form-data">
                             <div class="col-md-8">
                                 {!! csrf_field() !!}
                                 {{method_field('patch')}}

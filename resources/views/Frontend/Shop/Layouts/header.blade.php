@@ -20,15 +20,27 @@
 <header class="bg-light py-3 shadow">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <img src="logo.png" alt="لوگو" height="40">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="ms-4"><img src="logo.png" alt="لوگو" height="40"></div>
+                <div>
+                    @auth('buyer')
+                        <ul class="header-menu">
+                            <li>
+                                <a href="#">داشبورد</a>
+                            </li>
+                            <li>
+                                <a href="#">سفارش ها</a>
+                            </li>
+                        </ul>
+                    @endauth
+                </div>
             </div>
             <div>
 
                 <a href="{{route('order.index')}}" class="shop-ico"><i class="bi bi-cart-fill" style="font-size: 1.5rem;" id="cart-val" value={{$orderNumber}}></i></a>
 
                 @auth('buyer')
-                    <span style="margin-left: 10px;">{{ __('ui.hello')}} {{ auth('buyer')->user()->name }} {{ __('ui.dear')}}</span>
+                    <a href="#"><span style="margin-left: 10px;">{{ __('ui.hello')}} {{ auth('buyer')->user()->name }} {{ __('ui.dear')}}</span></a>
                     <a href="{{route('buyer.logout')}}" >{{ __('ui.logout')}}</a>
                 @else
                     <a href="{{route('buyer.login.path')}}" >{{ __('ui.login')}}</a> / <a href="{{route('buyer.show.register')}}" >{{ __('ui.membership')}}</a>

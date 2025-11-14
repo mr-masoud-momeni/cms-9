@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AuthBuyer
+class BuyerRole
 {
     /**
      * Handle an incoming request.
@@ -15,13 +15,12 @@ class AuthBuyer
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, $role)
     {
-//        dd(auth('buyer')->user()->hasRole('buyer')); // بررسی نقش‌های کاربر
-        // بررسی می‌کنیم که آیا کاربر از گارد "buyer" وارد شده است یا نه
-        if (!Auth::guard('buyer')->check()) {
+        $buyer = Auth::guard('buyer')->user();
 
-            return redirect()->route('buyer.login.path'); // به صفحه ورود هدایت می‌کنیم
+        if (!$buyer || !$buyer->hasRole($role)) {
+            abort(403, 'شما به این بخش دسترسی ندارید');
         }
         return $next($request);
     }

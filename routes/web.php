@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\front\BuyerController;
+use App\Http\Controllers\front\OrderController;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\customer\GatewayController;
 use App\Http\Controllers\Auth\AdminLoginController;
@@ -89,6 +90,7 @@ Route::group(
     , function () {
     Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
     Route::resource('/product', 'ProductController');
+    Route::resource('/Orders', 'OrderController');
     Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
     Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
@@ -107,12 +109,14 @@ Route::prefix('buyer')->group(function () {
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 Route::group(
     [
-        'middleware'=>['auth:buyer' , 'verified', 'role:buyer'],
+        'middleware'=>['auth.buyer','buyer.verified','role.buyer:buyer'],
         'prefix' => 'buyer',
         'as' => 'buyer.',
     ]
     , function () {
-    Route::get('/dashboard', [BuyerController::class, 'dashboard'])->middleware(['auth:buyer','buyer.verified','role:buyer'])->name('dashboard');
+    Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
+
 });
 
 

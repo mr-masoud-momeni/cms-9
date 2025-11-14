@@ -13,6 +13,7 @@ class Buyer extends Model implements AuthenticatableContract
     use LaratrustUserTrait;
     use HasFactory;
     protected $fillable = ['name', 'email', 'phone', 'uuid', 'password'];
+    protected $guard = 'buyer';
     /**
      * تعیین نوع مدل برای جدول واسط role_user
      */

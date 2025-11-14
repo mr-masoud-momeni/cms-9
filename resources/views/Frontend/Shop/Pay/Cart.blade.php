@@ -9,7 +9,7 @@
                 @include('Frontend.layouts.message')
                 {{-- اگر کاربر لاگین است و $order یک مدل Order است --}}
                 @auth('buyer')
-                @isset($order)
+                @isset($orderss)
                     <div class="main-box clearfix">
                         <div class="table-responsive">
                             <table class="table user-list">
@@ -24,7 +24,7 @@
                                 </thead>
                                 <tbody>
                                 @php $totalPrice = 0; @endphp
-                                @foreach($order->products as $product)
+                                @foreach($orderss->products as $product)
                                     @php
                                         $productPrice = $product->pivot->price * $product->pivot->quantity;
                                         $totalPrice += $productPrice;
@@ -54,7 +54,7 @@
                         <form method="post" action="{{ route('payment') }}">
                             {{ csrf_field() }}
                             <input type="hidden" name="amount" value="{{ $totalPrice }}">
-                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                            <input type="hidden" name="order_id" value="{{ $orderss->id }}">
                             <button type="submit">تکمیل خرید</button>
                         </form>
                     </div>
