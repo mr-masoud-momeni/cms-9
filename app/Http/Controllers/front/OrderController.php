@@ -30,15 +30,17 @@ class OrderController extends Controller
             $cart = session('cart', []);
             return view('Frontend.Shop.Pay.Cart', compact('cart'));
         }else{
-            $orderss = $buyer->orders()->where('status', 0)->where('shop_id', $currentShop->id)->with('products')->first();
-
+            $order = $buyer->orders()
+                ->where('status', 0)
+                ->where('shop_id', $currentShop->id)
+                ->with('products')->first();
             $totalAmount = 0;
-            if ($orderss) {
-                foreach ($orderss->products as $product) {
+            if ($order) {
+                foreach ($order->products as $product) {
                     $found = Product::find($product->id);
                     $price = $found ? $found->price : null;
 
-                    $orderss->products()->updateExistingPivot($product->id, [
+                    $order->products()->updateExistingPivot($product->id, [
                         'price' => $price,
                     ]);
 
@@ -47,9 +49,7 @@ class OrderController extends Controller
                     }
                 }
             }
-
-
-            return view('Frontend.Shop.Pay.Cart' , compact('orderss','totalAmount'));
+            return view('Frontend.Shop.Pay.Cart' , compact('totalAmount'));
         }
     }
 

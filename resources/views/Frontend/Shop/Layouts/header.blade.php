@@ -29,7 +29,7 @@
                                 <a href="#">داشبورد</a>
                             </li>
                             <li>
-                                <a href="#">سفارش ها</a>
+                                <a href="{{route('buyer.orders.completed')}}">سفارش ها</a>
                             </li>
                         </ul>
                     @endauth

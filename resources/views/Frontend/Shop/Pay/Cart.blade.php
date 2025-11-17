@@ -7,9 +7,8 @@
             <div class="col-md-12">
                 @include('Frontend.layouts.errors')
                 @include('Frontend.layouts.message')
-                {{-- اگر کاربر لاگین است و $order یک مدل Order است --}}
                 @auth('buyer')
-                @isset($orderss)
+                @isset($order)
                     <div class="main-box clearfix">
                         <div class="table-responsive">
                             <table class="table user-list">
@@ -24,10 +23,9 @@
                                 </thead>
                                 <tbody>
                                 @php $totalPrice = 0; @endphp
-                                @foreach($orderss->products as $product)
+                                @foreach($order->products as $product)
                                     @php
                                         $productPrice = $product->pivot->price * $product->pivot->quantity;
-                                        $totalPrice += $productPrice;
                                     @endphp
                                     <tr>
                                         <td>
@@ -44,17 +42,15 @@
                                 @endforeach
                                 <tr>
                                     <td>جمع کل</td>
-                                    <td class="text-center">{{ $totalPrice }}</td>
+                                    <td class="text-center">{{ $totalAmount }}</td>
                                     <td class="text-center"></td>
                                     <td class="text-center"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <form method="post" action="{{ route('payment') }}">
+                        <form method="post" action="{{ route('buyer.payment') }}">
                             {{ csrf_field() }}
-                            <input type="hidden" name="amount" value="{{ $totalPrice }}">
-                            <input type="hidden" name="order_id" value="{{ $orderss->id }}">
                             <button type="submit">تکمیل خرید</button>
                         </form>
                     </div>

@@ -27,5 +27,6 @@ class RolesTableSeeder extends Seeder
              'description' => 'مدیریت پنل خرید و دیدن سفارش در حال انجام...',
             ],
         ]);
+
     }
 }

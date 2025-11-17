@@ -71,5 +71,52 @@ class UsersTableSeeder extends Seeder
             'phone' => '09120136329',
             'email_verified_at' => '2024-08-30 13:52:31'
         ]);
+        DB::table('products')->insert([
+            ['shop_id' => '1',
+            'user_id' => '2',
+            'title' => 'محصول تست',
+            'body' => '<p>محصول تست</p>',
+            'slug' => 'mhsol-tst',
+            'images' => '{"images":{"original":"\/upload\/images\/2025\/ada19dbb973fe2fc5cee8b358fc40ddb9a6bdf1c_1602565545.jpg","300":"\/upload\/images\/2025\/300_ada19dbb973fe2fc5cee8b358fc40ddb9a6bdf1c_1602565545.jpg","600":"\/upload\/images\/2025\/600_ada19dbb973fe2fc5cee8b358fc40ddb9a6bdf1c_1602565545.jpg","800":"\/upload\/images\/2025\/800_ada19dbb973fe2fc5cee8b358fc40ddb9a6bdf1c_1602565545.jpg"},"thum":"\/upload\/images\/2025\/300_ada19dbb973fe2fc5cee8b358fc40ddb9a6bdf1c_1602565545.jpg"}',
+            'price-type' => 'cash',
+            'price' => '222222',
+            'created_at' => '2025-11-17 09:06:25',
+            'updated_at' => '2025-11-17 09:06:25',
+            ]
+        ]);
+        DB::table('orders')->insert([
+            ['buyer_id' => '1',
+            'shop_id' => '1',
+            'status' => 1,
+            'paid_at' => '2025-11-17 12:52:25',
+            'total' => '444444',
+            'created_at' => '2025-11-17 09:06:25',
+            'updated_at' => '2025-11-17 09:06:25',
+            ],
+            ['buyer_id' => '1',
+            'shop_id' => '1',
+            'status' => 0,
+            'paid_at' => null,
+            'total' => null,
+            'created_at' => '2025-11-17 09:06:25',
+            'updated_at' => '2025-11-17 09:06:25',
+            ]
+        ]);
+        DB::table('order_product')->insert([
+            ['order_id' => '1',
+            'product_id' => '1',
+            'quantity' => '3',
+            'price' => '222222',
+            'created_at' => '2025-11-17 09:06:25',
+            'updated_at' => '2025-11-17 09:06:25',
+            ],
+            ['order_id' => '2',
+            'product_id' => '1',
+            'quantity' => '2',
+            'price' => '222222',
+            'created_at' => '2025-11-17 09:06:25',
+            'updated_at' => '2025-11-17 09:06:25',
+            ],
+        ]);
     }
 }
