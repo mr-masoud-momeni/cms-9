@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerificationMail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Helpers\ShopHelper;
 class BuyerController extends Controller
 {
@@ -98,7 +97,7 @@ class BuyerController extends Controller
         $parts = explode('.', $host);
 
         if (count($parts) > 2) {
-            abort(403, 'Subdomains are not allowed');
+            abort(403, 'Sub domains are not allowed');
         }
 
         $mainDomain = implode('.', array_slice($parts, -2));
@@ -158,7 +157,9 @@ class BuyerController extends Controller
 
         // خریدار را بر اساس ایمیل و فروشگاه پیدا کن
         $buyer = Buyer::where('email', $credentials['email'])
-            ->whereHas('shops', fn($q) => $q->where('shops.id', $shop->id))
+            ->whereHas('shops', function ($q) use ($shop) {
+                $q->where('shops.id', $shop->id);
+            })
             ->first();
 
         if (!$buyer) {
