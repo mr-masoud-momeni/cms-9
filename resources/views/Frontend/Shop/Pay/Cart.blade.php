@@ -51,11 +51,6 @@
                         </div>
                         <form method="post" action="{{ route('buyer.payment') }}">
                             {{ csrf_field() }}
-<<<<<<< HEAD
-                            <input type="hidden" name="amount" value="{{ $totalPrice }}">
-                            <input type="hidden" name="order_id" value="{{ $order->id }}">
-=======
->>>>>>> 3204906abcdfff60cd74840db40f07bb576a61e4
                             <button type="submit">تکمیل خرید</button>
                         </form>
                     </div>
