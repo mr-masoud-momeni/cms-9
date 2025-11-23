@@ -27,7 +27,7 @@ Route::group(
         Route::get('/','IndexController@index')->name('index.show');
         Route::get('/shop','IndexController@shop')->name('index.shop');
         Route::get('/product/{product}', 'IndexController@product')->name('front.product.show');
-        Route::post('/pay','PaymentController@init')->name('payment');
+
         Route::post('/pay/callback','PaymentController@callback')->name('payments.callback');
         Route::get('/pay/success/{payment}','PaymentController@success')->name('payments.success');
         Route::get('/pay/failed/{payment}','PaymentController@failed')->name('payments.failed');
@@ -110,13 +110,14 @@ Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verify
 Route::group(
     [
         'middleware'=>['auth.buyer','buyer.verified','role.buyer:buyer'],
+        'namespace'=> 'App\Http\Controllers\front',
         'prefix' => 'buyer',
         'as' => 'buyer.',
     ]
     , function () {
     Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
     Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
-
+    Route::post('/pay','PaymentController@init')->name('payment');
 });
 
 

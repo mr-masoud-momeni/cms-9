@@ -7,7 +7,6 @@
             <div class="col-md-12">
                 @include('Frontend.layouts.errors')
                 @include('Frontend.layouts.message')
-                {{-- اگر کاربر لاگین است و $order یک مدل Order است --}}
                 @auth('buyer')
                 @isset($order)
                     <div class="main-box clearfix">
@@ -27,7 +26,6 @@
                                 @foreach($order->products as $product)
                                     @php
                                         $productPrice = $product->pivot->price * $product->pivot->quantity;
-                                        $totalPrice += $productPrice;
                                     @endphp
                                     <tr>
                                         <td>
@@ -44,17 +42,20 @@
                                 @endforeach
                                 <tr>
                                     <td>جمع کل</td>
-                                    <td class="text-center">{{ $totalPrice }}</td>
+                                    <td class="text-center">{{ $totalAmount }}</td>
                                     <td class="text-center"></td>
                                     <td class="text-center"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <form method="post" action="{{ route('payment') }}">
+                        <form method="post" action="{{ route('buyer.payment') }}">
                             {{ csrf_field() }}
+<<<<<<< HEAD
                             <input type="hidden" name="amount" value="{{ $totalPrice }}">
                             <input type="hidden" name="order_id" value="{{ $order->id }}">
+=======
+>>>>>>> 3204906abcdfff60cd74840db40f07bb576a61e4
                             <button type="submit">تکمیل خرید</button>
                         </form>
                     </div>

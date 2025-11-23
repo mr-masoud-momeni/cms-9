@@ -30,8 +30,15 @@ class OrderController extends Controller
             $cart = session('cart', []);
             return view('Frontend.Shop.Pay.Cart', compact('cart'));
         }else{
+<<<<<<< HEAD
             $order = $buyer->orders()->where('status', 0)->where('shop_id', $currentShop->id)->with('products')->first();
 
+=======
+            $order = $buyer->orders()
+                ->where('status', 0)
+                ->where('shop_id', $currentShop->id)
+                ->with('products')->first();
+>>>>>>> 3204906abcdfff60cd74840db40f07bb576a61e4
             $totalAmount = 0;
             if ($order) {
                 foreach ($order->products as $product) {
@@ -47,8 +54,11 @@ class OrderController extends Controller
                     }
                 }
             }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3204906abcdfff60cd74840db40f07bb576a61e4
             return view('Frontend.Shop.Pay.Cart' , compact('totalAmount'));
         }
     }

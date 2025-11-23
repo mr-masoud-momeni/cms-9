@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Models\product;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\Gateway;
@@ -13,17 +15,34 @@ class PaymentController extends Controller
 {
     public function init(Request $request)
     {
-        $shopId = ShopHelper::getShopId();
-
+        $buyer = auth('buyer')->user();
+        $currentShop = Shop::current(); // دامنه یا فروشگاه فعلی
+        $order = $buyer->orders()
+            ->where('status', 0)
+            ->where('shop_id', $currentShop->id)
+            ->with('products')->first();
+        $totalAmount = 0;
+        if ($order) {
+            foreach ($order->products as $product) {
+                $found = Product::find($product->id);
+                $price = $found ? $found->price : null;
+                $order->products()->updateExistingPivot($product->id, [
+                    'price' => $price,
+                ]);
+                if (!is_null($price)) {
+                    $totalAmount += $price * $product->pivot->quantity;
+                }
+            }
+        }
+        $shopId = $currentShop->id;
         $gateway = Gateway::where('shop_id', $shopId)
             ->where('active', true)
             ->firstOrFail();
-
         $payment = Payment::create([
             'shop_id'  => $gateway->shop_id,
             'gateway_id'=> $gateway->id,
-            'order_id'  => $request->order_id ?? null,
-            'amount'    => $request->amount,
+            'order_id'  => $order->id ?? null,
+            'amount'    => $totalAmount,
             'status'    => 'pending'
         ]);
 
@@ -104,13 +123,14 @@ class PaymentController extends Controller
                     if ($payment->order) {
                         $payment->order->update([
                             'status'  => 'paid',
+                            'total' => $payment->amount,
                             'paid_at' => now(),
                         ]);
                     }
-                    $order = $payment->order;
-                    $order->update([
-                       'status' => '1'
-                    ]);
+//                    $order = $payment->order;
+//                    $order->update([
+//                       'status' => '1'
+//                    ]);
                     // 🔥 ایونت رو اینجا فایر می‌کنیم
                     event(new \App\Events\PaymentWasSuccessful($order));
                     return redirect()->route('payments.success', $payment);
