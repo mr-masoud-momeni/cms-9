@@ -2,6 +2,8 @@
 
 return [
 
+    'platform_domain' => env('PLATFORM_DOMAIN', 'octoshop.ir'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

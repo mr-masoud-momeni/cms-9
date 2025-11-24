@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\permission;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -18,7 +18,7 @@ class UserController extends Controller
     public function index()
     {
         $Users = User::all()->sortBy('id');
-        $permissions = permission::all()->sortBy('id');
+        $permissions = Permission::all()->sortBy('id');
         $Roles = Role::all()->sortBy('id');
         return view('Backend.auth.register',compact('permissions', 'Roles','Users'));
     }

@@ -37,9 +37,8 @@ abstract class BaseLoginController extends Controller
         if (! $user) {
             return back()->withErrors(['email' => 'کاربر یافت نشد']);
         }
-
         // اگر کاربر نقش ادمین اصلی دارد
-        if ($user->role === 'admin') {
+        if ($user->hasRole('admin')) {
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
                 return redirect()->intended($this->redirectTo);
