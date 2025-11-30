@@ -16,13 +16,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($orders as $order)
+                        @foreach($orderss as $order)
 
                             <tr class="item{{$order->id}}">
                                 <td>{{$order->buyer->name}}</td>
                                 <td>{{ optional($order->payment)->amount ?? 0 }}</td>
                                 <td>{{$order->status ? 'پرداخت شده' : 'پرداخت نشده'}}</td>
-                                <td>{{ $order->paid_at ? $order->paid_at->format('Y/m/d') : '-' }}</td>
+                                <td>{{ $order->paid_at ? $order->paid_at : '-' }}</td>
                                 <td>
                                     <a href="{{ route('shop.Orders.show', $order->id) }}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
