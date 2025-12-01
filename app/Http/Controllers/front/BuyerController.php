@@ -169,6 +169,15 @@ class BuyerController extends Controller
         // استفاده از attempt برای هندل درست لاگین
         if (Auth::guard('buyer')->attempt($credentials)) {
             $request->session()->regenerate(); // جلوگیری از session fixation
+            // ذخیره context در سشن
+            session([
+                'buyer_shop_context' => [
+                    'buyer_id' => $buyer->id,
+                    'shop_id'  => $shop->id,
+                    'domain'   => $shop->domain,
+                    'created_at' => now()->toDateTimeString(),
+                ]
+            ]);
             return redirect()->intended('/buyer/dashboard');
         }
 

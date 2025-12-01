@@ -109,7 +109,7 @@ Route::prefix('buyer')->group(function () {
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 Route::group(
     [
-        'middleware'=>['auth.buyer','buyer.verified','role.buyer:buyer'],
+        'middleware'=>['auth.buyer','buyer.verified','role:buyer','check.shop.buyer'],
         'namespace'=> 'App\Http\Controllers\front',
         'prefix' => 'buyer',
         'as' => 'buyer.',
