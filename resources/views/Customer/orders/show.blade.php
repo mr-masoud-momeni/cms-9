@@ -7,7 +7,7 @@
             <div class="panel-body">
                 <div class="mb-3">
                     <strong>خریدار:</strong> {{ optional($order->buyer)->name }}<br>
-                    <strong>تاریخ پرداخت:</strong> {{ optional($order->payment)->paid_at ?? '-' }}<br>
+                    <strong>تاریخ پرداخت:</strong> {{ optional($order)->paid_at ?? '-' }}<br>
                     <strong>مبلغ نهایی:</strong> {{ number_format(optional($order->payment)->amount ?? 0) }} تومان<br>
                     <strong>وضعیت:</strong> {{ $order->status }}
                 </div>
@@ -34,7 +34,7 @@
                     </tbody>
                 </table>
 
-                <a href="{{ route('shop.Orders.index') }}" class="btn btn-secondary">بازگشت به لیست</a>
+                <a href="{{ route('shop.orders.index') }}" class="btn btn-secondary">بازگشت به لیست</a>
             </div>
             <div class="panel-footer">Panel Footer</div>
 

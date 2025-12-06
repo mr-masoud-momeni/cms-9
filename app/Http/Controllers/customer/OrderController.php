@@ -17,8 +17,8 @@ class OrderController extends Controller
     public function index()
     {
         $shop = Shop::current();
-        $orderss = Order::with('buyer', 'payment')->where('shop_id', $shop->id)->get();
-        return view('Customer.Orders.index', compact('orderss'));
+        $orders = Order::with('buyer', 'payment')->where('shop_id', $shop->id)->get();
+        return view('Customer.Orders.index', compact('orders'));
     }
 
     /**
@@ -52,7 +52,7 @@ class OrderController extends Controller
     {
         // لود کردن روابط خریدار، پرداخت و محصولات
         $order->load(['buyer', 'payment', 'products']);
-        return view('Customer.Orders.show', compact('order'));
+        return view('Customer.orders.show', compact('order'));
     }
 
     /**

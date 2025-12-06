@@ -90,7 +90,7 @@ Route::group(
     , function () {
     Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
     Route::resource('/product', 'ProductController');
-    Route::resource('/Orders', 'OrderController');
+    Route::resource('/orders', 'OrderController');
     Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
     Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
@@ -109,7 +109,7 @@ Route::prefix('buyer')->group(function () {
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 Route::group(
     [
-        'middleware'=>['auth.buyer','buyer.verified','role:buyer','check.shop.buyer'],
+        'middleware'=>['auth:buyer','buyer.verified','role:buyer','check.shop.buyer'],
         'namespace'=> 'App\Http\Controllers\front',
         'prefix' => 'buyer',
         'as' => 'buyer.',

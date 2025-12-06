@@ -73,9 +73,11 @@ return [
     |
     */
     'user_models' => [
-        'users' => \App\Models\User::class,
-        'buyers' => \App\Models\Buyer::class,
+        'users' => App\Models\User::class,
+        'buyers' => App\Models\Buyer::class,
     ],
+
+
 
     /*
     |--------------------------------------------------------------------------
