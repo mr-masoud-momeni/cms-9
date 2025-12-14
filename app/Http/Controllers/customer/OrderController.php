@@ -73,9 +73,27 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Order $order)
     {
-        //
+        $request->validate([
+            'status' => 'required|in:pending,paid,shipped,completed',
+            'tracking_code' => $request->status === 'shipped'
+                ? 'required|string|max:255'
+                : 'nullable',
+        ]);
+
+        $data = [
+            'status' => $request->status,
+        ];
+
+        if ($request->status === Order::STATUS_SHIPPED) {
+            $data['tracking_code'] = $request->tracking_code;
+            $data['shipped_at'] = now();
+        }
+
+        $order->update($data);
+
+        return back()->with('success', 'وضعیت سفارش بروزرسانی شد.');
     }
 
     /**

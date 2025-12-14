@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class GatewayController extends Controller
 {
-    public function edit(Shop $shop)
+    public function edit()
     {
-        $shop = auth()->user()->shop;
-        // لود همه درگاه‌های این فروشگاه
+        $shop = Shop::current();
+        // لود درگاه بانکی
         $gateways = $shop->gateways()->get();
 
         return view('Customer.gateways.edit', compact('shop', 'gateways'));
@@ -30,10 +30,15 @@ class GatewayController extends Controller
             'gateway_url' => 'required|url',
         ]);
 
-        $shop = Auth::user()->shop; // فرض بر اینه هر یوزر یک فروشگاه داره
+        $shop = Shop::current();
 
-        $shop->gateways()->create($validated);
+        // فقط یک درگاه برای هر فروشگاه
+        $shop->gateways()->updateOrCreate(
+            ['shop_id' => $shop->id], // شرط
+            $validated                 // داده‌ها
+        );
 
-        return back()->with('success', 'اطلاعات درگاه‌ها ذخیره شدند');
+        return back()->with('success', 'اطلاعات درگاه ذخیره شد');
     }
+
 }

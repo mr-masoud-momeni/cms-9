@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    const STATUS_PENDING   = 'pending';
+    const STATUS_PAID      = 'paid';
+    const STATUS_SHIPPED   = 'shipped';
+    const STATUS_COMPLETED = 'completed';
+
     protected $fillable =['buyer_id', 'shop_id', 'status','total'];
     public function buyer(){
         return $this->belongsTo(Buyer::class, 'buyer_id');

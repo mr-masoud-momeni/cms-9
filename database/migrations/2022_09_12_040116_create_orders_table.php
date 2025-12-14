@@ -17,7 +17,8 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('buyer_id');
             $table->unsignedBigInteger('shop_id');
-            $table->integer('status')->default('0');
+            $table->string('status')->nullable();
+            $table->string('tracking_code')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->string('total',50)->nullable();
             $table->timestamps();

@@ -13,57 +13,87 @@ abstract class BaseLoginController extends Controller
     protected string $redirectTo;
     protected string $view;
 
-    public function showLoginForm($path=null)
+    public function showLoginForm($path = null)
     {
-        if($path){
+        if ($path) {
+
+            // پیدا کردن یوزر
             $user = User::where('path', $path)->first();
             if (!$user) {
+
+                abort(404); // پیام عمومی
+            }
+
+            // اطلاعات فروشگاه
+            $shop = $user->shop;
+            if (!$shop) {
                 abort(404);
+            }
+
+            // دامنه درخواست
+            $requestDomain = request()->getHost();
+
+            // دامنه فروشگاه
+            $shopDomain = $shop->domain;
+
+            // مقایسه دامنه‌ها
+            if ($requestDomain !== $shopDomain) {
+                abort(404); // بدون افشای علت دقیق
             }
 
             return view($this->view);
         }
+
         return view($this->view);
     }
-
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
         $credentials = $request->only('email', 'password');
         $currentDomain = $request->getHost();
 
-        // پیدا کردن کاربر بر اساس ایمیل
+        // پیدا کردن کاربر (بدون پیام افشاگر)
         $user = User::where('email', $credentials['email'])->first();
 
         if (! $user) {
-            return back()->withErrors(['email' => 'کاربر یافت نشد']);
+            return back()->withErrors(['email' => 'ورود نامعتبر است.']);
         }
-        // اگر کاربر نقش ادمین اصلی دارد
+
+        // اگر نقش ادمین اصلی دارد
         if ($user->hasRole('admin')) {
-            if (Auth::attempt($credentials)) {
+
+            if (Auth::guard($this->guard)->attempt($credentials)) {
                 $request->session()->regenerate();
                 return redirect()->intended($this->redirectTo);
             }
 
-            return back()->withErrors(['email' => 'اطلاعات ورود اشتباه است']);
+            return back()->withErrors(['email' => 'ورود نامعتبر است.']);
         }
 
-        // اگر ادمین فروشگاه است آیا به فروشگاهی وصل است؟
+         // اگر یوزر متدی برای فروشگاه ندارد
+        //برای جلوگبری از خطای در خط بعدی
         if (! method_exists($user, 'shop')) {
-            return back()->withErrors(['domain' => 'حساب شما به فروشگاه خاصی متصل نیست.']);
+            return back()->withErrors(['email' => 'ورود نامعتبر است.']);
         }
 
+        // بررسی فروشگاه
         $shop = $user->shop()->first();
         if (! $shop) {
-            return back()->withErrors(['domain' => 'حساب شما به هیچ فروشگاهی متصل نیست.']);
+            return back()->withErrors(['email' => 'ورود نامعتبر است.']);
         }
 
         // بررسی دامنه
         if ($shop->domain !== $currentDomain) {
-            return back()->withErrors(['domain' => 'ورود از این دامنه مجاز نیست.']);
+            return back()->withErrors(['email' => 'ورود نامعتبر است.']);
         }
 
-        // حالا لاگین کن و سشن بساز
+        // تلاش برای ورود
         if (Auth::guard($this->guard)->attempt($credentials)) {
+
             $user = Auth::guard($this->guard)->user();
 
             session([
@@ -78,7 +108,7 @@ abstract class BaseLoginController extends Controller
             return redirect()->intended($this->redirectTo);
         }
 
-        return back()->withErrors(['email' => 'اطلاعات ورود اشتباه است']);
+        return back()->withErrors(['email' => 'ورود نامعتبر است.']);
     }
 
 
