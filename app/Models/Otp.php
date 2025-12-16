@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Otp extends Model
+{
+    protected $fillable = [
+        'code_hash',
+        'expires_at',
+        'purpose',
+        'attempts',
+        'blocked_until',
+    ];
+
+    protected $dates = [
+        'expires_at',
+        'blocked_until',
+    ];
+
+    // پلی‌مورفیک
+    public function otpable()
+    {
+        return $this->morphTo();
+    }
+
+    // متدهای کمکی
+    public function isExpired(): bool
+    {
+        return $this->expires_at->isPast();
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->blocked_until && $this->blocked_until->isFuture();
+    }
+}

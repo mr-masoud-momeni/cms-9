@@ -8,6 +8,7 @@ use App\Http\Controllers\customer\GatewayController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\ShopAdminLoginController;
 use App\Http\Controllers\Auth\BuyerLoginController;
+use App\Http\Controllers\OtpController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -101,6 +102,7 @@ Route::group(
 // خریدار
 Route::prefix('buyer')->group(function () {
     Route::get('/register', [BuyerController::class, 'index'])->name('buyer.show.register');
+    Route::get('/registerotp', [OtpController::class, 'index'])->name('buyer.show.registerotp');
     Route::post('/register', [BuyerController::class, 'register'])->name('buyer.register');
     Route::get('/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
     Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
