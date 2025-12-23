@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use App\Models\Otp;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Exception;
+use Illuminate\Support\Facades\Hash;
+use function now;
 
 class OtpService
 {
