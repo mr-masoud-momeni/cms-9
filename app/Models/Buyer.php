@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Authenticatable;
 use Laratrust\Traits\LaratrustUserTrait;
+use Illuminate\Support\Str;
 
 class Buyer extends Model implements AuthenticatableContract
 {
@@ -20,6 +21,14 @@ class Buyer extends Model implements AuthenticatableContract
     public function getMorphClass()
     {
         return static::class; // یعنی App\Models\Buyer
+    }
+    protected static function booted()
+    {
+        static::creating(function ($buyer) {
+            if (empty($buyer->uuid)) {
+                $buyer->uuid = (string) Str::uuid();
+            }
+        });
     }
     public function shops()
     {

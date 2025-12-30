@@ -8,6 +8,7 @@ use App\Services\Auth\OtpService;
 use App\Services\Auth\BuyerAccountService;
 use App\Services\Auth\BuyerAuthFlowService;
 use App\Helpers\ShopHelper;
+use App\Models\Buyer;
 
 class BuyerAuthController extends Controller
 {
@@ -26,69 +27,71 @@ class BuyerAuthController extends Controller
     {
         $shopId = ShopHelper::getShopId();
 
-        if (! $shopId) {
-            abort(404);
-        }
-
-        $step = $this->flow->handlePhone(
-            $request->phone,
-            $shopId
-        );
-
-        if ($step === 'password') {
+        if ($this->buyerExistsInShop($request->phone, $shopId)) {
             return view('Frontend.auth.password', [
                 'phone' => $request->phone
             ]);
         }
 
-        $this->otp->send($request->phone, 'register');
+        try {
+            $this->otp->send($request->phone, 'register');
+            session([
+                'otp_expires_at' => now()->addMinutes(3)
+            ]);
+        } catch (Exception $e) {
+            return back()->withErrors(['phone' => $e->getMessage()]);
+        }
 
-        return view('buyer.auth.otp', [
+        return view('Frontend.auth.otp', [
             'phone' => $request->phone,
             'purpose' => 'register'
         ]);
     }
+    protected function buyerExistsInShop(string $phone, int $shopId): bool
+    {
+        return Buyer::where('phone', $phone)
+            ->whereHas('shops', function ($q) use ($shopId) {
+                $q->where('shops.id', $shopId);
+            })
+            ->exists();
+    }
 
     public function verifyOtp(Request $request)
     {
-        $verified = $this->otp->verify(
-            $request->phone,
-            $request->code,
-            $request->purpose
-        );
-
-        if (! $verified) {
-            return back()->withErrors(['code' => 'کد وارد شده نادرست است']);
+        try {
+            $this->otp->verify(
+                $request->phone,
+                'register',
+                $request->code
+            );
+        } catch (Exception $e) {
+            return back()->withErrors(['code' => $e->getMessage()]);
         }
 
-        if ($request->purpose === 'register') {
-            return view('buyer.auth.register', [
-                'phone' => $request->phone
-            ]);
-        }
-
-        if ($request->purpose === 'reset') {
-            return view('buyer.auth.reset-password', [
-                'phone' => $request->phone
-            ]);
-        }
+        return view('buyer.auth.register', [
+            'phone' => $request->phone
+        ]);
     }
 
-    public function register(Request $request)
+
+    public function register(RegisterRequest $request)
     {
         $shopId = ShopHelper::getShopId();
 
-        if (! $shopId) {
-            abort(404);
-        }
+        $buyer = Buyer::create([
+            'uuid'     => Str::uuid(),
+            'name'     => $request->name,
+            'phone'    => $request->phone,
+            'password' => Hash::make($request->password),
+        ]);
 
-        $this->account->register(
-            $request->only('name', 'phone', 'password'),
-            $shopId
-        );
+        $buyer->shops()->attach($shopId);
 
-        return redirect()->route('buyer.dashboard');
+        Auth::guard('buyer')->login($buyer);
+
+        return redirect('/buyer/dashboard');
     }
+
 
     public function login(Request $request)
     {
@@ -132,5 +135,10 @@ class BuyerAuthController extends Controller
         );
 
         return redirect()->route('buyer.login.path');
+    }
+    // مدیریت خروج (logout) خریدار
+    public function logout()
+    {
+        $this->account->logout();
     }
 }

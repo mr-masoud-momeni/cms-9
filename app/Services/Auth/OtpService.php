@@ -3,64 +3,53 @@
 namespace App\Services\Auth;
 
 use App\Models\Otp;
+use App\Models\Buyer;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use App\Services\SmsService;
 use function now;
 
 class OtpService
 {
-    const MAX_ACTIVE_OTP = 3;
+    const MAX_ACTIVE_OTP = 1;
     const MAX_ATTEMPTS = 3;
-    const EXPIRE_MINUTES = 2;
+    const EXPIRE_MINUTES = 3;
     const BLOCK_MINUTES = 5;
 
-    public function generate($otpable, string $purpose): string
+    public function __construct(
+        private SmsService $sms,
+    ) {}
+
+    public function send(string $phone, string $purpose): void
     {
-        $this->cleanupOldOtps($otpable, $purpose);
-
-        $activeCount = Otp::where('otpable_type', get_class($otpable))
-            ->where('otpable_id', $otpable->id)
-            ->where('purpose', $purpose)
-            ->where('expires_at', '>', now())
-            ->count();
-
-        if ($activeCount >= self::MAX_ACTIVE_OTP) {
-            throw new Exception('Too many active OTP requests.');
-        }
+        $this->ensureCanSend($phone, $purpose);
 
         $code = random_int(100000, 999999);
 
         Otp::create([
-            'otpable_type' => get_class($otpable),
-            'otpable_id'   => $otpable->id,
-            'purpose'      => $purpose,
-            'code_hash'    => Hash::make($code),
-            'expires_at'   => now()->addMinutes(self::EXPIRE_MINUTES),
-            'attempts'     => 0,
+            'phone'      => $phone,
+            'purpose'    => $purpose,
+            'code_hash'  => Hash::make($code),
+            'expires_at' => now()->addMinutes(self::EXPIRE_MINUTES),
         ]);
 
-        return (string)$code;
+        $this->sms->sendOtp($phone, $code);
     }
 
-    public function verify($otpable, string $purpose, string $code): void
+    public function verify(string $phone, string $purpose, string $code): void
     {
-        $otp = Otp::where('otpable_type', get_class($otpable))
-            ->where('otpable_id', $otpable->id)
+        $otp = Otp::where('phone', $phone)
             ->where('purpose', $purpose)
             ->latest()
-            ->first();
-
-        if (!$otp) {
-            throw new Exception('OTP not found.');
-        }
+            ->firstOrFail();
 
         if ($otp->blocked_until && $otp->blocked_until->isFuture()) {
-            throw new Exception('OTP temporarily blocked.');
+            throw new Exception('موقتاً مسدود شده');
         }
 
         if ($otp->expires_at->isPast()) {
             $otp->delete();
-            throw new Exception('OTP expired.');
+            throw new Exception('کد منقضی شده');
         }
 
         if (!Hash::check($code, $otp->code_hash)) {
@@ -72,19 +61,22 @@ class OtpService
                 ]);
             }
 
-            throw new Exception('Invalid OTP.');
+            throw new Exception('کد اشتباه است');
         }
 
-        // Success
         $otp->delete();
     }
 
-    protected function cleanupOldOtps($otpable, string $purpose): void
+    protected function ensureCanSend(string $phone, string $purpose): void
     {
-        Otp::where('otpable_type', get_class($otpable))
-            ->where('otpable_id', $otpable->id)
+        $active = Otp::where('phone', $phone)
             ->where('purpose', $purpose)
-            ->where('expires_at', '<', now())
-            ->delete();
+            ->where('expires_at', '>', now())
+            ->exists();
+
+        if ($active) {
+            throw new Exception('تا پایان زمان باید صبر کنید');
+        }
     }
 }
+

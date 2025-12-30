@@ -103,20 +103,19 @@ Route::prefix('buyer')->group(function () {
 //    Route::get('/register', [BuyerController::class, 'index'])->name('buyer.show.register');
 //    Route::post('/register', [BuyerController::class, 'register'])->name('buyer.register');
 //    Route::get('/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
-    Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
-    Route::get('/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
+//    Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
+    Route::get('/auth/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
 
     Route::get('/auth/phone', [BuyerAuthController::class, 'showPhone'])->name('buyer.login');
     Route::post('/auth/phone', [BuyerAuthController::class, 'submitPhone']);
     Route::post('/auth/login', [BuyerAuthController::class, 'login']);
 
-    Route::post('/otp', [BuyerAuthController::class, 'verifyOtp']);
+    Route::post('/auth/otp', [BuyerAuthController::class, 'verifyOtp'])->name('buyer.otp.verify');
 
-    Route::post('/register', [BuyerAuthController::class, 'register']);
-    Route::post('/login', [BuyerAuthController::class, 'login']);
+    Route::post('/auth/register', [BuyerAuthController::class, 'register']);
 
     Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword']);
-    Route::post('/reset-password', [BuyerAuthController::class, 'resetPassword']);
+    Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword']);
 });
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 Route::group(

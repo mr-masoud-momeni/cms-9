@@ -62,4 +62,11 @@ class BuyerAccountService
             'password' => Hash::make($password)
         ]);
     }
+    // مدیریت خروج (logout) خریدار
+    public function logout()
+    {
+        Auth::guard('buyer')->logout();
+
+        return redirect()->route('buyer.login')->with('message', __('message.logout_msg'));
+    }
 }

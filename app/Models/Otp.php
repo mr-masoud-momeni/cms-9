@@ -12,9 +12,10 @@ class Otp extends Model
     public const PURPOSE_RESET = 'reset_password';
 
     protected $fillable = [
+        'phone',
+        'purpose',
         'code_hash',
         'expires_at',
-        'purpose',
         'attempts',
         'blocked_until',
     ];

@@ -1,25 +1,19 @@
-<h2>{{ ucfirst($purpose) }} OTP</h2>
+<h2>کد تأیید ارسال‌شده به {{ $phone }}</h2>
 
-@if(!session('otp_sent'))
+<form method="POST" action="{{ route('buyer.otp.verify') }}">
+    @csrf
 
-    <form method="POST" action="{{ route('buyer.otp.send', $purpose) }}">
-        @csrf
-        <input name="mobile" placeholder="Mobile">
-        <button>Send Code</button>
-    </form>
+    <input type="hidden" name="phone" value="{{ $phone }}">
+    <input type="hidden" name="purpose" value="{{ $purpose }}">
 
-@else
+    <input name="code" placeholder="کد تایید">
+    <button>تایید</button>
+</form>
 
-    <form method="POST" action="{{ route('buyer.otp.verify', $purpose) }}">
-        @csrf
-        <input name="code" placeholder="OTP Code">
-        <button>Verify</button>
-    </form>
-
+@if(session('otp_expires_at'))
     <p>
         ارسال مجدد تا
-        {{ max(0, 60 - (now()->timestamp - session('otp_sent_at'))) }}
+        {{ max(0, session('otp_expires_at')->diffInSeconds(now())) }}
         ثانیه دیگر
     </p>
-
 @endif
