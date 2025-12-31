@@ -112,7 +112,7 @@ Route::prefix('buyer')->group(function () {
 
     Route::post('/auth/otp', [BuyerAuthController::class, 'verifyOtp'])->name('buyer.otp.verify');
 
-    Route::post('/auth/register', [BuyerAuthController::class, 'register']);
+    Route::post('/auth/register', [BuyerAuthController::class, 'register'])->name('buyer.register.submit');
 
     Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword']);
     Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword']);

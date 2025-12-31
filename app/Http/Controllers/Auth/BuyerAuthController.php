@@ -9,6 +9,10 @@ use App\Services\Auth\BuyerAccountService;
 use App\Services\Auth\BuyerAuthFlowService;
 use App\Helpers\ShopHelper;
 use App\Models\Buyer;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class BuyerAuthController extends Controller
 {
@@ -64,34 +68,82 @@ class BuyerAuthController extends Controller
                 'register',
                 $request->code
             );
+            session()->forget([
+                'otp_expires_at',
+            ]);
+            session([
+                'register_context' => [
+                    'phone' => $request->phone,
+                    'verified_at' => now()->timestamp,
+                ]
+            ]);
         } catch (Exception $e) {
             return back()->withErrors(['code' => $e->getMessage()]);
         }
 
-        return view('buyer.auth.register', [
+        return view('Frontend.auth.register', [
             'phone' => $request->phone
         ]);
     }
 
 
-    public function register(RegisterRequest $request)
+    public function register(Request $request)
     {
+        // 1. بررسی context
+        $context = session('register_context');
+
+        if (! $context || empty($context['phone'])) {
+            abort(403, 'دسترسی غیرمجاز');
+        }
+
+        if (now()->timestamp - $context['verified_at'] > 300) {
+            session()->forget('register_context');
+            abort(403, 'زمان ثبت‌نام منقضی شده');
+        }
+
+        $phone  = $context['phone'];
         $shopId = ShopHelper::getShopId();
 
+        if (! $shopId) {
+            abort(404, 'فروشگاه نامعتبر');
+        }
+
+        // 2. ساخت buyer
         $buyer = Buyer::create([
-            'uuid'     => Str::uuid(),
-            'name'     => $request->name,
-            'phone'    => $request->phone,
-            'password' => Hash::make($request->password),
+            'uuid'        => (string) Str::uuid(),
+            'phone'       => $phone,
+            'name'        => $request->name,
+            'email'       => $request->email,
+            'password'    => $request->password
+                ? Hash::make($request->password)
+                : null,
+            'verified_at' => now(), // 👈 وریفای شد
         ]);
 
+        // 3. اتصال به فروشگاه
         $buyer->shops()->attach($shopId);
 
+        // 4. دادن رول buyer
+        $buyer->assignRole('buyer');
+
+        // 5. لاگین
         Auth::guard('buyer')->login($buyer);
 
-        return redirect('/buyer/dashboard');
-    }
+        // 6. ست کردن context فروشگاه (برای middleware check.shop.buyer)
+        session([
+            'buyer_shop_context' => [
+                'buyer_id' => $buyer->id,
+                'shop_id'  => $shopId,
+                'domain'   => request()->getHost(),
+                'created_at' => now()->toDateTimeString(),
+            ]
+        ]);
 
+        // 7. پاکسازی session موقت
+        session()->forget('register_context');
+
+        return redirect()->intended('/buyer/dashboard');
+    }
 
     public function login(Request $request)
     {

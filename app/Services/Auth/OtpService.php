@@ -6,7 +6,6 @@ use App\Models\Otp;
 use App\Models\Buyer;
 use Exception;
 use Illuminate\Support\Facades\Hash;
-use App\Services\SmsService;
 use function now;
 
 class OtpService
