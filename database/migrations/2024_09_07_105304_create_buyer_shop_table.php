@@ -17,7 +17,7 @@ class CreateBuyerShopTable extends Migration
             $table->id();
             $table->foreignId('buyer_id')->constrained();
             $table->foreignId('shop_id')->constrained();
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('phone');
             $table->string('email_verification_token')->nullable();
             $table->timestamp('email_verified_at')->nullable();

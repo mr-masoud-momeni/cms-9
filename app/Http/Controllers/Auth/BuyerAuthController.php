@@ -121,10 +121,14 @@ class BuyerAuthController extends Controller
         ]);
 
         // 3. اتصال به فروشگاه
-        $buyer->shops()->attach($shopId);
+        $buyer->shops()->attach($shopId, [
+            'email' => $request->email,
+            'phone' => $phone,
+            'email_verified_at' => now(),
+        ]);
 
         // 4. دادن رول buyer
-        $buyer->assignRole('buyer');
+        $buyer->attachRole('buyer');
 
         // 5. لاگین
         Auth::guard('buyer')->login($buyer);
