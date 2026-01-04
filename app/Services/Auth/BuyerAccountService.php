@@ -63,10 +63,20 @@ class BuyerAccountService
         ]);
     }
     // مدیریت خروج (logout) خریدار
-    public function logout()
+//    public function logout()
+//    {
+//        Auth::guard('buyer')->logout();
+//
+//        return redirect()->route('buyer.login')->with('message', __('message.logout_msg'));
+//    }
+    public function logout(Request $request)
     {
         Auth::guard('buyer')->logout();
 
-        return redirect()->route('buyer.login')->with('message', __('message.logout_msg'));
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('buyer.login');
     }
+
 }

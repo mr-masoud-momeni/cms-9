@@ -26,7 +26,33 @@ class BuyerAuthController extends Controller
     {
         return view('Frontend.auth.phone');
     }
+    public function showOtpForm(Request $request)
+    {
+        return view('Frontend.auth.otp', [
+            'phone'   => $request->phone,
+            'purpose'=> $request->purpose,
+        ]);
+    }
+    public function showRegisterForm()
+    {
+        if (! session('register_context')) {
+            abort(403);
+        }
 
+        return view('Frontend.auth.register');
+    }
+    public function showForgotForm()
+    {
+        return view('Frontend.auth.forgot-phone');
+    }
+    public function showResetForm()
+    {
+        if (! session('reset_context.verified')) {
+            abort(403);
+        }
+
+        return view('Frontend.auth.reset-password');
+    }
     public function submitPhone(Request $request)
     {
         $shopId = ShopHelper::getShopId();
@@ -62,30 +88,58 @@ class BuyerAuthController extends Controller
 
     public function verifyOtp(Request $request)
     {
+        $request->validate([
+            'phone'   => 'required',
+            'code'    => 'required',
+            'purpose' => 'required|in:register,reset',
+        ]);
+
         try {
             $this->otp->verify(
                 $request->phone,
-                'register',
+                $request->purpose,
                 $request->code
             );
-            session()->forget([
-                'otp_expires_at',
-            ]);
-            session([
-                'register_context' => [
-                    'phone' => $request->phone,
-                    'verified_at' => now()->timestamp,
-                ]
-            ]);
         } catch (Exception $e) {
             return back()->withErrors(['code' => $e->getMessage()]);
         }
 
-        return view('Frontend.auth.register', [
-            'phone' => $request->phone
-        ]);
-    }
+        // OTP UI session رو پاک کن
+        session()->forget(['otp_expires_at']);
 
+        // 🔀 مسیر بر اساس هدف
+        return match ($request->purpose) {
+
+            'register' => $this->handleRegisterVerified($request->phone),
+
+            'reset'    => $this->handleResetVerified($request->phone),
+
+            default    => abort(400),
+        };
+    }
+    protected function handleRegisterVerified(string $phone)
+    {
+        session([
+            'register_context' => [
+                'phone' => $phone,
+                'verified_at' => now()->timestamp,
+            ]
+        ]);
+
+        return redirect()->route('buyer.register.form');
+    }
+    protected function handleResetVerified(string $phone)
+    {
+        session([
+            'reset_context' => [
+                'phone'    => $phone,
+                'verified' => true,
+                'verified_at' => now()->timestamp,
+            ]
+        ]);
+
+        return redirect()->route('buyer.reset.form');
+    }
 
     public function register(Request $request)
     {
@@ -168,33 +222,89 @@ class BuyerAuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
+        $request->validate([
+            'phone' => 'required'
+        ]);
+
+        $shopId = ShopHelper::getShopId();
+
+        $buyer = Buyer::where('phone', $request->phone)
+            ->whereHas('shops', fn ($q) => $q->where('shops.id', $shopId))
+            ->first();
+
+        if (! $buyer) {
+            return back()->withErrors(['phone' => 'کاربری با این شماره وجود ندارد']);
+        }
+
         $this->otp->send($request->phone, 'reset');
 
-        return view('buyer.auth.otp', [
+        session([
+            'reset_context' => [
+                'phone' => $request->phone,
+                'verified' => false,
+            ]
+        ]);
+
+        return redirect()->route('buyer.otp.form', [
             'phone' => $request->phone,
             'purpose' => 'reset'
         ]);
     }
 
+//    public function resetPassword(Request $request)
+//    {
+//        $shopId = ShopHelper::getShopId();
+//
+//        if (! $shopId) {
+//            abort(404);
+//        }
+//
+//        $this->account->resetPassword(
+//            $request->phone,
+//            $request->password,
+//            $shopId
+//        );
+//
+//        return redirect()->route('buyer.login.path');
+//    }
     public function resetPassword(Request $request)
     {
-        $shopId = ShopHelper::getShopId();
+        $context = session('reset_context');
 
-        if (! $shopId) {
-            abort(404);
+        if (! $context || ! $context['verified']) {
+            abort(403);
         }
 
-        $this->account->resetPassword(
-            $request->phone,
-            $request->password,
-            $shopId
-        );
+        $request->validate([
+            'password' => 'required|confirmed|min:6'
+        ]);
 
-        return redirect()->route('buyer.login.path');
+        $buyer = Buyer::where('phone', $context['phone'])->firstOrFail();
+
+        $buyer->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        session()->forget('reset_context');
+
+        return redirect()->route('buyer.login')
+            ->with('success', 'رمز عبور تغییر کرد');
     }
+
     // مدیریت خروج (logout) خریدار
-    public function logout()
+//    public function logout()
+//    {
+//        $this->account->logout();
+//    }
+    public function logout(Request $request)
     {
-        $this->account->logout();
+        Auth::guard('buyer')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('buyer.login');
     }
+
+
 }

@@ -20,6 +20,10 @@ class Buyer extends Authenticatable
         'uuid',
         'password',
     ];
+    public function getMorphClass()
+    {
+        return static::class; // یعنی App\Models\User
+    }
 
     protected static function booted()
     {

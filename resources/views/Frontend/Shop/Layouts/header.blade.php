@@ -41,7 +41,12 @@
 
                 @auth('buyer')
                     <a href="#"><span style="margin-left: 10px;">{{ __('ui.hello')}} {{ auth('buyer')->user()->name }} {{ __('ui.dear')}}</span></a>
-                    <a href="{{route('buyer.logout')}}" >{{ __('ui.logout')}}</a>
+                    <form method="POST" action="{{ route('buyer.logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-link p-0">
+                            {{ __('ui.logout')}}
+                        </button>
+                    </form>
                 @else
                     <a href="{{route('buyer.login.path')}}" >{{ __('ui.login')}}</a> / <a href="{{route('buyer.show.register')}}" >{{ __('ui.membership')}}</a>
                 @endauth

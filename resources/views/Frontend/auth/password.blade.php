@@ -1,4 +1,4 @@
-<form method="POST" action="/buyer/auth/login">
+<form method="POST" action="{{route('buyer.otp.login')}}">
     @csrf
     <input type="hidden" name="phone" value="{{ $phone }}">
     <input name="password" type="password" placeholder="رمز عبور">

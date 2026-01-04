@@ -98,25 +98,61 @@ Route::group(
     Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');
     Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
 });
+
+//Route::prefix('buyer')->group(function () {
+////    Route::get('/register', [BuyerController::class, 'index'])->name('buyer.show.register');
+////    Route::post('/register', [BuyerController::class, 'register'])->name('buyer.register');
+////    Route::get('/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
+////    Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
+//    Route::get('/auth/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
+//});
 // خریدار
 Route::prefix('buyer')->group(function () {
-//    Route::get('/register', [BuyerController::class, 'index'])->name('buyer.show.register');
-//    Route::post('/register', [BuyerController::class, 'register'])->name('buyer.register');
-//    Route::get('/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
-//    Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
-    Route::get('/auth/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
 
-    Route::get('/auth/phone', [BuyerAuthController::class, 'showPhone'])->name('buyer.login');
+    // ---------- Login / Phone ----------
+    Route::get('/auth/phone', [BuyerAuthController::class, 'showPhone'])
+        ->name('buyer.login');
+
     Route::post('/auth/phone', [BuyerAuthController::class, 'submitPhone']);
-    Route::post('/auth/login', [BuyerAuthController::class, 'login']);
 
-    Route::post('/auth/otp', [BuyerAuthController::class, 'verifyOtp'])->name('buyer.otp.verify');
+    Route::post('/auth/login', [BuyerAuthController::class, 'login'])
+        ->name('buyer.login.submit');
 
-    Route::post('/auth/register', [BuyerAuthController::class, 'register'])->name('buyer.register.submit');
+    Route::post('/auth/logout', [BuyerAuthController::class, 'logout'])
+        ->name('buyer.logout');
 
-    Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword']);
-    Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword']);
+
+
+    // ---------- OTP ----------
+    Route::get('/auth/otp', [BuyerAuthController::class, 'showOtpForm'])
+        ->name('buyer.otp.form');
+
+    Route::post('/auth/otp', [BuyerAuthController::class, 'verifyOtp'])
+        ->name('buyer.otp.verify');
+
+
+    // ---------- Register ----------
+    Route::get('/auth/register', [BuyerAuthController::class, 'showRegisterForm'])
+        ->name('buyer.register.form');
+
+    Route::post('/auth/register', [BuyerAuthController::class, 'register'])
+        ->name('buyer.register.submit');
+
+
+    // ---------- Forgot / Reset ----------
+    Route::get('/auth/forgot', [BuyerAuthController::class, 'showForgotForm'])
+        ->name('buyer.forgot.form');
+
+    Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword'])
+        ->name('buyer.forgot.submit');
+
+    Route::get('/auth/reset-password', [BuyerAuthController::class, 'showResetForm'])
+        ->name('buyer.reset.form');
+
+    Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword'])
+        ->name('buyer.reset.submit');
 });
+
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 Route::group(
     [
