@@ -24,11 +24,11 @@ class BuyerAuthController extends Controller
 
     public function showPhone()
     {
-        return view('Frontend.auth.phone');
+        return view('Frontend.Shop.auth.phone');
     }
     public function showOtpForm(Request $request)
     {
-        return view('Frontend.auth.otp', [
+        return view('Frontend.Shop.auth.otp', [
             'phone'   => $request->phone,
             'purpose'=> $request->purpose,
         ]);
@@ -39,11 +39,11 @@ class BuyerAuthController extends Controller
             abort(403);
         }
 
-        return view('Frontend.auth.register');
+        return view('Frontend.Shop.auth.register');
     }
     public function showForgotForm()
     {
-        return view('Frontend.auth.forgot-phone');
+        return view('Frontend.Shop.auth.forgot-phone');
     }
     public function showResetForm()
     {
@@ -51,14 +51,14 @@ class BuyerAuthController extends Controller
             abort(403);
         }
 
-        return view('Frontend.auth.reset-password');
+        return view('Frontend.Shop.auth.reset-password');
     }
     public function submitPhone(Request $request)
     {
         $shopId = ShopHelper::getShopId();
 
         if ($this->buyerExistsInShop($request->phone, $shopId)) {
-            return view('Frontend.auth.password', [
+            return view('Frontend.Shop.auth.password', [
                 'phone' => $request->phone
             ]);
         }
@@ -72,7 +72,7 @@ class BuyerAuthController extends Controller
             return back()->withErrors(['phone' => $e->getMessage()]);
         }
 
-        return view('Frontend.auth.otp', [
+        return view('Frontend.Shop.auth.otp', [
             'phone' => $request->phone,
             'purpose' => 'register'
         ]);
@@ -250,23 +250,6 @@ class BuyerAuthController extends Controller
             'purpose' => 'reset'
         ]);
     }
-
-//    public function resetPassword(Request $request)
-//    {
-//        $shopId = ShopHelper::getShopId();
-//
-//        if (! $shopId) {
-//            abort(404);
-//        }
-//
-//        $this->account->resetPassword(
-//            $request->phone,
-//            $request->password,
-//            $shopId
-//        );
-//
-//        return redirect()->route('buyer.login.path');
-//    }
     public function resetPassword(Request $request)
     {
         $context = session('reset_context');

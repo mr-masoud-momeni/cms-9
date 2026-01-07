@@ -48,7 +48,7 @@
                         </button>
                     </form>
                 @else
-                    <a href="{{route('buyer.login.path')}}" >{{ __('ui.login')}}</a> / <a href="{{route('buyer.show.register')}}" >{{ __('ui.membership')}}</a>
+                    <a href="{{route('buyer.login')}}" >{{ __('ui.login')}}</a>
                 @endauth
             </div>
 

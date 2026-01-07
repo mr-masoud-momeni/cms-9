@@ -113,7 +113,8 @@ Route::prefix('buyer')->group(function () {
     Route::get('/auth/phone', [BuyerAuthController::class, 'showPhone'])
         ->name('buyer.login');
 
-    Route::post('/auth/phone', [BuyerAuthController::class, 'submitPhone']);
+    Route::post('/auth/phone', [BuyerAuthController::class, 'submitPhone'])
+        ->name('buyer.submit.phone');;
 
     Route::post('/auth/login', [BuyerAuthController::class, 'login'])
         ->name('buyer.login.submit');
