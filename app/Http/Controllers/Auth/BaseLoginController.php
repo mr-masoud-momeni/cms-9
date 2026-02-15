@@ -73,12 +73,7 @@ abstract class BaseLoginController extends Controller
 
             return back()->withErrors(['email' => 'ورود نامعتبر است.']);
         }
-
-         // اگر یوزر متدی برای فروشگاه ندارد
-        //برای جلوگبری از خطای در خط بعدی
-        if (! method_exists($user, 'shop')) {
-            return back()->withErrors(['email' => 'ورود نامعتبر است.']);
-        }
+        
 
         // بررسی فروشگاه
         $shop = $user->shop()->first();
