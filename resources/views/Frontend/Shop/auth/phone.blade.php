@@ -10,6 +10,11 @@
                     @error('phone')
                     <div>{{ $message }}</div>
                     @enderror
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
 
                     <button class="btn btn-primary w-100" type="submit">ادامه</button>
                 </form>

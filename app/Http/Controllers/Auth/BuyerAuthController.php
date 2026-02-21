@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class BuyerAuthController extends Controller
 {
@@ -58,9 +59,11 @@ class BuyerAuthController extends Controller
         $shopId = ShopHelper::getShopId();
 
         if ($this->buyerExistsInShop($request->phone, $shopId)) {
-            return view('Frontend.Shop.auth.password', [
-                'phone' => $request->phone
-            ]);
+//            return view('Frontend.Shop.auth.password', [
+//                'phone' => $request->phone
+//            ]);
+            session(['login_phone' => $request->phone]);
+            return redirect()->route('buyer.password.form');
         }
 
         try {
@@ -202,22 +205,38 @@ class BuyerAuthController extends Controller
 
         return redirect()->intended('/buyer/dashboard');
     }
+    public function showPassword()
+    {
+        $phone = session('login_phone');
 
+        if (! $phone) {
+            return redirect()->route('buyer.login');
+        }
+
+        return view('Frontend.Shop.auth.password', compact('phone'));
+    }
     public function login(Request $request)
     {
         $shopId = ShopHelper::getShopId();
 
-        if (! $shopId) {
-            abort(404);
+        try {
+
+            $this->account->login(
+                $request->phone,
+                $request->password,
+                $shopId
+            );
+
+            return redirect()->route('buyer.dashboard');
+
+        } catch (ValidationException $e) {
+
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+
         }
-
-        $this->account->login(
-            $request->phone,
-            $request->password,
-            $shopId
-        );
-
-        return redirect()->route('buyer.dashboard');
     }
 
     public function forgotPassword(Request $request)
