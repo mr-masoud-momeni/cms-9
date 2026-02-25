@@ -5,8 +5,8 @@
         <div class="row align-items-center">
             <!-- داشبورد یوزر -->
             <div class="col-md-12">
-                @include('Frontend.layouts.errors')
-                @include('Frontend.layouts.message')
+                @include('Frontend.Shop.layouts.errors')
+                @include('Frontend.Shop.layouts.message')
                 {{-- اگر کاربر لاگین است و $order یک مدل Order است --}}
                 @if($orders->isEmpty())
                     <p>هیچ سفارش تکمیل شده‌ای وجود ندارد.</p>

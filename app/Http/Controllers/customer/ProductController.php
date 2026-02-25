@@ -77,7 +77,7 @@ class ProductController extends CustomerController
             $product->categories()->attach(request('category'));
         }
         session()->flash('createproduct','محصول شما با موفقیت ثبت شد.');
-        return redirect('/customer/product');
+        return redirect('/shop/product');
     }
 
 

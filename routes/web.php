@@ -34,7 +34,7 @@ Route::group(
         Route::get('/blog/{article}', 'blog@show')->name('article.show');
         Route::get('/page/{page}', 'blog@show1')->name('page.showw');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
-        Route::resource('/order', 'OrderController');
+
 
 });
 
@@ -167,6 +167,7 @@ Route::group(
     ]
     , function () {
     Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
+    Route::resource('/order', 'OrderController');
     Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
     Route::post('/pay','PaymentController@init')->name('payment');
 });

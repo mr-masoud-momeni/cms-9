@@ -2,7 +2,7 @@
 @section('Main')
     <div class="content container min-vh-100 d-flex justify-content-center align-items-center">
         <div class="row w-100">
-            
+
             <div class="col-md-6 mx-auto text-center">
                 @if ($errors->any())
                     <div class="alert alert-danger">

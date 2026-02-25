@@ -43,6 +43,7 @@ class UserDataComposer
             $sessionCart = session()->get('cart', []);
             $order = $sessionCart;
             $orderCount = is_array($sessionCart) ? array_sum($sessionCart) : 0;
+            $orderNumber = is_array($sessionCart) ? count($sessionCart) : 0;
         }
 
         $view->with(compact('order','orderCount', 'orderNumber'));
