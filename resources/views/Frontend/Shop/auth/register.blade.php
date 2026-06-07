@@ -8,7 +8,7 @@
                     <input name="name" class="form-control mb-3" placeholder="نام (اختیاری)">
                     <input name="email" class="form-control mb-3" placeholder="ایمیل (اختیاری)">
                     <input name="password" class="form-control mb-3" type="password" placeholder="رمز عبور">
-                    <button>ثبت‌نام</button>
+                    <button type="submit" class="btn btn-primary w-100">ثبت‌نام</button>
                 </form>
             </div>
         </div>

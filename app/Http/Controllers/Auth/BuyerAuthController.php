@@ -55,6 +55,13 @@ class BuyerAuthController extends Controller
     }
     public function submitPhone(Request $request)
     {
+        $request->validate([
+            'phone' => [
+                'required',
+                'digits:11',
+                'regex:/^09\d{9}$/'
+            ],
+        ]);
         $shopId = ShopHelper::getShopId();
 
         if ($this->buyerExistsInShop($request->phone, $shopId)) {

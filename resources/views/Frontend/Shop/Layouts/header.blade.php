@@ -21,7 +21,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex justify-content-between align-items-center">
-                <div class="ms-4"><img src="logo.png" alt="لوگو" height="40"></div>
+                <div class="ms-4"><img src="logo.png" alt="لوگو 12" height="40"></div>
                 <div>
                     @auth('buyer')
                         <ul class="header-menu">

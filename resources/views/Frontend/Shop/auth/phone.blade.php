@@ -5,10 +5,9 @@
             <div class="col-md-6 mx-auto text-center">
                 <form method="POST" action="{{ route('buyer.submit.phone') }}">
                     @csrf
-
                     <input class="form-control mb-3" type="text" name="phone" placeholder="شماره موبایل" required>
                     @error('phone')
-                    <div>{{ $message }}</div>
+                        <div class="text-red-500 mt-1">{{ $message }}</div>
                     @enderror
 
                     <button class="btn btn-primary w-100" type="submit">ادامه</button>
