@@ -24,8 +24,8 @@ class OrderController extends Controller
         $currentShop = Shop::current(); // دامنه یا فروشگاه فعلی
         if(!$buyer){
             if(session()->has('cart') && count(session('cart')) > 0){
-                return redirect()->route('buyer.show.register')
-                    ->with('message', 'برای ادامه خرید باید ثبت‌نام کنید.');
+                return redirect()->route('buyer.login')
+                    ->with('warning', 'برای ادامه خرید باید ثبت‌نام کنید.');
             }
             $cart = session('cart', []);
             return view('Frontend.Shop.Pay.Cart', compact('cart'));
@@ -129,6 +129,7 @@ class OrderController extends Controller
                 $quantity = $request->input('count_product', 1);
                 // ذخیره در سشن برای کاربران مهمان
                 $cart = session()->get('cart', []);
+
                 // اگر محصول از قبل در سبد بود، تعداد را به‌روز می‌کنیم
                 if (isset($cart[$product_id])) {
                     $cart[$product_id] += $quantity;

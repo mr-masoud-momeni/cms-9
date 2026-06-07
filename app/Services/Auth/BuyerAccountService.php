@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Models\Buyer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class BuyerAccountService
 {
@@ -36,7 +37,9 @@ class BuyerAccountService
         ];
 
         if (! Auth::guard('buyer')->attempt($credentials)) {
-            abort(422, 'رمز عبور اشتباه است');
+            throw ValidationException::withMessages([
+                'password' => 'رمز عبور اشتباه است'
+            ]);
         }
 
         session([
@@ -48,7 +51,7 @@ class BuyerAccountService
             ]
         ]);
 
-        return $buyer;
+        return Auth::guard('buyer')->user();
     }
 
 

@@ -34,7 +34,7 @@ Route::group(
         Route::get('/blog/{article}', 'blog@show')->name('article.show');
         Route::get('/page/{page}', 'blog@show1')->name('page.showw');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
-        Route::resource('/order', 'OrderController');
+
 
 });
 
@@ -114,9 +114,12 @@ Route::prefix('buyer')->group(function () {
         ->name('buyer.login');
 
     Route::post('/auth/phone', [BuyerAuthController::class, 'submitPhone'])
-        ->name('buyer.submit.phone');;
+        ->name('buyer.submit.phone');
 
-    Route::post('/auth/login', [BuyerAuthController::class, 'login'])
+    Route::get('/auth/password', [BuyerAuthController::class, 'showPassword'])
+        ->name('buyer.password.form');
+
+    Route::post('/auth/password', [BuyerAuthController::class, 'login'])
         ->name('buyer.login.submit');
 
     Route::post('/auth/logout', [BuyerAuthController::class, 'logout'])
@@ -164,6 +167,7 @@ Route::group(
     ]
     , function () {
     Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
+    Route::resource('/order', 'OrderController');
     Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
     Route::post('/pay','PaymentController@init')->name('payment');
 });

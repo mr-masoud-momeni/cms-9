@@ -37,7 +37,7 @@
             </div>
             <div>
 
-                <a href="{{route('order.index')}}" class="shop-ico"><i class="bi bi-cart-fill" style="font-size: 1.5rem;" id="cart-val" value={{$orderNumber}}></i></a>
+                <a href="{{route('buyer.order.index')}}" class="shop-ico"><i class="bi bi-cart-fill" style="font-size: 1.5rem;" id="cart-val" value={{$orderNumber}}></i></a>
 
                 @auth('buyer')
                     <a href="#"><span style="margin-left: 10px;">{{ __('ui.hello')}} {{ auth('buyer')->user()->name }} {{ __('ui.dear')}}</span></a>

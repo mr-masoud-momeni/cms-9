@@ -3,12 +3,16 @@
     <div class="content container min-vh-100 d-flex justify-content-center align-items-center">
         <div class="row w-100">
             <div class="col-md-6 mx-auto text-center">
+                @include('Frontend.Shop.layouts.message')
                 <form method="POST" action="{{ route('buyer.submit.phone') }}">
                     @csrf
+
                     <input class="form-control mb-3" type="text" name="phone" placeholder="شماره موبایل" required>
-                    @error('phone')
-                        <div class="text-red-500 mt-1">{{ $message }}</div>
-                    @enderror
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
 
                     <button class="btn btn-primary w-100" type="submit">ادامه</button>
                 </form>
