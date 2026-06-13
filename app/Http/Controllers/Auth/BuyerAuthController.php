@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Auth\OtpService;
 use App\Services\Auth\BuyerAccountService;
-use App\Services\Auth\BuyerAuthFlowService;
 use App\Helpers\ShopHelper;
 use App\Models\Buyer;
 use Exception;
@@ -18,7 +17,6 @@ use Illuminate\Validation\ValidationException;
 class BuyerAuthController extends Controller
 {
     public function __construct(
-        private BuyerAuthFlowService $flow,
         private OtpService $otp,
         private BuyerAccountService $account
     ) {}

@@ -10,7 +10,6 @@ use function now;
 
 class OtpService
 {
-    const MAX_ACTIVE_OTP = 1;
     const MAX_ATTEMPTS = 3;
     const EXPIRE_MINUTES = 3;
     const BLOCK_MINUTES = 5;
@@ -23,16 +22,25 @@ class OtpService
     {
         $this->ensureCanSend($phone, $purpose);
 
+        Otp::where('phone', $phone)
+        ->where('purpose', $purpose)
+        ->delete();
+
         $code = random_int(100000, 999999);
 
-        Otp::create([
+        $otp = Otp::create([
             'phone'      => $phone,
             'purpose'    => $purpose,
             'code_hash'  => Hash::make($code),
             'expires_at' => now()->addMinutes(self::EXPIRE_MINUTES),
         ]);
 
-        $this->sms->sendOtp($phone, $code);
+        try {
+            $this->sms->sendOtp($phone, $code);
+        } catch (\Throwable $e) {
+            $otp->delete();
+            throw $e;
+        }
     }
 
     public function verify(string $phone, string $purpose, string $code): void
