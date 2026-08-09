@@ -7,6 +7,8 @@ use App\Models\Buyer;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use function now;
+use App\Services\Security\LimiterService;
+use App\Support\SecurityKey;
 
 class OtpService
 {
@@ -16,11 +18,18 @@ class OtpService
 
     public function __construct(
         private SmsService $sms,
+        private LimiterService $limiter,
     ) {}
 
     public function send(string $phone, string $purpose): void
     {
-        $this->ensureCanSend($phone, $purpose);
+        $key = SecurityKey::otpSend($purpose, $phone);
+
+        if ($this->limiter->tooManyAttempts($key, 1)) {
+            throw new Exception(
+                'لطفاً ' . $this->limiter->availableIn($key) . ' ثانیه دیگر دوباره تلاش کنید.'
+            );
+        }
 
         Otp::where('phone', $phone)
         ->where('purpose', $purpose)
@@ -37,6 +46,7 @@ class OtpService
 
         try {
             $this->sms->sendOtp($phone, $code);
+            $this->limiter->hit($key, self::EXPIRE_MINUTES * 60);
         } catch (\Throwable $e) {
             $otp->delete();
             throw $e;
@@ -62,6 +72,8 @@ class OtpService
         if (!Hash::check($code, $otp->code_hash)) {
             $otp->increment('attempts');
 
+            $otp->refresh();
+            
             if ($otp->attempts >= self::MAX_ATTEMPTS) {
                 $otp->update([
                     'blocked_until' => now()->addMinutes(self::BLOCK_MINUTES)
@@ -72,18 +84,6 @@ class OtpService
         }
 
         $otp->delete();
-    }
-
-    protected function ensureCanSend(string $phone, string $purpose): void
-    {
-        $active = Otp::where('phone', $phone)
-            ->where('purpose', $purpose)
-            ->where('expires_at', '>', now())
-            ->exists();
-
-        if ($active) {
-            throw new Exception('تا پایان زمان باید صبر کنید');
-        }
     }
 }
 

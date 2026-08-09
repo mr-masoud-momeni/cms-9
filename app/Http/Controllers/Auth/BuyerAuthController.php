@@ -21,36 +21,12 @@ class BuyerAuthController extends Controller
         private BuyerAccountService $account
     ) {}
 
+
+
+    // ---------- Login / Phone Controllers ----------
     public function showPhone()
     {
         return view('Frontend.Shop.auth.phone');
-    }
-    public function showOtpForm(Request $request)
-    {
-        return view('Frontend.Shop.auth.otp', [
-            'phone'   => $request->phone,
-            'purpose'=> $request->purpose,
-        ]);
-    }
-    public function showRegisterForm()
-    {
-        if (! session('register_context')) {
-            abort(403);
-        }
-
-        return view('Frontend.Shop.auth.register');
-    }
-    public function showForgotForm()
-    {
-        return view('Frontend.Shop.auth.forgot-phone');
-    }
-    public function showResetForm()
-    {
-        if (! session('reset_context.verified')) {
-            abort(403);
-        }
-
-        return view('Frontend.Shop.auth.reset-password');
     }
     public function submitPhone(Request $request)
     {
@@ -64,9 +40,6 @@ class BuyerAuthController extends Controller
         $shopId = ShopHelper::getShopId();
 
         if ($this->buyerExistsInShop($request->phone, $shopId)) {
-//            return view('Frontend.Shop.auth.password', [
-//                'phone' => $request->phone
-//            ]);
             session(['login_phone' => $request->phone]);
             return redirect()->route('buyer.password.form');
         }
@@ -85,15 +58,60 @@ class BuyerAuthController extends Controller
             'purpose' => 'register'
         ]);
     }
-    protected function buyerExistsInShop(string $phone, int $shopId): bool
+    public function showPassword()
     {
-        return Buyer::where('phone', $phone)
-            ->whereHas('shops', function ($q) use ($shopId) {
-                $q->where('shops.id', $shopId);
-            })
-            ->exists();
+        $phone = session('login_phone');
+
+        if (! $phone) {
+            return redirect()->route('buyer.login');
+        }
+
+        return view('Frontend.Shop.auth.password', compact('phone'));
+    }
+    public function login(Request $request)
+    {
+        $shopId = ShopHelper::getShopId();
+
+        try {
+
+            $this->account->login(
+                $request->phone,
+                $request->password,
+                $shopId
+            );
+
+            return redirect()->route('buyer.dashboard');
+
+        } catch (ValidationException $e) {
+
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+
+        }
+    }
+    public function logout(Request $request)
+    {
+        Auth::guard('buyer')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('buyer.login');
     }
 
+
+
+    
+    // ---------- OTP Controllers ----------
+    public function showOtpForm(Request $request)
+    {
+        return view('Frontend.Shop.auth.otp', [
+            'phone'   => $request->phone,
+            'purpose'=> $request->purpose,
+        ]);
+    }
     public function verifyOtp(Request $request)
     {
         $request->validate([
@@ -125,30 +143,18 @@ class BuyerAuthController extends Controller
             default    => abort(400),
         };
     }
-    protected function handleRegisterVerified(string $phone)
+
+
+
+    // ---------- Register Controllers ----------
+    public function showRegisterForm()
     {
-        session([
-            'register_context' => [
-                'phone' => $phone,
-                'verified_at' => now()->timestamp,
-            ]
-        ]);
+        if (! session('register_context')) {
+            abort(403);
+        }
 
-        return redirect()->route('buyer.register.form');
+        return view('Frontend.Shop.auth.register');
     }
-    protected function handleResetVerified(string $phone)
-    {
-        session([
-            'reset_context' => [
-                'phone'    => $phone,
-                'verified' => true,
-                'verified_at' => now()->timestamp,
-            ]
-        ]);
-
-        return redirect()->route('buyer.reset.form');
-    }
-
     public function register(Request $request)
     {
         // 1. بررسی context
@@ -210,40 +216,13 @@ class BuyerAuthController extends Controller
 
         return redirect()->intended('/buyer/dashboard');
     }
-    public function showPassword()
+
+
+    // ---------- Forgot / Reset Controllers ----------
+    public function showForgotForm()
     {
-        $phone = session('login_phone');
-
-        if (! $phone) {
-            return redirect()->route('buyer.login');
-        }
-
-        return view('Frontend.Shop.auth.password', compact('phone'));
+        return view('Frontend.Shop.auth.forgot-phone');
     }
-    public function login(Request $request)
-    {
-        $shopId = ShopHelper::getShopId();
-
-        try {
-
-            $this->account->login(
-                $request->phone,
-                $request->password,
-                $shopId
-            );
-
-            return redirect()->route('buyer.dashboard');
-
-        } catch (ValidationException $e) {
-
-            return redirect()
-                ->back()
-                ->withErrors($e->errors())
-                ->withInput();
-
-        }
-    }
-
     public function forgotPassword(Request $request)
     {
         $request->validate([
@@ -274,6 +253,14 @@ class BuyerAuthController extends Controller
             'purpose' => 'reset'
         ]);
     }
+    public function showResetForm()
+    {
+        if (! session('reset_context.verified')) {
+            abort(403);
+        }
+
+        return view('Frontend.Shop.auth.reset-password');
+    }
     public function resetPassword(Request $request)
     {
         $context = session('reset_context');
@@ -298,20 +285,41 @@ class BuyerAuthController extends Controller
             ->with('success', 'رمز عبور تغییر کرد');
     }
 
-    // مدیریت خروج (logout) خریدار
-//    public function logout()
-//    {
-//        $this->account->logout();
-//    }
-    public function logout(Request $request)
+
+    
+
+    protected function buyerExistsInShop(string $phone, int $shopId): bool
     {
-        Auth::guard('buyer')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('buyer.login');
+        return Buyer::where('phone', $phone)
+            ->whereHas('shops', function ($q) use ($shopId) {
+                $q->where('shops.id', $shopId);
+            })
+            ->exists();
     }
 
+
+    protected function handleRegisterVerified(string $phone)
+    {
+        session([
+            'register_context' => [
+                'phone' => $phone,
+                'verified_at' => now()->timestamp,
+            ]
+        ]);
+
+        return redirect()->route('buyer.register.form');
+    }
+    protected function handleResetVerified(string $phone)
+    {
+        session([
+            'reset_context' => [
+                'phone'    => $phone,
+                'verified' => true,
+                'verified_at' => now()->timestamp,
+            ]
+        ]);
+
+        return redirect()->route('buyer.reset.form');
+    }
 
 }
