@@ -11,7 +11,24 @@ class Order extends Model
     const STATUS_SHIPPED   = 'shipped';
     const STATUS_COMPLETED = 'completed';
 
-    protected $fillable =['buyer_id', 'shop_id', 'status','total'];
+    protected $casts = [
+        'paid_at' => 'datetime',
+    ];
+
+    protected $fillable = [
+        'buyer_id',
+        'shop_id',
+        'status',
+        'total',
+        'paid_at',
+        'tracking_code',
+        'receiver_name',
+        'receiver_phone',
+        'receiver_province',
+        'receiver_city',
+        'receiver_postal_code',
+        'receiver_address',
+    ];
     public function buyer(){
         return $this->belongsTo(Buyer::class, 'buyer_id');
     }

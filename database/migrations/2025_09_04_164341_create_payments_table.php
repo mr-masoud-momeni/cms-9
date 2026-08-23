@@ -16,13 +16,21 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('shop_id');
-            $table->unsignedBigInteger('gateway_id');
+            $table->string('method')->default('online');
+            $table->unsignedBigInteger('gateway_id')->nullable();
             $table->unsignedBigInteger('order_id')->nullable(); // اگر سفارش داری
             $table->string('ref_id')->nullable();    // کد ارجاع بانک (token)
             $table->string('sale_reference_id')->nullable(); // شماره پیگیری
             $table->string('sale_order_id')->nullable();     // شماره سفارش بانک
             $table->unsignedBigInteger('amount');
-            $table->enum('status', ['pending','redirected','paid','failed'])->default('pending');
+            $table->enum('status', [
+                'pending',
+                'redirected',
+                'waiting_confirmation',
+                'paid',
+                'rejected',
+                'failed'
+            ])->default('pending');
             $table->timestamps();
 
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');

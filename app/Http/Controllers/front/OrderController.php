@@ -17,40 +17,48 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-
         $buyer = auth('buyer')->user();
-        $currentShop = Shop::current(); // دامنه یا فروشگاه فعلی
-        if(!$buyer){
-            if(session()->has('cart') && count(session('cart')) > 0){
+        $currentShop = Shop::current();
+
+        // کاربر مهمان
+        if (!$buyer) {
+
+            $cart = session('cart', []);
+
+            if (count($cart) > 0) {
                 return redirect()->route('buyer.login')
                     ->with('warning', 'برای ادامه خرید باید ثبت‌نام کنید.');
             }
-            $cart = session('cart', []);
+
             return view('Frontend.Shop.Pay.Cart', compact('cart'));
-        }else{
-            $order = $buyer->orders()
-                ->where('status', 0)
-                ->where('shop_id', $currentShop->id)
-                ->with('products')->first();
-            $totalAmount = 0;
-            if ($order) {
-                foreach ($order->products as $product) {
-                    $found = Product::find($product->id);
-                    $price = $found ? $found->price : null;
-
-                    $order->products()->updateExistingPivot($product->id, [
-                        'price' => $price,
-                    ]);
-
-                    if (!is_null($price)) {
-                        $totalAmount += $price * $product->pivot->quantity;
-                    }
-                }
-            }
-            return view('Frontend.Shop.Pay.Cart' , compact('totalAmount'));
         }
+
+        // سفارش باز خریدار در فروشگاه فعلی
+        $order = $buyer->orders()
+            ->where('status', 0)
+            ->where('shop_id', $currentShop->id)
+            ->with('products')
+            ->first();
+
+        $totalAmount = 0;
+
+        if ($order) {
+
+            foreach ($order->products as $product) {
+
+                $totalAmount +=
+                    $product->pivot->price *
+                    $product->pivot->quantity;
+            }
+        }
+
+        return view(
+            'Frontend.Shop.Pay.Cart',
+            compact('order', 'totalAmount')
+        );
     }
 
     /**
@@ -202,6 +210,28 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $buyer = auth('buyer')->user();
+
+        if (!$buyer) {
+            return redirect()->route('buyer.login');
+        }
+
+        $currentShop = Shop::current();
+
+        $order = $buyer->orders()
+            ->where('status', 0)
+            ->where('shop_id', $currentShop->id)
+            ->first();
+
+        if (!$order) {
+            return redirect()->back()
+                ->with('error', 'سبد خرید پیدا نشد.');
+        }
+
+        // حذف کامل محصول از سبد
+        $order->products()->detach($id);
+
+        return redirect()->back()
+            ->with('success', 'محصول از سبد خرید حذف شد.');
     }
 }

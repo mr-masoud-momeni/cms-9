@@ -17,10 +17,18 @@ class OrderController extends Controller
     public function index()
     {
         $shop = Shop::current();
-        $orders = Order::with('buyer', 'payment')->where('shop_id', $shop->id)->get();
+
+        $orders = Order::with([
+            'buyer',
+            'payment',
+            'products',
+        ])
+            ->where('shop_id', $shop->id)
+            ->latest()
+            ->get();
+
         return view('Customer.Orders.index', compact('orders'));
     }
-
     /**
      * Show the form for creating a new resource.
      *

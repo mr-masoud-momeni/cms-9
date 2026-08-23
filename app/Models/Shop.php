@@ -60,4 +60,13 @@ class Shop extends Model
     {
         return $this->hasMany(Gateway::class);
     }
+    public function baleConnections()
+    {
+        return $this->hasMany(ShopBaleConnection::class);
+    }
+
+    public function baleConnectionTokens()
+    {
+        return $this->hasMany(ShopBaleConnectionToken::class);
+    }
 }

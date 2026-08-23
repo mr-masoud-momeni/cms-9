@@ -19,6 +19,7 @@ abstract class BaseLoginController extends Controller
 
             // پیدا کردن یوزر
             $user = User::where('path', $path)->first();
+
             if (!$user) {
 
                 abort(404); // پیام عمومی
@@ -27,6 +28,7 @@ abstract class BaseLoginController extends Controller
             // اطلاعات فروشگاه
             $shop = $user->shop;
             if (!$shop) {
+                            
                 abort(404);
             }
 

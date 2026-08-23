@@ -63,7 +63,7 @@
                                 <img src="{{ asset($product->images['thum'])}}"
                                      class="card-img-top" alt="iPhone" />
                                 <div class="card-body">
-                                    <form method="post" action="{{route('order.store')}}" class="AddProduct" >
+                                    <form method="post" action="{{route('buyer.order.store')}}" class="AddProduct" >
                                         {!! csrf_field() !!}
                                     <div class="text-center mt-1">
                                         <h4 class="card-title">{{ $product->title}}</h4>

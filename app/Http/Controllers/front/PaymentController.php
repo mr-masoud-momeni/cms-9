@@ -3,154 +3,406 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
-use App\Models\product;
+use App\Models\Gateway;
+use App\Models\Payment;
 use App\Models\Shop;
 use Illuminate\Http\Request;
-use App\Models\Payment;
-use App\Models\Gateway;
-use App\Helpers\ShopHelper;
 use SoapClient;
+use SoapFault;
+use Throwable;
 
 class PaymentController extends Controller
 {
-    public function init(Request $request)
-    {
+    /**
+     * شروع پرداخت
+     */
+public function init(Request $request)
+{
         $buyer = auth('buyer')->user();
-        $currentShop = Shop::current(); // دامنه یا فروشگاه فعلی
+
+        if (!$buyer) {
+            return redirect()
+                ->route('buyer.login')
+                ->with('warning', 'برای پرداخت ابتدا وارد حساب کاربری شوید.');
+        }
+
+        $currentShop = Shop::current();
+
         $order = $buyer->orders()
             ->where('status', 0)
             ->where('shop_id', $currentShop->id)
-            ->with('products')->first();
-        $totalAmount = 0;
-        if ($order) {
-            foreach ($order->products as $product) {
-                $found = Product::find($product->id);
-                $price = $found ? $found->price : null;
-                $order->products()->updateExistingPivot($product->id, [
-                    'price' => $price,
-                ]);
-                if (!is_null($price)) {
-                    $totalAmount += $price * $product->pivot->quantity;
-                }
-            }
+            ->with('products')
+            ->first();
+
+        if (!$order || $order->products->isEmpty()) {
+            return back()->withErrors('سبد خرید شما خالی است.');
         }
-        $shopId = $currentShop->id;
-        $gateway = Gateway::where('shop_id', $shopId)
-            ->where('active', true)
-            ->firstOrFail();
-        $payment = Payment::create([
-            'shop_id'  => $gateway->shop_id,
-            'gateway_id'=> $gateway->id,
-            'order_id'  => $order->id ?? null,
-            'amount'    => $totalAmount,
-            'status'    => 'pending'
+
+        // اعتبارسنجی اطلاعات گیرنده
+        $validated = $request->validate([
+            'receiver_name' => 'required|string|max:255',
+            'receiver_phone' => 'required|string|max:20',
+            'receiver_province' => 'required|string|max:100',
+            'receiver_city' => 'required|string|max:100',
+            'receiver_address' => 'required|string|max:1000',
+            'receiver_postal_code' => 'required|string|max:20',
         ]);
 
-        $client = new SoapClient($gateway->wsdl_url);
+        // ذخیره اطلاعات گیرنده روی سفارش
+        $order->update([
+            'receiver_name' => $validated['receiver_name'],
+            'receiver_phone' => $validated['receiver_phone'],
+            'receiver_province' => $validated['receiver_province'],
+            'receiver_city' => $validated['receiver_city'],
+            'receiver_address' => $validated['receiver_address'],
+            'receiver_postal_code' => $validated['receiver_postal_code'],
+        ]);
 
-        $params = [
-            'terminalId'     => $gateway->terminal_id,
-            'userName'       => $gateway->username,
-            'userPassword'   => $gateway->password,
-            'orderId'        => $payment->id, // به عنوان شناسه سفارش بانک
-            'amount'         => $payment->amount,
-            'localDate'      => date("Ymd"),
-            'localTime'      => date("His"),
-            'additionalData' => '',
-            'callBackUrl'    => route('payments.callback'),
-            'payerId'        => 0
-        ];
+        /*
+         * محاسبه مبلغ از روی قیمت ثبت‌شده در pivot
+         */
+        $totalAmount = 0;
 
-        $res = $client->bpPayRequest($params);
-        $result = explode(',', $res->return);
-
-        if ($result[0] == "0") {
-            $payment->update([
-                'ref_id' => $result[1],
-                'status' => 'redirected'
-            ]);
-            return view('Frontend.Shop.pay.redirect', ['gatewayUrl' => $gateway->gateway_url, 'refId' => $result[1]]);
+        foreach ($order->products as $product) {
+            $totalAmount +=
+                $product->pivot->price *
+                $product->pivot->quantity;
         }
 
-        $payment->update(['status' => 'failed']);
-        return back()->withErrors('خطا در ارتباط با درگاه. کد خطا: ' . $result[0]);
+        if ($totalAmount <= 0) {
+            return back()->withErrors('مبلغ سفارش نامعتبر است.');
+        }
+
+        /*
+         * پیدا کردن درگاه فعال این فروشگاه
+         */
+        $gateway = Gateway::where('shop_id', $currentShop->id)
+            ->where('active', true)
+            ->first();
+
+        if (!$gateway) {
+            return back()->withErrors('درگاه پرداخت فعال برای این فروشگاه وجود ندارد.');
+        }
+
+        /*
+         * ساخت Payment داخلی
+         *
+         * payment.id بعداً به عنوان orderId
+         * به بانک ملت ارسال می‌شود.
+         */
+        $payment = Payment::create([
+            'shop_id'    => $currentShop->id,
+            'gateway_id' => $gateway->id,
+            'order_id'   => $order->id,
+            'amount'     => $totalAmount,
+            'status'     => 'pending',
+        ]);
+
+        try {
+
+            $client = new SoapClient(
+                $gateway->wsdl_url,
+                [
+                    'trace'      => true,
+                    'exceptions' => true,
+                ]
+            );
+
+            /*
+             * اطلاعات مورد نیاز بانک ملت
+             */
+            $params = [
+                'terminalId'   => $gateway->terminal_id,
+                'userName'     => $gateway->username,
+                'userPassword' => $gateway->password,
+
+                // شناسه پرداخت ما در بانک
+                'orderId'      => $payment->id,
+
+                // مبلغ به ریال
+                'amount'       => $payment->amount,
+
+                'localDate'    => now()->format('Ymd'),
+                'localTime'    => now()->format('His'),
+
+                'additionalData' => '',
+
+                // آدرس Callback
+                'callBackUrl' => route('payments.callback'),
+
+                'payerId' => 0,
+            ];
+
+            /*
+             * درخواست پرداخت
+             */
+            $response = $client->bpPayRequest($params);
+
+            $result = explode(',', $response->return);
+
+            $responseCode = $result[0] ?? null;
+            $refId = $result[1] ?? null;
+
+            /*
+             * درخواست موفق بوده
+             */
+            if ((string) $responseCode === '0' && $refId) {
+
+                $payment->update([
+                    'ref_id' => $refId,
+                    'status' => 'redirected',
+                ]);
+
+                return view(
+                    'Frontend.Shop.pay.redirect',
+                    [
+                        'gatewayUrl' => $gateway->gateway_url,
+                        'refId'      => $refId,
+                    ]
+                );
+            }
+
+            /*
+             * درخواست پرداخت ناموفق
+             */
+            $payment->update([
+                'status' => 'failed',
+            ]);
+
+            return back()->withErrors(
+                'خطا در ایجاد تراکنش بانک. کد خطا: ' . $responseCode
+            );
+
+        } catch (Throwable $e) {
+
+            $payment->update([
+                'status' => 'failed',
+            ]);
+
+            report($e);
+
+            return back()->withErrors(
+                'خطا در ارتباط با درگاه پرداخت.'
+            );
+        }
     }
 
+
+    /**
+     * Callback بانک ملت
+     */
     public function callback(Request $request)
     {
-        $resCode = $request->input('ResCode');
-        $orderId = $request->input('SaleOrderId');
-        $refId   = $request->input('RefId');
-        $saleRefId = $request->input('SaleReferenceId');
+        /*
+         * اطلاعات برگشتی بانک
+         */
+        $resCode       = $request->input('ResCode');
+        $saleOrderId   = $request->input('SaleOrderId');
+        $refId         = $request->input('RefId');
+        $saleRefId     = $request->input('SaleReferenceId');
 
-        $payment = Payment::where('id', $orderId)->firstOrFail();
+        /*
+         * اگر شناسه پرداخت برنگشته باشد،
+         * نمی‌توانیم Payment خودمان را پیدا کنیم.
+         */
+        if (!$saleOrderId) {
+            return redirect()->route('payments.failed')
+                ->with('error', 'شناسه تراکنش دریافت نشد.');
+        }
 
-        if ($resCode == 0) {
-            // SOAP Verify
+        /*
+         * SaleOrderId همان payment.id است
+         * که در init به بانک فرستادیم.
+         */
+        $payment = Payment::with(['order', 'gateway'])
+            ->find($saleOrderId);
+
+        if (!$payment) {
+            return redirect()->route('payments.failed')
+                ->with('error', 'تراکنش پیدا نشد.');
+        }
+
+        /*
+         * اگر قبلاً پرداخت شده، دوباره Verify/Settle نکن.
+         */
+        if ($payment->status === 'paid') {
+            return redirect()->route('payments.success', $payment);
+        }
+
+        /*
+         * اگر کاربر در بانک پرداخت را لغو کرده باشد
+         */
+        if ((string) $resCode !== '0') {
+
+            $payment->update([
+                'status' => 'failed',
+            ]);
+
+            return redirect()->route('payments.failed', $payment);
+        }
+
+        try {
+
             $gateway = $payment->gateway;
-            $client = new SoapClient($gateway->wsdl_url);
-            $verify = $client->bpVerifyRequest([
+
+            $client = new SoapClient(
+                $gateway->wsdl_url,
+                [
+                    'trace'      => true,
+                    'exceptions' => true,
+                ]
+            );
+
+            /*
+             * -----------------------------
+             * مرحله اول: Verify
+             * -----------------------------
+             *
+             * orderId:
+             * همان payment.id که موقع PayRequest فرستادیم
+             *
+             * saleOrderId:
+             * شناسه‌ای که بانک در Callback برگردانده
+             *
+             * saleReferenceId:
+             * شناسه مرجع تراکنش بانک
+             */
+            $verifyResponse = $client->bpVerifyRequest([
                 'terminalId'      => $gateway->terminal_id,
                 'userName'        => $gateway->username,
                 'userPassword'    => $gateway->password,
-                'orderId'         => $payment->order_id,
-                'saleOrderId'     => $orderId,
+
+                'orderId'         => $payment->id,
+                'saleOrderId'     => $saleOrderId,
                 'saleReferenceId' => $saleRefId,
             ]);
-            $result = (int) $verify->return;
 
-            if ($result === 0) {
-                // SOAP Settle
-                $settle = $client->bpSettleRequest([
-                    'terminalId'      => $gateway->terminal_id,
-                    'userName'        => $gateway->username,
-                    'userPassword'    => $gateway->password,
-                    'orderId'         => $payment->order_id,
-                    'saleOrderId'     => $orderId,
-                    'saleReferenceId' => $saleRefId,
+            $verifyResult = (int) $verifyResponse->return;
+
+            /*
+             * Verify موفق
+             */
+            if ($verifyResult !== 0) {
+
+                $payment->update([
+                    'status' => 'failed',
                 ]);
 
-                $resultsettle = (int) $settle->return;
-                if ($resultsettle === 0) {
-                    $payment->update([
-                        'status'  => 'paid',
-                        'ref_id'  => $refId,
-                        'sale_order_id'      => $orderId,
-                        'sale_reference_id'  => $saleRefId,
+                return redirect()
+                    ->route('payments.failed', $payment)
+                    ->with(
+                        'error',
+                        'تأیید تراکنش توسط بانک انجام نشد. کد: ' . $verifyResult
+                    );
+            }
+
+            /*
+             * -----------------------------
+             * مرحله دوم: Settle
+             * -----------------------------
+             */
+            $settleResponse = $client->bpSettleRequest([
+                'terminalId'      => $gateway->terminal_id,
+                'userName'        => $gateway->username,
+                'userPassword'    => $gateway->password,
+
+                'orderId'         => $payment->id,
+                'saleOrderId'     => $saleOrderId,
+                'saleReferenceId' => $saleRefId,
+            ]);
+
+            $settleResult = (int) $settleResponse->return;
+
+            /*
+             * Settle موفق
+             */
+            if ($settleResult === 0) {
+
+                $payment->update([
+                    'status'            => 'paid',
+                    'ref_id'            => $refId,
+                    'sale_order_id'     => $saleOrderId,
+                    'sale_reference_id' => $saleRefId,
+                ]);
+
+                /*
+                 * سفارش را Paid می‌کنیم
+                 */
+                if ($payment->order) {
+
+                    $payment->order->update([
+                        'status'   => 1,
+                        'total'    => $payment->amount,
+                        'paid_at'  => now(),
                     ]);
 
-                    // آپدیت سفارش مربوطه
-                    if ($payment->order) {
-                        $payment->order->update([
-                            'status'  => 'paid',
-                            'total' => $payment->amount,
-                            'paid_at' => now(),
-                        ]);
-                    }
-//                    $order = $payment->order;
-//                    $order->update([
-//                       'status' => '1'
-//                    ]);
-                    // 🔥 ایونت رو اینجا فایر می‌کنیم
-                    event(new \App\Events\PaymentWasSuccessful($order));
-                    return redirect()->route('payments.success', $payment);
+                    /*
+                     * اگر Event پرداخت موفق داری،
+                     * اینجا باید خود Order را بفرستیم.
+                     */
+                    event(
+                        new \App\Events\PaymentWasSuccessful(
+                            $payment->order
+                        )
+                    );
                 }
-            }
-        }
 
-        // اگر به هر دلیلی موفق نبود
-        $payment->update(['status' => 'failed']);
-        return redirect()->route('payments.failed', $payment);
+                return redirect()
+                    ->route('payments.success', $payment);
+            }
+
+            /*
+             * Settle ناموفق
+             */
+            $payment->update([
+                'status' => 'failed',
+            ]);
+
+            return redirect()
+                ->route('payments.failed', $payment)
+                ->with(
+                    'error',
+                    'تسویه تراکنش توسط بانک انجام نشد. کد: ' . $settleResult
+                );
+
+        } catch (Throwable $e) {
+
+            report($e);
+
+            $payment->update([
+                'status' => 'failed',
+            ]);
+
+            return redirect()
+                ->route('payments.failed', $payment)
+                ->with(
+                    'error',
+                    'خطا هنگام تأیید تراکنش با بانک.'
+                );
+        }
     }
+
+
+    /**
+     * صفحه پرداخت موفق
+     */
     public function success(Payment $payment)
     {
-        return view('Frontend.Shop.pay.success', compact('payment'));
+        return view(
+            'Frontend.Shop.pay.success',
+            compact('payment')
+        );
     }
 
+
+    /**
+     * صفحه پرداخت ناموفق
+     */
     public function failed(Payment $payment)
     {
-        return view('Frontend.Shop.pay.failed', compact('payment'));
+        return view(
+            'Frontend.Shop.pay.failed',
+            compact('payment')
+        );
     }
-
-
 }

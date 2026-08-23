@@ -93,6 +93,9 @@ Route::group(
     Route::resource('/orders', 'OrderController');
     Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
     Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
+    Route::post('/card-to-card', [CardToCardController::class, 'store'])->name('card-to-card.store');
+    Route::post('/bale/connect', [BaleConnectionController::class, 'connect'])->name('bale.connect');
+    Route::post('/bale/disconnect', [BaleConnectionController::class, 'disconnect'])->name('bale.disconnect');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
     Route::post('/category/create', 'CategoryController@save')->name('catProduct.save');
     Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');
@@ -158,6 +161,7 @@ Route::prefix('buyer')->group(function () {
 });
 
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
+Route::resource('buyer/order', 'App\Http\Controllers\front\OrderController');
 Route::group(
     [
         'middleware'=>['auth:buyer','buyer.verified','role:buyer','check.shop.buyer'],
@@ -167,7 +171,6 @@ Route::group(
     ]
     , function () {
     Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
-    Route::resource('/order', 'OrderController');
     Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
     Route::post('/pay','PaymentController@init')->name('payment');
 });

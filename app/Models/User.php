@@ -98,4 +98,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Shop::class);
     }
+    public function baleConnections()
+    {
+        return $this->hasMany(ShopBaleConnection::class);
+    }
+
+    public function baleConnectionTokens()
+    {
+        return $this->hasMany(ShopBaleConnectionToken::class);
+    }
 }

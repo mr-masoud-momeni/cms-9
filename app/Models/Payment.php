@@ -17,7 +17,15 @@ class Payment extends Model
         'amount',
         'status'
     ];
+    public function isOnline()
+    {
+        return $this->method === 'online';
+    }
 
+    public function isCardToCard()
+    {
+        return $this->method === 'card_to_card';
+    }
     public function gateway()
     {
         return $this->belongsTo(Gateway::class);
@@ -30,5 +38,9 @@ class Payment extends Model
     public function order()
     {
         return $this->belongsTo(Shop::class);
+    }
+    public function receipt()
+    {
+        return $this->hasOne(PaymentReceipt::class);
     }
 }

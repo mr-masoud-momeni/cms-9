@@ -13,10 +13,19 @@ class GatewayController extends Controller
     public function edit()
     {
         $shop = Shop::current();
-        // لود درگاه بانکی
+
         $gateways = $shop->gateways()->get();
 
-        return view('Customer.gateways.edit', compact('shop', 'gateways'));
+        $baleConnection = $shop->baleConnections()
+            ->where('user_id', auth('shop_admin')->id())
+            ->where('active', true)
+            ->first();
+
+        return view('Customer.gateways.edit', compact(
+            'shop',
+            'gateways',
+            'baleConnection'
+        ));
     }
 
     public function store(Request $request)
