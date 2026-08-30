@@ -6,7 +6,7 @@ use App\Models\article;
 use App\Http\Controllers\Controller;
 use App\Models\menu;
 use App\Models\Order;
-use App\Models\product;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\ShopHelper;
 use function view;

@@ -8,6 +8,8 @@ use App\Http\Controllers\customer\GatewayController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\ShopAdminLoginController;
 use App\Http\Controllers\Auth\BuyerAuthController;
+use App\Http\Controllers\customer\CardToCardController;
+use App\Http\Controllers\customer\BaleConnectionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -93,7 +95,7 @@ Route::group(
     Route::resource('/orders', 'OrderController');
     Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
     Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
-    Route::post('/card-to-card', [CardToCardController::class, 'store'])->name('card-to-card.store');
+    Route::post('/card-to-card', [CardToCardController::class, 'update'])->name('card-to-card.store');
     Route::post('/bale/connect', [BaleConnectionController::class, 'connect'])->name('bale.connect');
     Route::post('/bale/disconnect', [BaleConnectionController::class, 'disconnect'])->name('bale.disconnect');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');

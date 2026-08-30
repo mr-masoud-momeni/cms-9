@@ -69,4 +69,8 @@ class Shop extends Model
     {
         return $this->hasMany(ShopBaleConnectionToken::class);
     }
+    public function bankAccount()
+    {
+        return $this->hasOne(ShopBankAccount::class);
+    }
 }

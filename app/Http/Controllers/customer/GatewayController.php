@@ -12,6 +12,7 @@ class GatewayController extends Controller
 {
     public function edit()
     {
+
         $shop = Shop::current();
 
         $gateways = $shop->gateways()->get();
@@ -21,10 +22,13 @@ class GatewayController extends Controller
             ->where('active', true)
             ->first();
 
+        $bankAccount = $shop->bankAccount;
+
         return view('Customer.gateways.edit', compact(
             'shop',
             'gateways',
-            'baleConnection'
+            'baleConnection',
+            'bankAccount'
         ));
     }
 

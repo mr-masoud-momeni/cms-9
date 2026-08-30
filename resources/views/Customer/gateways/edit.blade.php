@@ -113,11 +113,13 @@
 
                                         <div class="form-group">
                                             <label for="card_number">شماره کارت</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   name="card_number"
-                                                   value="{{ old('card_number') }}"
-                                                   placeholder="مثلاً 6037...">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="card_number"
+                                                value="{{ old('card_number', $bankAccount?->card_number) }}"
+                                                placeholder="مثلاً 6037..."
+                                            >
                                         </div>
 
                                     </div>
@@ -126,10 +128,12 @@
 
                                         <div class="form-group">
                                             <label for="owner_name">نام صاحب کارت</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   name="owner_name"
-                                                   value="{{ old('owner_name') }}">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="owner_name"
+                                                value="{{ old('owner_name', $bankAccount?->account_holder) }}"
+                                            >
                                         </div>
 
                                     </div>
@@ -138,11 +142,13 @@
 
                                         <div class="form-group">
                                             <label for="iban">شماره شبا</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   name="iban"
-                                                   value="{{ old('iban') }}"
-                                                   placeholder="IR...">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="iban"
+                                                value="{{ old('iban', $bankAccount?->sheba) }}"
+                                                placeholder="IR..."
+                                            >
                                         </div>
 
                                     </div>
