@@ -287,6 +287,22 @@ class PaymentController extends Controller
             'amount' => $totalAmount,
         ]);
 
+        // کارت‌به‌کارت هنوز پرداخت نهایی نشده، اما سفارش دیگر نباید
+        // به‌عنوان سبد خرید فعال نمایش داده شود.
+        // 2 = در انتظار تأیید پرداخت کارت‌به‌کارت
+        $order->update([
+            'status' => 2,
+            'total' => $totalAmount,
+        ]);
+
+        // برای مهمان، سبد Session و شناسه سفارش Checkout پاک می‌شود.
+        // برای کاربر لاگین‌شده، تغییر status به 2 باعث می‌شود OrderController
+        // دیگر این سفارش را به‌عنوان سبد خرید فعال نخواند.
+        if (!auth('buyer')->check()) {
+            session()->forget('cart');
+            session()->forget('checkout_order_id');
+        }
+
         return view('Frontend.Shop.Pay.card-to-card-success', compact('payment', 'order'));
     }
 
