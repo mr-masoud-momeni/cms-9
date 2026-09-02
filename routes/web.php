@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\front\BuyerController;
 use App\Http\Controllers\front\OrderController;
+use App\Http\Controllers\front\PaymentController;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\customer\GatewayController;
 use App\Http\Controllers\Auth\AdminLoginController;
@@ -104,13 +105,6 @@ Route::group(
     Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
 });
 
-//Route::prefix('buyer')->group(function () {
-////    Route::get('/register', [BuyerController::class, 'index'])->name('buyer.show.register');
-////    Route::post('/register', [BuyerController::class, 'register'])->name('buyer.register');
-////    Route::get('/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
-////    Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
-//    Route::get('/auth/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
-//});
 // خریدار
 Route::prefix('buyer')->group(function () {
 
@@ -130,8 +124,6 @@ Route::prefix('buyer')->group(function () {
     Route::post('/auth/logout', [BuyerAuthController::class, 'logout'])
         ->name('buyer.logout');
 
-
-
     // ---------- OTP ----------
     Route::get('/auth/otp', [BuyerAuthController::class, 'showOtpForm'])
         ->name('buyer.otp.form');
@@ -139,14 +131,12 @@ Route::prefix('buyer')->group(function () {
     Route::post('/auth/otp', [BuyerAuthController::class, 'verifyOtp'])
         ->name('buyer.otp.verify');
 
-
     // ---------- Register ----------
     Route::get('/auth/register', [BuyerAuthController::class, 'showRegisterForm'])
         ->name('buyer.register.form');
 
     Route::post('/auth/register', [BuyerAuthController::class, 'register'])
         ->name('buyer.register.submit');
-
 
     // ---------- Forgot / Reset ----------
     Route::get('/auth/forgot', [BuyerAuthController::class, 'showForgotForm'])
