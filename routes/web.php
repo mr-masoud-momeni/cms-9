@@ -142,14 +142,11 @@ Route::prefix('buyer')->group(function () {
     Route::get('/auth/forgot', [BuyerAuthController::class, 'showForgotForm'])
         ->name('buyer.forgot.form');
 
-    Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword'])
-        ->name('buyer.forgot.submit');
+    Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword'])->name('buyer.forgot.submit');
 
-    Route::get('/auth/reset-password', [BuyerAuthController::class, 'showResetForm'])
-        ->name('buyer.reset.form');
+    Route::get('/auth/reset-password', [BuyerAuthController::class, 'showResetForm'])->name('buyer.reset.form');
 
-    Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword'])
-        ->name('buyer.reset.submit');
+    Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword'])->name('buyer.reset.submit');
 });
 
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
@@ -167,21 +164,9 @@ Route::group(
     Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
 });
 
-// Checkout
-Route::post('/checkout', [PaymentController::class, 'checkout'])
-    ->name('checkout');
-
-// صفحه انتخاب روش پرداخت
-Route::get('/payment', [PaymentController::class, 'index'])
-    ->name('payment.index');
-
-// پرداخت آنلاین
-Route::post('/payment/online', [PaymentController::class, 'init'])
-    ->name('payment.online');
-
-// کارت به کارت
-Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])
-    ->name('payment.card_to_card');
-
-
-
+// Checkout / Payment
+Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+Route::post('/payment/online', [PaymentController::class, 'init'])->name('payment.online');
+Route::get('/payment/card-to-card', [PaymentController::class, 'cardToCardForm'])->name('payment.card_to_card');
+Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])->name('payment.card_to_card.submit');
