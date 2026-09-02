@@ -3,6 +3,7 @@
 https://docs.google.com/document/d/1dQGotVLWKT0ezYnV2vb81dl-eWqm8H3cVhIspm80FNs/edit#bookmark=id.senm0jrcaira
  */
 namespace App\Models;
+
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -15,7 +16,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use LaratrustUserTrait;
     use HasFactory;
     use Notifiable;
-/**create an uuid and save in users table automatically */
+
     protected static function boot()
     {
         parent::boot();
@@ -27,27 +28,18 @@ class User extends Authenticatable implements MustVerifyEmail
             $model->path = $randomString;
         });
     }
+
     public function getMorphClass()
     {
-        return static::class; // یعنی App\Models\User
+        return static::class;
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -55,49 +47,54 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_secret',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
     protected $appends = [
         'profile_photo_url',
     ];
-    public function menu(){
-        return $this->hasMany(menu::class);
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
     }
-    public function article(){
-        return $this->hasMany(article::class);
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
     }
-    public function category(){
-        return $this->hasMany(category::class);
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
     }
-    public function EmailGroup(){
+
+    public function emailGroups()
+    {
         return $this->hasMany(EmailGroup::class);
     }
-    public function Page(){
+
+    public function pages()
+    {
         return $this->hasMany(Page::class);
     }
-    public function product(){
-        return $this->hasMany(product::class);
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
+
     public function order()
     {
         return $this->hasMany(Order::class);
     }
+
     public function shop()
     {
         return $this->hasOne(Shop::class);
     }
+
     public function baleConnections()
     {
         return $this->hasMany(ShopBaleConnection::class);
