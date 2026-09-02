@@ -2,148 +2,76 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Models\comment;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
 use App\Models\Page;
 use App\Models\User;
-//use Dotlogics\Grapesjs\App\Traits\EditorTrait;
+
 class PageController extends Controller
 {
-//    use EditorTrait;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $pages=Page::latest()->paginate(10);
         return view('Backend.page.index', compact('pages'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
+    public function create() {}
 
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $id = request('_some_token');
         if($id){
-            $Page = new Page();
-            $Page = $Page->find($id);
+            $page = Page::find($id);
             $html = request('gjs-html');
             dd($html);
             $html = str_replace("&#039;", "'", $html);
             $html = str_replace("<code>", "", $html);
             $html = str_replace("</code>", "", $html);
             $html = str_replace("&gt;", ">", $html);
-            $Page->html = $html;
-            $Page->styles= request('gjs-styles');
-            $Page->css= request('gjs-css');
-            $Page->components= request('gjs-components');
-            $save=$Page->save();
+            $page->html = $html;
+            $page->styles= request('gjs-styles');
+            $page->css= request('gjs-css');
+            $page->components= request('gjs-components');
+            $save=$page->save();
         }
         if ($request->ajax()){
-            $validator = Validator::make($request->all(), [
-                'title' => 'required',
-                'url' => 'required',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['error'=>$validator->errors()->all()]);
-            }
-            else{
-                $Page=auth()->User()->Page()->create($request->all());
-                return response()->json(['success'=>$Page]);
-            }
+            $validator = Validator::make($request->all(), ['title' => 'required', 'url' => 'required']);
+            if ($validator->fails()) return response()->json(['error'=>$validator->errors()->all()]);
+            $page=auth()->User()->pages()->create($request->all());
+            return response()->json(['success'=>$page]);
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(page $page)
+    public function show(Page $page)
     {
         return view('Backend.page.show' , compact('page'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request, Page $page)
     {
-//        return view('Backend.page.create' , compact('page'));
         return $this->show_gjs_editor($request, $page);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         if ($request->ajax()) {
-            $validator = Validator::make($request->all(), [
-                'title' => 'required',
-                'url' => 'required',
-            ]);
-            if ($validator->fails()) {
-                return response()->json(['errorValidate'=>$validator->errors()->all()]);
-            }
-            $Page = new Page();
-            $Page = $Page->find($request->id);
-            $Page->title = $request->title;
-            $Page->url = $request->url;
-            $Page->status = $request->status;
-            $save=$Page->save();
-            if($save){
-                return response()->json(['success'=>$Page]);
-            }
-            else{
-                return response()->json(['success'=>'خطای در ثبت رخ داده است.']);
-            }
+            $validator = Validator::make($request->all(), ['title' => 'required', 'url' => 'required']);
+            if ($validator->fails()) return response()->json(['errorValidate'=>$validator->errors()->all()]);
+            $page = Page::find($request->id);
+            $page->title = $request->title; $page->url = $request->url; $page->status = $request->status;
+            $save=$page->save();
+            if($save) return response()->json(['success'=>$page]);
+            return response()->json(['success'=>'خطای در ثبت رخ داده است.']);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if ($request->ajax()){
-            $Page = new Page();
-            $Page = $Page->find($request->id);
-            $delete = $Page->delete();
-            if($delete){
-                return response()->json(['success'=>$Page]);
-            }
-
+            $page = Page::find($request->id); $delete = $page->delete();
+            if($delete) return response()->json(['success'=>$page]);
         }
     }
 }
