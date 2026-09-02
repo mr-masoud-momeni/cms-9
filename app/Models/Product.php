@@ -1,18 +1,13 @@
 <?php
 
 namespace App\Models;
+
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
-class product extends Model
+class Product extends Model
 {
     use Sluggable;
-
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
-     */
 
     public function sluggable(): array
     {
@@ -22,7 +17,8 @@ class product extends Model
             ]
         ];
     }
-    protected $fillable =[
+
+    protected $fillable = [
         'user_id',
         'shop_id',
         'title',
@@ -36,24 +32,31 @@ class product extends Model
         'price-type',
         'price',
     ];
+
     protected $casts = ['images' => 'array'];
 
-    public function getRoutekeyName(){
+    public function getRoutekeyName()
+    {
         return 'slug';
     }
-    public function user(){
-        return $this->belongsTo(user::class);
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
-    public function shop(){
-        return $this->belongsTo(shop::class);
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
     }
+
     public function categories()
     {
-        return $this->morphToMany(category::class, 'categorizable');
+        return $this->morphToMany(Category::class, 'categorizable');
     }
+
     public function orders()
     {
         return $this->belongsToMany(Order::class)->withPivot('quantity', 'price');
     }
-
 }
