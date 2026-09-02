@@ -16,10 +16,6 @@ use Throwable;
 
 class PaymentController extends Controller
 {
-    /**
-     * ذخیره اطلاعات گیرنده و رفتن به صفحه انتخاب روش پرداخت.
-     * این مرحله برای خریدار لاگین‌شده و مهمان هر دو کار می‌کند.
-     */
     public function checkout(Request $request)
     {
         $shop = Shop::current();
@@ -53,12 +49,10 @@ class PaymentController extends Controller
             }
 
             $cart = session('cart', []);
-
             if (empty($cart)) {
                 return back()->withErrors('سبد خرید شما خالی است.');
             }
 
-            // اگر قبلاً برای همین checkout یک سفارش مهمان ساخته شده، همان را ادامه بده.
             $existingOrderId = session('checkout_order_id');
             if ($existingOrderId) {
                 $order = Order::where('id', $existingOrderId)
@@ -87,7 +81,6 @@ class PaymentController extends Controller
 
                     foreach ($products as $product) {
                         $quantity = max(1, (int) ($cart[$product->id] ?? 0));
-
                         $order->products()->attach($product->id, [
                             'quantity' => $quantity,
                             'price' => $product->price,
@@ -110,9 +103,6 @@ class PaymentController extends Controller
         return redirect()->route('payment.index');
     }
 
-    /**
-     * صفحه انتخاب روش پرداخت.
-     */
     public function index()
     {
         $shop = Shop::current();
@@ -130,16 +120,33 @@ class PaymentController extends Controller
         $bankAccount = $shop->bankAccount;
 
         return view('Frontend.Shop.Pay.payment', compact(
-            'order',
-            'totalAmount',
-            'gateway',
-            'bankAccount'
+            'order', 'totalAmount', 'gateway', 'bankAccount'
         ));
     }
 
-    /**
-     * شروع پرداخت آنلاین بانک ملت.
-     */
+    public function cardToCardForm()
+    {
+        $shop = Shop::current();
+        $order = $this->checkoutOrder($shop);
+
+        if (!$order || $order->products->isEmpty()) {
+            return redirect()->route('order.index')
+                ->withErrors('سفارش قابل پرداخت پیدا نشد.');
+        }
+
+        $bankAccount = $shop->bankAccount;
+        if (!$bankAccount) {
+            return redirect()->route('payment.index')
+                ->withErrors('اطلاعات کارت بانکی این فروشگاه ثبت نشده است.');
+        }
+
+        $totalAmount = $this->orderAmount($order);
+
+        return view('Frontend.Shop.Pay.card-to-card', compact(
+            'order', 'totalAmount', 'bankAccount'
+        ));
+    }
+
     public function init(Request $request)
     {
         $shop = Shop::current();
@@ -159,7 +166,6 @@ class PaymentController extends Controller
         }
 
         $totalAmount = $this->orderAmount($order);
-
         if ($totalAmount <= 0) {
             return back()->withErrors('مبلغ سفارش نامعتبر است.');
         }
@@ -209,21 +215,14 @@ class PaymentController extends Controller
             }
 
             $payment->update(['status' => 'failed']);
-
-            return back()->withErrors(
-                'خطا در ایجاد تراکنش بانک. کد خطا: ' . $responseCode
-            );
+            return back()->withErrors('خطا در ایجاد تراکنش بانک. کد خطا: ' . $responseCode);
         } catch (Throwable $e) {
             $payment->update(['status' => 'failed']);
             report($e);
-
             return back()->withErrors('خطا در ارتباط با درگاه پرداخت.');
         }
     }
 
-    /**
-     * ثبت پرداخت کارت‌به‌کارت و رسید.
-     */
     public function cardToCard(Request $request)
     {
         $shop = Shop::current();
@@ -245,7 +244,6 @@ class PaymentController extends Controller
         ]);
 
         $totalAmount = $this->orderAmount($order);
-
         if ($totalAmount <= 0) {
             return back()->withErrors('مبلغ سفارش نامعتبر است.');
         }
@@ -292,9 +290,6 @@ class PaymentController extends Controller
         return view('Frontend.Shop.Pay.card-to-card-success', compact('payment', 'order'));
     }
 
-    /**
-     * Callback بانک ملت
-     */
     public function callback(Request $request)
     {
         $resCode = $request->input('ResCode');
@@ -303,14 +298,14 @@ class PaymentController extends Controller
         $saleRefId = $request->input('SaleReferenceId');
 
         if (!$saleOrderId) {
-            return redirect()->route('payments.failed')
+            return redirect()->route('index.show')
                 ->with('error', 'شناسه تراکنش دریافت نشد.');
         }
 
         $payment = Payment::with(['order', 'gateway'])->find($saleOrderId);
 
         if (!$payment) {
-            return redirect()->route('payments.failed')
+            return redirect()->route('index.show')
                 ->with('error', 'تراکنش پیدا نشد.');
         }
 
@@ -325,7 +320,6 @@ class PaymentController extends Controller
 
         try {
             $gateway = $payment->gateway;
-
             if (!$gateway) {
                 throw new \RuntimeException('درگاه پرداخت تراکنش پیدا نشد.');
             }
@@ -380,7 +374,6 @@ class PaymentController extends Controller
 
                     session()->forget('cart');
                     session()->forget('checkout_order_id');
-
                     event(new \App\Events\PaymentWasSuccessful($payment->order));
                 }
 
@@ -388,13 +381,11 @@ class PaymentController extends Controller
             }
 
             $payment->update(['status' => 'failed']);
-
             return redirect()->route('payments.failed', $payment)
                 ->with('error', 'تسویه تراکنش توسط بانک انجام نشد. کد: ' . $settleResult);
         } catch (Throwable $e) {
             report($e);
             $payment->update(['status' => 'failed']);
-
             return redirect()->route('payments.failed', $payment)
                 ->with('error', 'خطا هنگام تأیید تراکنش با بانک.');
         }
@@ -410,9 +401,6 @@ class PaymentController extends Controller
         return view('Frontend.Shop.pay.failed', compact('payment'));
     }
 
-    /**
-     * سفارش فعلی checkout را برای کاربر لاگین‌شده یا مهمان پیدا می‌کند.
-     */
     private function checkoutOrder(Shop $shop)
     {
         $buyer = auth('buyer')->user();
@@ -430,7 +418,6 @@ class PaymentController extends Controller
         }
 
         $orderId = session('checkout_order_id');
-
         if (!$orderId) {
             return null;
         }
