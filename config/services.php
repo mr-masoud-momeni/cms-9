@@ -31,6 +31,7 @@ return [
     ],
     'bale' => [
         'bot_token' => env('BALE_BOT_TOKEN'),
+        'bot_username' => env('BALE_BOT_USERNAME'),
     ],
 
 ];

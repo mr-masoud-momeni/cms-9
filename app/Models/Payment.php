@@ -11,6 +11,7 @@ class Payment extends Model
         'shop_id',
         'gateway_id',
         'order_id',
+        'method',
         'ref_id',
         'sale_reference_id',
         'sale_order_id',
@@ -37,7 +38,7 @@ class Payment extends Model
     }
     public function order()
     {
-        return $this->belongsTo(Shop::class);
+        return $this->belongsTo(Order::class);
     }
     public function receipt()
     {

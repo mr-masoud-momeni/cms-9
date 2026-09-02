@@ -164,6 +164,7 @@ Route::prefix('buyer')->group(function () {
 
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
 Route::resource('buyer/order', 'App\Http\Controllers\front\OrderController');
+
 Route::group(
     [
         'middleware'=>['auth:buyer','buyer.verified','role:buyer','check.shop.buyer'],
@@ -174,8 +175,23 @@ Route::group(
     , function () {
     Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
     Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
-    Route::post('/pay','PaymentController@init')->name('payment');
 });
+
+// Checkout
+Route::post('/checkout', [PaymentController::class, 'checkout'])
+    ->name('checkout');
+
+// صفحه انتخاب روش پرداخت
+Route::get('/payment', [PaymentController::class, 'index'])
+    ->name('payment.index');
+
+// پرداخت آنلاین
+Route::post('/payment/online', [PaymentController::class, 'init'])
+    ->name('payment.online');
+
+// کارت به کارت
+Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])
+    ->name('payment.card_to_card');
 
 
 

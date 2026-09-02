@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\front;
 use App\Models\Order;
-use App\Models\product;
+use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -23,41 +23,95 @@ class OrderController extends Controller
         $buyer = auth('buyer')->user();
         $currentShop = Shop::current();
 
-        // کاربر مهمان
+        /*
+        |--------------------------------------------------------------------------
+        | کاربر مهمان
+        |--------------------------------------------------------------------------
+        */
         if (!$buyer) {
 
             $cart = session('cart', []);
 
-            if (count($cart) > 0) {
+            // اگر سبد خالی است
+            if (empty($cart)) {
+                return view(
+                    'Frontend.Shop.Pay.Cart',
+                    [
+                        'products' => collect(),
+                        'totalAmount' => 0,
+                    ]
+                );
+            }
+
+            // اگر فروشگاه ورود خریدار را اجباری کرده باشد
+            if ($currentShop->buyer_login_required === true) {
                 return redirect()->route('buyer.login')
                     ->with('warning', 'برای ادامه خرید باید ثبت‌نام کنید.');
             }
 
-            return view('Frontend.Shop.Pay.Cart', compact('cart'));
+            // دریافت محصولات موجود در سبد
+            $products = Product::whereIn('id', array_keys($cart))
+                ->where('shop_id', $currentShop->id)
+                ->get();
+
+            $totalAmount = 0;
+
+            foreach ($products as $product) {
+
+                $product->cart_quantity = $cart[$product->id] ?? 0;
+                $product->cart_price = $product->price;
+
+                $totalAmount +=
+                    $product->cart_price *
+                    $product->cart_quantity;
+            }
+
+            return view(
+                'Frontend.Shop.Pay.Cart',
+                compact('products', 'totalAmount')
+            );
         }
 
-        // سفارش باز خریدار در فروشگاه فعلی
+
+        /*
+        |--------------------------------------------------------------------------
+        | کاربر لاگین شده
+        |--------------------------------------------------------------------------
+        */
+
         $order = $buyer->orders()
             ->where('status', 0)
             ->where('shop_id', $currentShop->id)
             ->with('products')
             ->first();
 
+        if (!$order) {
+            return view(
+                'Frontend.Shop.Pay.Cart',
+                [
+                    'products' => collect(),
+                    'totalAmount' => 0,
+                ]
+            );
+        }
+
+        $products = $order->products;
+
         $totalAmount = 0;
 
-        if ($order) {
+        foreach ($products as $product) {
 
-            foreach ($order->products as $product) {
+            $product->cart_quantity = $product->pivot->quantity;
+            $product->cart_price = $product->pivot->price;
 
-                $totalAmount +=
-                    $product->pivot->price *
-                    $product->pivot->quantity;
-            }
+            $totalAmount +=
+                $product->cart_price *
+                $product->cart_quantity;
         }
 
         return view(
             'Frontend.Shop.Pay.Cart',
-            compact('order', 'totalAmount')
+            compact('products', 'totalAmount')
         );
     }
 
@@ -210,13 +264,42 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
+        $currentShop = Shop::current();
+
         $buyer = auth('buyer')->user();
 
+        /*
+        |--------------------------------------------------------------------------
+        | کاربر مهمان
+        |--------------------------------------------------------------------------
+        */
         if (!$buyer) {
-            return redirect()->route('buyer.login');
+
+            // اگر این فروشگاه خرید مهمان را اجازه نمی‌دهد
+            if ($currentShop->buyer_login_required === true) {
+                return redirect()->route('buyer.login')
+                    ->with('warning', 'برای ادامه خرید باید وارد حساب کاربری شوید.');
+            }
+
+            $cart = session('cart', []);
+
+            // حذف محصول از سبد Session
+            if (isset($cart[$id])) {
+                unset($cart[$id]);
+            }
+
+            session()->put('cart', $cart);
+
+            return redirect()->back()
+                ->with('success', 'محصول از سبد خرید حذف شد.');
         }
 
-        $currentShop = Shop::current();
+
+        /*
+        |--------------------------------------------------------------------------
+        | کاربر لاگین شده
+        |--------------------------------------------------------------------------
+        */
 
         $order = $buyer->orders()
             ->where('status', 0)

@@ -19,6 +19,7 @@ class CreateShopsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('domain')->unique()->nullable(false);
+            $table->boolean('buyer_login_required')->default(false);
             $table->string('slug')->nullable();
             $table->timestamps();
 

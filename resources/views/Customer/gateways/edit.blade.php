@@ -166,6 +166,7 @@
 
 
                     {{-- اتصال به بله --}}
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4>اعلان پرداخت‌ها</h4>
@@ -196,27 +197,6 @@
                                     </button>
                                 </form>
 
-                            @elseif(session('bale_connection_token'))
-
-                                <p>
-                                    <strong>وضعیت:</strong>
-                                    <span class="text-warning">
-                                        در انتظار اتصال
-                                    </span>
-                                </p>
-
-                                <p>
-                                    کد زیر را در بات Shop Maker در بله ارسال کنید:
-                                </p>
-
-                                <div style="font-size: 24px; font-weight: bold; margin: 15px 0;">
-                                    {{ session('bale_connection_token') }}
-                                </div>
-
-                                <p>
-                                    این کد تا ۱۰ دقیقه معتبر است.
-                                </p>
-
                             @else
 
                                 <p>
@@ -226,7 +206,7 @@
                                     </span>
                                 </p>
 
-                                <form action="{{ route('shop.bale.connect') }}" method="POST">
+                                <form id="bale-connect-form" action="{{ route('shop.bale.connect') }}" method="POST">
                                     @csrf
 
                                     <button type="submit"
@@ -238,8 +218,8 @@
                             @endif
 
                         </div>
-                    </div>
 
+                    </div>
                 </div>
 
                 <div class="panel-footer">
@@ -250,5 +230,21 @@
 
         </div>
     </div>
+<script>
+document.getElementById('bale-connect-form').addEventListener('submit', function (e) {
+    e.preventDefault();
 
+    fetch(this.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.open(data.url, '_blank');
+    });
+});
+</script>
 @endsection
