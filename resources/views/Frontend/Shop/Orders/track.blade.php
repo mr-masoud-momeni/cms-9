@@ -13,12 +13,12 @@
                     </div>
 
                     <div class="alert alert-success rounded-3">
-                        پرداخت سفارش <strong>#{{ $order->id }}</strong> با موفقیت تأیید شده است.
+                        پرداخت سفارش <strong>#{{ $trackedOrder->id }}</strong> با موفقیت تأیید شده است.
                     </div>
 
                     <div class="mb-4">
                         <h5 class="fw-bold mb-3">جزئیات سفارش</h5>
-                        @foreach($order->products as $product)
+                        @foreach($trackedOrder->products as $product)
                             <div class="d-flex justify-content-between border-bottom py-2">
                                 <span>{{ $product->name }} × {{ $product->pivot->quantity }}</span>
                                 <span>{{ number_format($product->pivot->price * $product->pivot->quantity) }} تومان</span>
@@ -28,23 +28,23 @@
 
                     <div class="d-flex justify-content-between fw-bold fs-5 border-top pt-3">
                         <span>مبلغ کل</span>
-                        <span>{{ number_format((float) $order->total) }} تومان</span>
+                        <span>{{ number_format((float) $trackedOrder->total) }} تومان</span>
                     </div>
 
-                    @if($order->receiver_name || $order->receiver_address)
+                    @if($trackedOrder->receiver_name || $trackedOrder->receiver_address)
                         <div class="mt-4">
                             <h5 class="fw-bold mb-3">اطلاعات تحویل</h5>
-                            @if($order->receiver_name)
-                                <p class="mb-1">گیرنده: {{ $order->receiver_name }}</p>
+                            @if($trackedOrder->receiver_name)
+                                <p class="mb-1">گیرنده: {{ $trackedOrder->receiver_name }}</p>
                             @endif
-                            @if($order->receiver_phone)
-                                <p class="mb-1">موبایل: {{ $order->receiver_phone }}</p>
+                            @if($trackedOrder->receiver_phone)
+                                <p class="mb-1">موبایل: {{ $trackedOrder->receiver_phone }}</p>
                             @endif
-                            @if($order->receiver_province || $order->receiver_city)
-                                <p class="mb-1">{{ $order->receiver_province }}{{ $order->receiver_province && $order->receiver_city ? '، ' : '' }}{{ $order->receiver_city }}</p>
+                            @if($trackedOrder->receiver_province || $trackedOrder->receiver_city)
+                                <p class="mb-1">{{ $trackedOrder->receiver_province }}{{ $trackedOrder->receiver_province && $trackedOrder->receiver_city ? '، ' : '' }}{{ $trackedOrder->receiver_city }}</p>
                             @endif
-                            @if($order->receiver_address)
-                                <p class="mb-0">آدرس: {{ $order->receiver_address }}</p>
+                            @if($trackedOrder->receiver_address)
+                                <p class="mb-0">آدرس: {{ $trackedOrder->receiver_address }}</p>
                             @endif
                         </div>
                     @endif
