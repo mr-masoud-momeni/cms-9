@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\front\BuyerController;
 use App\Http\Controllers\front\OrderController;
+use App\Http\Controllers\front\PaymentController;
+use App\Http\Controllers\front\OrderTrackingController;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\customer\GatewayController;
 use App\Http\Controllers\Auth\AdminLoginController;
@@ -23,7 +25,7 @@ use App\Http\Controllers\customer\BaleConnectionController;
 //Route::get('/user/active/email/{token}','UserController@activation')->name('activation.account');
 Route::group(
     [
-        'namespace'=> 'App\Http\Controllers\front',
+        'namespace'=> 'App\\Http\\Controllers\\front',
     ]
     , function () {
         Route::get('/','IndexController@index')->name('index.show');
@@ -40,6 +42,10 @@ Route::group(
 
 });
 
+// لینک عمومی و امن مشاهده سفارش مشتری
+Route::get('/order/{order}/track/{expires}/{token}', [OrderTrackingController::class, 'show'])
+    ->name('customer.order.track');
+
 // ادمین اصلی
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
@@ -49,7 +55,7 @@ Route::prefix('admin')->group(function () {
 Route::group(
     [
         'middleware'=>['auth' , 'verified', 'role:admin'],
-        'namespace'=> 'App\Http\Controllers\admin',
+        'namespace'=> 'App\\Http\\Controllers\\admin',
         'prefix' => 'admin',
     ]
     , function () {
@@ -85,7 +91,7 @@ Route::prefix('shop/{path}')->group(function () {
 Route::group(
     [
         'middleware'=>['auth:shop_admin' , 'verified', 'role:shop_owner' , 'check.shop'],
-        'namespace'=> 'App\Http\Controllers\customer',
+        'namespace'=> 'App\\Http\\Controllers\\customer',
         'prefix' => 'shop',
         'as' => 'shop.',
     ]
@@ -100,17 +106,10 @@ Route::group(
     Route::post('/bale/disconnect', [BaleConnectionController::class, 'disconnect'])->name('bale.disconnect');
     Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
     Route::post('/category/create', 'CategoryController@save')->name('catProduct.save');
-    Route::patch('/category/edit', 'CategoryController@edit')->name('catProduct.edit');
+    Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
     Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
 });
 
-//Route::prefix('buyer')->group(function () {
-////    Route::get('/register', [BuyerController::class, 'index'])->name('buyer.show.register');
-////    Route::post('/register', [BuyerController::class, 'register'])->name('buyer.register');
-////    Route::get('/login', [BuyerController::class, 'showLoginForm'])->name('buyer.login.path');
-////    Route::post('/login', [BuyerController::class, 'login'])->name('buyer.login');
-//    Route::get('/auth/logout', [BuyerController::class, 'logout'])->name('buyer.logout');
-//});
 // خریدار
 Route::prefix('buyer')->group(function () {
 
@@ -130,15 +129,12 @@ Route::prefix('buyer')->group(function () {
     Route::post('/auth/logout', [BuyerAuthController::class, 'logout'])
         ->name('buyer.logout');
 
-
-
     // ---------- OTP ----------
     Route::get('/auth/otp', [BuyerAuthController::class, 'showOtpForm'])
         ->name('buyer.otp.form');
 
     Route::post('/auth/otp', [BuyerAuthController::class, 'verifyOtp'])
         ->name('buyer.otp.verify');
-
 
     // ---------- Register ----------
     Route::get('/auth/register', [BuyerAuthController::class, 'showRegisterForm'])
@@ -147,28 +143,24 @@ Route::prefix('buyer')->group(function () {
     Route::post('/auth/register', [BuyerAuthController::class, 'register'])
         ->name('buyer.register.submit');
 
-
     // ---------- Forgot / Reset ----------
     Route::get('/auth/forgot', [BuyerAuthController::class, 'showForgotForm'])
         ->name('buyer.forgot.form');
 
-    Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword'])
-        ->name('buyer.forgot.submit');
+    Route::post('/auth/forgot', [BuyerAuthController::class, 'forgotPassword'])->name('buyer.forgot.submit');
 
-    Route::get('/auth/reset-password', [BuyerAuthController::class, 'showResetForm'])
-        ->name('buyer.reset.form');
+    Route::get('/auth/reset-password', [BuyerAuthController::class, 'showResetForm'])->name('buyer.reset.form');
 
-    Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword'])
-        ->name('buyer.reset.submit');
+    Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword'])->name('buyer.reset.submit');
 });
 
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
-Route::resource('buyer/order', 'App\Http\Controllers\front\OrderController');
+Route::resource('buyer/order', 'App\\Http\\Controllers\\front\\OrderController');
 
 Route::group(
     [
         'middleware'=>['auth:buyer','buyer.verified','role:buyer','check.shop.buyer'],
-        'namespace'=> 'App\Http\Controllers\front',
+        'namespace'=> 'App\\Http\\Controllers\\front',
         'prefix' => 'buyer',
         'as' => 'buyer.',
     ]
@@ -177,21 +169,9 @@ Route::group(
     Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
 });
 
-// Checkout
-Route::post('/checkout', [PaymentController::class, 'checkout'])
-    ->name('checkout');
-
-// صفحه انتخاب روش پرداخت
-Route::get('/payment', [PaymentController::class, 'index'])
-    ->name('payment.index');
-
-// پرداخت آنلاین
-Route::post('/payment/online', [PaymentController::class, 'init'])
-    ->name('payment.online');
-
-// کارت به کارت
-Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])
-    ->name('payment.card_to_card');
-
-
-
+// Checkout / Payment
+Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+Route::post('/payment/online', [PaymentController::class, 'init'])->name('payment.online');
+Route::get('/payment/card-to-card', [PaymentController::class, 'cardToCardForm'])->name('payment.card_to_card');
+Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])->name('payment.card_to_card.submit');

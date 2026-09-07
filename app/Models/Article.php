@@ -5,7 +5,7 @@ namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Article extends Model
 {
     use Sluggable;
 
@@ -20,17 +20,12 @@ class Product extends Model
 
     protected $fillable = [
         'user_id',
-        'shop_id',
         'title',
         'body',
         'images',
         'slug',
         'viewCount',
         'comentCount',
-        'link',
-        'product-body',
-        'price-type',
-        'price',
     ];
 
     protected $casts = ['images' => 'array'];
@@ -45,18 +40,18 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function shop()
-    {
-        return $this->belongsTo(Shop::class);
-    }
-
     public function categories()
     {
         return $this->morphToMany(Category::class, 'categorizable');
     }
 
-    public function orders()
+    public function Permission()
     {
-        return $this->belongsToMany(Order::class)->withPivot('quantity', 'price');
+        return $this->belongsToMany(Permission::class);
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }

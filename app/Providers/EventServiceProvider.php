@@ -5,16 +5,15 @@ namespace App\Providers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Authenticated;
 use App\Listeners\MergeCartAfterLogin;
+use App\Events\PaymentWasSuccessful;
+use App\Events\CardToCardPaymentSubmitted;
+use App\Listeners\SendPaymentSuccessToBale;
+use App\Listeners\SendCardToCardPaymentToBale;
+
 class EventServiceProvider extends ServiceProvider
 {
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array<class-string, array<int, class-string>>
-     */
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
@@ -22,13 +21,14 @@ class EventServiceProvider extends ServiceProvider
         Authenticated::class => [
             MergeCartAfterLogin::class,
         ],
+        PaymentWasSuccessful::class => [
+            SendPaymentSuccessToBale::class,
+        ],
+        CardToCardPaymentSubmitted::class => [
+            SendCardToCardPaymentToBale::class,
+        ],
     ];
 
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
     public function boot()
     {
         //

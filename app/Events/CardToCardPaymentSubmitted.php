@@ -2,18 +2,18 @@
 
 namespace App\Events;
 
-use App\Models\Order;
+use App\Models\Payment;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PaymentWasSuccessful
+class CardToCardPaymentSubmitted
 {
     use Dispatchable, SerializesModels;
 
-    public $payment;
+    public Payment $payment;
 
-    public function __construct(Order $order)
+    public function __construct(Payment $payment)
     {
-        $this->payment = $order->payment;
+        $this->payment = $payment;
     }
 }

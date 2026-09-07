@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Models;
-use Cviebrock\EloquentSluggable\Sluggable;
+
 use Illuminate\Database\Eloquent\Model;
 
-class menu extends Model
+class Menu extends Model
 {
     protected $fillable = [
         'title',
         'content',
     ];
-    public function user(){
-        return $this->belongsTo(user::class);
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

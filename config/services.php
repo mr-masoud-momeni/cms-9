@@ -7,10 +7,7 @@ return [
     | Third Party Services
     |--------------------------------------------------------------------------
     |
-    | This file is for storing the credentials for third party services such
-    | as Mailgun, Postmark, AWS and more. This file provides the de facto
-    | location for this type of information, allowing packages to have
-    | a conventional file to locate the various service credentials.
+    | Here you may configure the third party services used by your application.
     |
     */
 
@@ -29,9 +26,14 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+
     'bale' => [
         'bot_token' => env('BALE_BOT_TOKEN'),
         'bot_username' => env('BALE_BOT_USERNAME'),
+
+        // در هاست اشتراکی public_html کنار پوشه Laravel قرار دارد.
+        // در صورت تفاوت ساختار مسیر، مقدار PUBLIC_HTML_PATH را در .env تنظیم کنید.
+        'public_path' => env('PUBLIC_HTML_PATH', base_path('../public_html')),
     ],
 
 ];
