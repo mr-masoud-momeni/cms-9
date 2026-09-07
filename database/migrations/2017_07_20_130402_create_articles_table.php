@@ -15,7 +15,8 @@ class CreateArticlesTable extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsingend();
+            $table->unsignedBigInteger('shop_id');
+            $table->unsignedInteger('user_id');
             $table->string('title');
             $table->text('body');
             $table->string('slug');
@@ -23,6 +24,8 @@ class CreateArticlesTable extends Migration
             $table->integer('comentCount')->default(0);
             $table->integer('veiwCount')->default(0);
             $table->timestamps();
+
+            $table->index('shop_id');
         });
     }
 
