@@ -34,7 +34,7 @@ class OrderTrackingController extends Controller
         }
 
         return view('Frontend.Shop.Orders.track', [
-            'order' => $orderModel,
+            'trackedOrder' => $orderModel,
             'shop' => $shop,
         ]);
     }
