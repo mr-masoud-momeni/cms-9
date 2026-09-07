@@ -15,15 +15,13 @@ class MergeCartAfterLogin
 
     public function handle($event)
     {
-        // فقط وقتی کاربر buyer لاگین است
         if (!auth('buyer')->check()) {
             return;
         }
 
-        $buyer  = auth('buyer')->user();
+        $buyer = auth('buyer')->user();
         $shopId = ShopHelper::getShopId();
 
-        // سفارش باز کاربر
         $loginCart = $buyer->orders()
             ->where('status', 0)
             ->where('shop_id', $shopId)
@@ -37,12 +35,13 @@ class MergeCartAfterLogin
         }
 
         if ($loginCart) {
-            // اگر سفارش باز موجود است، محصولات سشن را با آن ادغام کن
             foreach ($sessionCart as $productId => $quantity) {
-                // قیمت محصول را از جدول محصول بگیر
-                $product = Product::find($productId);
+                $product = Product::where('id', $productId)
+                    ->where('shop_id', $shopId)
+                    ->first();
+
                 if (!$product) {
-                    continue; // اگر محصول پیدا نشد
+                    continue;
                 }
 
                 $existing = $loginCart->products->firstWhere('id', $productId);
@@ -50,31 +49,33 @@ class MergeCartAfterLogin
                 if ($existing) {
                     $loginCart->products()->updateExistingPivot($productId, [
                         'quantity' => $existing->pivot->quantity + $quantity,
-                        'price'    => $product->price,  // قیمت را ذخیره کن
+                        'price' => $product->price,
                     ]);
                 } else {
                     $loginCart->products()->attach($productId, [
                         'quantity' => $quantity,
-                        'price'    => $product->price,
+                        'price' => $product->price,
                     ]);
                 }
             }
         } else {
-            // اگر سفارش باز نداریم، بساز
             $loginCart = $buyer->orders()->create([
                 'shop_id' => $shopId,
-                'status'  => 0,
+                'status' => 0,
             ]);
 
             foreach ($sessionCart as $productId => $quantity) {
-                $product = Product::find($productId);
+                $product = Product::where('id', $productId)
+                    ->where('shop_id', $shopId)
+                    ->first();
+
                 if (!$product) {
                     continue;
                 }
 
                 $loginCart->products()->attach($productId, [
                     'quantity' => $quantity,
-                    'price'    => $product->price,
+                    'price' => $product->price,
                 ]);
             }
         }
