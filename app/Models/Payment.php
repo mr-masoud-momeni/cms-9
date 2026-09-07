@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\CardToCardPaymentSubmitted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,16 @@ class Payment extends Model
         'amount',
         'status'
     ];
+
+    protected static function booted(): void
+    {
+        static::updated(function (Payment $payment) {
+            if ($payment->isDirty('status') && $payment->status === 'waiting_confirmation') {
+                event(new CardToCardPaymentSubmitted($payment));
+            }
+        });
+    }
+
     public function isOnline()
     {
         return $this->method === 'online';
@@ -27,6 +38,7 @@ class Payment extends Model
     {
         return $this->method === 'card_to_card';
     }
+
     public function gateway()
     {
         return $this->belongsTo(Gateway::class);
@@ -36,10 +48,12 @@ class Payment extends Model
     {
         return $this->belongsTo(Shop::class);
     }
+
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
+
     public function receipt()
     {
         return $this->hasOne(PaymentReceipt::class);
