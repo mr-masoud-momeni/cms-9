@@ -27,9 +27,18 @@ class IndexController extends Controller
     {
         $shop = ShopHelper::getShop();
         $shopId = $shop?->id;
-        $products = Product::where('shop_id', $shopId)->latest()->paginate(12);
 
-        return view('Frontend.Shop.index', compact('products', 'shop'));
+        $products = Product::where('shop_id', $shopId)
+            ->latest()
+            ->paginate(12, ['*'], 'products_page');
+
+        $articles = Article::where('shop_id', $shopId)
+            ->latest()
+            ->paginate(12, ['*'], 'articles_page');
+
+        $cartCount = count(session('cart', []));
+
+        return view('Frontend.Shop.index', compact('products', 'articles', 'shop', 'cartCount'));
     }
 
     public function product(Product $product)
