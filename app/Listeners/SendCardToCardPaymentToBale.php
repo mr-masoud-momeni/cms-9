@@ -30,7 +30,6 @@ class SendCardToCardPaymentToBale
         $buyerName = $order?->buyer?->name ?? $order?->receiver_name ?? 'مهمان';
         $buyerPhone = $order?->buyer?->phone ?? $order?->receiver_phone ?? '-';
         $trackingCode = $payment->receipt?->tracking_code ?: '-';
-        $receiptUrl = $payment->receipt?->image ? url($payment->receipt->image) : null;
 
         $text = "🟡 پرداخت کارت‌به‌کارت جدید\n\n"
             . "سفارش: #{$order->id}\n"
@@ -42,9 +41,6 @@ class SendCardToCardPaymentToBale
 
         $keyboard = [
             'inline_keyboard' => [
-                array_filter([
-                    $receiptUrl ? ['text' => '🧾 مشاهده رسید', 'url' => $receiptUrl] : null,
-                ]),
                 [
                     ['text' => '✅ تأیید پرداخت', 'callback_data' => "payment:approve:{$payment->id}"],
                     ['text' => '❌ رد پرداخت', 'callback_data' => "payment:reject:{$payment->id}"],
@@ -52,12 +48,31 @@ class SendCardToCardPaymentToBale
             ],
         ];
 
+        $receiptPath = $this->resolveReceiptPath($payment->receipt?->image);
+
         try {
-            app(BaleService::class)->sendMessage(
-                $connection->bale_chat_id,
-                $text,
-                $keyboard
-            );
+            $bale = app(BaleService::class);
+
+            if ($receiptPath) {
+                $bale->sendPhoto(
+                    $connection->bale_chat_id,
+                    $receiptPath,
+                    $text,
+                    $keyboard
+                );
+            } else {
+                Log::warning('Payment receipt file not found for Bale notification', [
+                    'payment_id' => $payment->id,
+                    'receipt' => $payment->receipt?->image,
+                ]);
+
+                // اگر فایل واقعاً در دسترس نبود، حداقل اطلاعات سفارش را ارسال کن.
+                $bale->sendMessage(
+                    $connection->bale_chat_id,
+                    $text . "\n\n⚠️ فایل رسید روی سرور پیدا نشد.",
+                    $keyboard
+                );
+            }
         } catch (\Throwable $e) {
             Log::error('Failed to send card-to-card payment to Bale', [
                 'payment_id' => $payment->id,
@@ -65,5 +80,57 @@ class SendCardToCardPaymentToBale
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Resolve the receipt file for both local development and the shared-host
+     * deployment where public_html is next to the Laravel project directory.
+     *
+     * If an older upload was written to Laravel/public, move it to public_html
+     * so the same relative URL also remains publicly accessible.
+     */
+    private function resolveReceiptPath(?string $relativePath): ?string
+    {
+        if (!$relativePath) {
+            return null;
+        }
+
+        $relativePath = ltrim($relativePath, '/');
+
+        $publicHtmlPath = config('services.bale.public_path');
+        $targetPath = $publicHtmlPath
+            ? rtrim($publicHtmlPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath
+            : null;
+
+        $laravelPublicPath = public_path($relativePath);
+
+        // Deployment: Laravel project and public_html are sibling directories.
+        if ($targetPath && is_file($targetPath)) {
+            return $targetPath;
+        }
+
+        if ($targetPath && is_file($laravelPublicPath)) {
+            $targetDirectory = dirname($targetPath);
+
+            if (!is_dir($targetDirectory)) {
+                mkdir($targetDirectory, 0755, true);
+            }
+
+            if (@rename($laravelPublicPath, $targetPath)) {
+                return $targetPath;
+            }
+
+            if (@copy($laravelPublicPath, $targetPath)) {
+                @unlink($laravelPublicPath);
+                return $targetPath;
+            }
+        }
+
+        // Local development / installations where public_path is the real web root.
+        if (is_file($laravelPublicPath)) {
+            return $laravelPublicPath;
+        }
+
+        return null;
     }
 }
