@@ -7,12 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
 use App\page;
+use App\Helpers\ShopHelper;
 use Illuminate\Support\Facades\View;
 
 class blog extends Controller
 {
     public function show(Article $article)
     {
+        $shop = ShopHelper::getShop();
+
+        abort_unless($article->shop_id === $shop->id, 404);
+
         $categories = Category::all()->sortBy('id')->pluck('name', 'id');
         return view('Frontend.blog.ShowPost', compact('article', 'categories'));
     }
