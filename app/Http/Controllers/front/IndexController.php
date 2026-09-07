@@ -15,7 +15,8 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $shopId = ShopHelper::getShopId();
+        $shop = ShopHelper::getShop();
+        $shopId = $shop?->id;
         $menu = Menu::where('id', 1)->first();
         $articles = Article::latest()->take(3)->get();
         $products = Product::latest()->take(3)->where('shop_id', $shopId)->get();
@@ -24,9 +25,11 @@ class IndexController extends Controller
 
     public function shop()
     {
-        $shopId = ShopHelper::getShopId();
-        $products = Product::where('shop_id', $shopId)->latest()->paginate(7);
-        return view('Frontend.Shop.index', compact('products'));
+        $shop = ShopHelper::getShop();
+        $shopId = $shop?->id;
+        $products = Product::where('shop_id', $shopId)->latest()->paginate(12);
+
+        return view('Frontend.Shop.index', compact('products', 'shop'));
     }
 
     public function product(Product $product)
