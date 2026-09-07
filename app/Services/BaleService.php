@@ -41,6 +41,52 @@ class BaleService
         return $this->request('sendMessage', $payload);
     }
 
+    public function sendPhoto(
+        int|string $chatId,
+        string $photoPath,
+        string $caption = '',
+        array $replyMarkup = []
+    ): array {
+        if (!is_file($photoPath) || !is_readable($photoPath)) {
+            throw new RuntimeException("فایل رسید پیدا نشد: {$photoPath}");
+        }
+
+        $token = config('services.bale.bot_token');
+
+        if (!$token) {
+            throw new RuntimeException('BALE_BOT_TOKEN تنظیم نشده است.');
+        }
+
+        $payload = [
+            'chat_id' => (string) $chatId,
+            'caption' => $caption,
+        ];
+
+        if ($replyMarkup) {
+            $payload['reply_markup'] = json_encode($replyMarkup, JSON_UNESCAPED_UNICODE);
+        }
+
+        $handle = fopen($photoPath, 'r');
+
+        try {
+            $response = Http::timeout(20)
+                ->attach('photo', $handle, basename($photoPath))
+                ->post("https://tapi.bale.ai/bot{$token}/sendPhoto", $payload);
+        } finally {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+        }
+
+        if (!$response->successful() || !$response->json('ok')) {
+            throw new RuntimeException(
+                'Bale API error: ' . $response->body()
+            );
+        }
+
+        return $response->json();
+    }
+
     public function answerCallbackQuery(string $callbackQueryId, string $text = ''): array
     {
         return $this->request('answerCallbackQuery', array_filter([
