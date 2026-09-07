@@ -24,9 +24,9 @@ class IndexController extends Controller
 
     public function shop()
     {
-        $shopId = ShopHelper::getShopId();
-        $products = Product::where('shop_id', $shopId)->latest()->paginate(6);
-        return view('Frontend.Shop.index', compact('products'));
+        $shop = ShopHelper::getShop();
+        $products = Product::where('shop_id', $shop->id)->latest()->paginate(9);
+        return view('Frontend.Shop.index', compact('products', 'shop'));
     }
 
     public function product(Product $product)
