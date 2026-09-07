@@ -28,8 +28,7 @@ Route::group(
         'namespace'=> 'App\\Http\\Controllers\\front',
     ]
     , function () {
-        Route::get('/','IndexController@index')->name('index.show');
-        Route::get('/shop','IndexController@shop')->name('index.shop');
+        Route::get('/','IndexController@shop')->name('index.show');
         Route::get('/product/{product}', 'IndexController@product')->name('front.product.show');
 
         Route::post('/pay/callback','PaymentController@callback')->name('payments.callback');
