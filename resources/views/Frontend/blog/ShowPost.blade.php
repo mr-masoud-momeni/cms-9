@@ -1,45 +1,36 @@
 @extends('Frontend.layouts.Master')
 @section('Main')
 
-    <!--==========================
-      About Us Section
-    ============================-->
-    <section id="SinglePost" >
+<section id="SinglePost">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 col-md-6">
+                <div id="content">
+                    <h2>{{ $article->title }}</h2>
+                    {!! $article->body !!}
 
-        <div class="container">
-            <div class="row">
-
-                <div class="col-lg-7 col-md-6">
-                    <div id="content">
-                        <h2>{{$article->title}}</h2>
-                        {!! $article->body !!}
+                    @if($article->categories->count())
                         <ul>
-                            @if(isset($article->category))
-                                @foreach($article->category()->get() as $cat)
-                                    <li>{{$cat->name}}</li>
-                                @endforeach
-                            @endif
-
+                            @foreach($article->categories as $cat)
+                                <li>{{ $cat->name }}</li>
+                            @endforeach
                         </ul>
-                    </div>
-                    <div class="comment">
-                        @include('Frontend.layouts.comment')
-                    </div>
+                    @endif
                 </div>
-
-                <div class="col-lg-5 col-md-6">
-                    <div class="SinglePost-img">
-                        <?php $place=$article->images['thum']; ?>
-                        <img src="{{ asset($place)}}" alt="">
-                    </div>
+                <div class="comment">
+                    @include('Frontend.layouts.comment')
                 </div>
+            </div>
 
-
+            <div class="col-lg-5 col-md-6">
+                <div class="SinglePost-img">
+                    @if(!empty($article->images['thum']))
+                        <img src="{{ asset($article->images['thum']) }}" alt="{{ $article->title }}">
+                    @endif
+                </div>
             </div>
         </div>
-
-    </section><!-- #about -->
-
+    </div>
+</section>
 
 @endsection
-
