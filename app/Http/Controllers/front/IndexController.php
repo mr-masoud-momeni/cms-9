@@ -5,7 +5,6 @@ namespace App\Http\Controllers\front;
 use App\Models\Article;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
-use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\ShopHelper;
@@ -18,8 +17,8 @@ class IndexController extends Controller
         $shop = ShopHelper::getShop();
         $shopId = $shop?->id;
         $menu = Menu::where('id', 1)->first();
-        $articles = Article::latest()->take(3)->get();
-        $products = Product::latest()->take(3)->where('shop_id', $shopId)->get();
+        $articles = Article::where('shop_id', $shopId)->latest()->take(3)->get();
+        $products = Product::where('shop_id', $shopId)->latest()->take(3)->get();
         return view('Frontend.Home.index', compact('articles', 'menu', 'products'));
     }
 
@@ -43,6 +42,10 @@ class IndexController extends Controller
 
     public function product(Product $product)
     {
+        $shop = ShopHelper::getShop();
+
+        abort_unless($product->shop_id === $shop->id, 404);
+
         return view('Frontend.Shop.show', compact('product'));
     }
 
