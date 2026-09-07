@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'throttle' => \App\Http\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.buyer' => \App\Http\Middleware\AuthBuyer::class,
         'buyer.verified' => \App\Http\Middleware\BuyerVerified::class,
@@ -49,6 +49,5 @@ class Kernel extends HttpKernel
         'role.buyer' => \App\Http\Middleware\BuyerRole::class,
         'platform.domain' => \App\Http\Middleware\PlatformDomainOnly::class,
         'check.shop.buyer' => \App\Http\Middleware\CheckBuyerShopContext::class,
-        'current.shop' => \App\Http\Middleware\ResolveCurrentShop::class,
     ];
 }
