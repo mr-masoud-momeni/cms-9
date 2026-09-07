@@ -71,7 +71,7 @@ Route::group(
     Route::get('/category/create/article', 'CategoryController@create')->name('catArticle.create');
     Route::post('/category/create', 'CategoryController@save')->name('category.save');
     Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
-    Route::delete('/category/delete', 'ArticleController@delete')->name('article.delete');
+    Route::delete('/category/delete', 'CategoryController@delete')->name('category.delete');
     Route::resource('/Permission', 'PermissionController');
     Route::resource('/notification', 'NotificationController');
     Route::resource('/role', 'RoleController');
