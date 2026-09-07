@@ -20,7 +20,7 @@
                         <h5 class="fw-bold mb-3">جزئیات سفارش</h5>
                         @foreach($trackedOrder->products as $product)
                             <div class="d-flex justify-content-between border-bottom py-2">
-                                <span>{{ $product->name }} × {{ $product->pivot->quantity }}</span>
+                                <span>{{ $product->title }} × {{ $product->pivot->quantity }}</span>
                                 <span>{{ number_format($product->pivot->price * $product->pivot->quantity) }} تومان</span>
                             </div>
                         @endforeach
