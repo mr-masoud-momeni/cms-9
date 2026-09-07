@@ -29,6 +29,7 @@ class ShopHelper
                 'name' => $shop->name,
                 'domain' => $shop->domain,
                 'slug' => $shop->slug,
+                'buyer_login_required' => $shop->buyer_login_required,
             ];
 
             session()->put('current_shop', $context);
