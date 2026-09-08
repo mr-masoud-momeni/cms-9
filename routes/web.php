@@ -159,7 +159,7 @@ Route::prefix('buyer')->group(function () {
 });
 
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
-Route::resource('buyer/order', OrderController::class);
+Route::resource('buyer/order', OrderController::class)->names('buyer.order');
 
 Route::group(
     [
