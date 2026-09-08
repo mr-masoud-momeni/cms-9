@@ -32,7 +32,22 @@ class IndexController extends Controller
             ->latest()
             ->paginate(9);
 
-        return view('Frontend.Store.index', compact('products', 'shop', 'menu'));
+        $articles = Article::where('shop_id', $shopId)
+            ->latest()
+            ->take(12)
+            ->get();
+
+        $productCount = Product::where('shop_id', $shopId)->count();
+        $postCount = Article::where('shop_id', $shopId)->count();
+
+        return view('Frontend.Store.index', compact(
+            'products',
+            'articles',
+            'shop',
+            'menu',
+            'productCount',
+            'postCount'
+        ));
     }
 
     public function product(Product $product)
