@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Controllers\front;
+
+use App\Helpers\ShopHelper;
+use App\Http\Controllers\Controller;
+use App\Models\Article;
+use App\page;
+
+class BlogController extends Controller
+{
+    public function show(Article $article)
+    {
+        $shop = ShopHelper::getShop();
+
+        abort_unless($article->shop_id === $shop->id, 404);
+
+        return view('Frontend.Store.Pages.article', compact('article', 'shop'));
+    }
+
+    public function show1(page $page)
+    {
+        $path = resource_path('views/Frontend/blog/')."Page.blade.php";
+        $f = @fopen($path, "r+");
+        ftruncate($f, 0);
+        fclose($f);
+
+        $template = "<html><head><style>".$page->css."</style></head><body>".$page->html."</body></html>";
+        file_put_contents($path, trim($template));
+
+        $categories = $page->title;
+        return view('Frontend.blog.Page', compact('page', 'categories'));
+    }
+}
