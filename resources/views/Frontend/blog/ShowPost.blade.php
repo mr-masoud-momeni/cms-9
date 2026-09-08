@@ -1,4 +1,4 @@
-@extends('Frontend.layouts.Master')
+@extends('Frontend.Store.Layouts.MasterMinimal')
 @section('Main')
 
 <section id="SinglePost">
