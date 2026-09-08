@@ -25,13 +25,15 @@ class IndexController extends Controller
     public function shop()
     {
         $shop = ShopHelper::getShop();
+        $menu = Menu::where('id', 1)->first();
         $products = Product::where('shop_id', $shop->id)->latest()->paginate(9);
-        return view('Frontend.Store.index', compact('products', 'shop'));
+        return view('Frontend.Store.index', compact('products', 'shop', 'menu'));
     }
 
     public function product(Product $product)
     {
-        return view('Frontend.Store.show', compact('product'));
+        $menu = Menu::where('id', 1)->first();
+        return view('Frontend.Store.show', compact('product', 'menu'));
     }
 
     public function create() {}
