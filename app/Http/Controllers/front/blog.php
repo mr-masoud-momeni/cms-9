@@ -19,7 +19,7 @@ class blog extends Controller
         abort_unless($article->shop_id === $shop->id, 404);
 
         $categories = Category::all()->sortBy('id')->pluck('name', 'id');
-        return view('Frontend.blog.ShowPost', compact('article', 'categories'));
+        return view('Frontend.blog.ShowPost', compact('article', 'categories', 'shop'));
     }
 
     public function show1(page $page)
