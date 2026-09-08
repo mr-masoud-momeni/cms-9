@@ -26,12 +26,12 @@ class IndexController extends Controller
     {
         $shop = ShopHelper::getShop();
         $products = Product::where('shop_id', $shop->id)->latest()->paginate(9);
-        return view('Frontend.Shop.index', compact('products', 'shop'));
+        return view('Frontend.Store.index', compact('products', 'shop'));
     }
 
     public function product(Product $product)
     {
-        return view('Frontend.Shop.show', compact('product'));
+        return view('Frontend.Store.show', compact('product'));
     }
 
     public function create() {}
