@@ -1,4 +1,4 @@
-@extends('Frontend.Store.Layouts.Master')
+@extends('Frontend.Store.Layouts.MasterMinimal')
 
 @section('Main')
     <!-- صفحه محصول -->
