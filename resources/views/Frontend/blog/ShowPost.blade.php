@@ -1,36 +1,27 @@
 @extends('Frontend.Store.Layouts.MasterMinimal')
+
 @section('Main')
-
-<section id="SinglePost">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-7 col-md-6">
-                <div id="content">
-                    <h2>{{ $article->title }}</h2>
-                    {!! $article->body !!}
-
-                    @if($article->categories->count())
-                        <ul>
-                            @foreach($article->categories as $cat)
-                                <li>{{ $cat->name }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-                <div class="comment">
+    <main class="store-detail store-blog-detail" aria-label="مقاله">
+        <div class="store-detail-grid">
+            <article class="store-detail-content">
+                <h1>{{ $article->title }}</h1>
+                <div class="store-blog-content">{!! $article->body !!}</div>
+                @if($article->categories->count())
+                    <div class="store-blog-meta">
+                        @foreach($article->categories as $cat)
+                            <span>{{ $cat->name }}</span>
+                        @endforeach
+                    </div>
+                @endif
+                <div class="store-blog-comments">
                     @include('Frontend.layouts.comment')
                 </div>
-            </div>
-
-            <div class="col-lg-5 col-md-6">
-                <div class="SinglePost-img">
-                    @if(!empty($article->images['thum']))
-                        <img src="{{ asset($article->images['thum']) }}" alt="{{ $article->title }}">
-                    @endif
-                </div>
+            </article>
+            <div>
+                @if(!empty($article->images['thum']))
+                    <img src="{{ asset($article->images['thum']) }}" alt="{{ $article->title }}" class="store-blog-image">
+                @endif
             </div>
         </div>
-    </div>
-</section>
-
+    </main>
 @endsection
