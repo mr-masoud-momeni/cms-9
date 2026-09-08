@@ -1,0 +1,63 @@
+/* Store theme: one shared content grid for homepage and internal pages */
+:root {
+    --store-content-width: 1100px;
+}
+
+.store-header-inner,
+.store-tabs,
+.shop-products,
+.shop-posts,
+.store-detail {
+    width: 100%;
+    max-width: var(--store-content-width);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.store-header-inner {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.store-tabs,
+.shop-products,
+.shop-posts {
+    max-width: var(--store-content-width);
+}
+
+.store-detail {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+@media (max-width: 1135px) {
+    .store-header-inner,
+    .store-tabs,
+    .shop-products,
+    .shop-posts,
+    .store-detail {
+        max-width: calc(100% - 36px);
+    }
+
+    .store-header-inner {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .store-header-inner,
+    .store-tabs,
+    .shop-products,
+    .shop-posts,
+    .store-detail {
+        max-width: 100%;
+    }
+
+    .store-header-inner,
+    .store-detail {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+}
