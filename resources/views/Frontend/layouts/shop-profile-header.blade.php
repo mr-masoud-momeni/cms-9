@@ -15,7 +15,7 @@
                 @endif
             </div>
         </a>
-        <a href="{{ route('cart.index') }}" class="shop-profile-header__cart" aria-label="سبد خرید">
+        <a href="{{ route('order.index') }}" class="shop-profile-header__cart" aria-label="سبد خرید">
             <span class="shop-profile-header__cart-icon">🛒</span>
             <span>سبد خرید</span>
         </a>
