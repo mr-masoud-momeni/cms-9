@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\ShopAdminLoginController;
 use App\Http\Controllers\Auth\BuyerAuthController;
 use App\Http\Controllers\customer\CardToCardController;
 use App\Http\Controllers\customer\BaleConnectionController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,7 @@ use App\Http\Controllers\customer\BaleConnectionController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 //Route::get('/user/active/email/{token}','UserController@activation')->name('activation.account');
 Route::group(
     [
@@ -37,9 +39,8 @@ Route::group(
         Route::get('/blog/{article}', 'blog@show')->name('article.show');
         Route::get('/page/{page}', 'blog@show1')->name('page.showw');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
-
-
-});
+    }
+);
 
 // لینک عمومی و امن مشاهده سفارش مشتری
 Route::get('/order/{order}/track/{expires}/{token}', [OrderTrackingController::class, 'show'])
@@ -51,6 +52,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminLoginController::class, 'login']);
     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 });
+
 Route::group(
     [
         'middleware'=>['auth' , 'verified', 'role:admin'],
@@ -58,35 +60,37 @@ Route::group(
         'prefix' => 'admin',
     ]
     , function () {
+        Route::get('/dashboard', function () {return view('Backend.layouts.Master');})->name('admin.dashboard');
+        Route::resource('/register' , 'UserController');
+        Route::get('/article', 'ArticleController@index')->name('article.index');
+        Route::get('/article/edit/{article}', 'ArticleController@edit')->name('article.edit');
+        Route::get('/article/create', 'ArticleController@create')->name('article.create');
+        Route::patch('/article/{article}', 'ArticleController@update')->name('article.update');
+        Route::delete('/article/delete', 'ArticleController@delete')->name('article.delete');
+        Route::post('/article', 'ArticleController@save')->name('article.save');
+        Route::get('/category/create/article', 'CategoryController@create')->name('catArticle.create');
+        Route::post('/category/create', 'CategoryController@save')->name('category.save');
+        Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
+        Route::delete('/category/delete', 'CategoryController@delete')->name('category.delete');
+        Route::resource('/Permission', 'PermissionController');
+        Route::resource('/notification', 'NotificationController');
+        Route::resource('/role', 'RoleController');
+        Route::resource('/email', 'SendEmail');
+        Route::resource('/email-group', 'EmailGroupController');
+        Route::resource('/page', 'PageController');
+        Route::resource('/menu', 'MenuController');
+        Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
+        Route::get('search','HomeController@search')->name('search');
+    }
+);
 
-    Route::get('/dashboard', function () {return view('Backend.layouts.Master');})->name('admin.dashboard');
-    Route::resource('/register' , 'UserController');
-    Route::get('/article', 'ArticleController@index')->name('article.index');
-    Route::get('/article/edit/{article}', 'ArticleController@edit')->name('article.edit');
-    Route::get('/article/create', 'ArticleController@create')->name('article.create');
-    Route::patch('/article/{article}', 'ArticleController@update')->name('article.update');
-    Route::delete('/article/delete', 'ArticleController@delete')->name('article.delete');
-    Route::post('/article', 'ArticleController@save')->name('article.save');
-    Route::get('/category/create/article', 'CategoryController@create')->name('catArticle.create');
-    Route::post('/category/create', 'CategoryController@save')->name('category.save');
-    Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
-    Route::delete('/category/delete', 'CategoryController@delete')->name('category.delete');
-    Route::resource('/Permission', 'PermissionController');
-    Route::resource('/notification', 'NotificationController');
-    Route::resource('/role', 'RoleController');
-    Route::resource('/email', 'SendEmail');
-    Route::resource('/email-group', 'EmailGroupController');
-    Route::resource('/page', 'PageController');
-    Route::resource('/menu', 'MenuController');
-    Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
-    Route::get('search','HomeController@search')->name('search');
-});
 // ادمین فروشگاه
 Route::prefix('shop/{path}')->group(function () {
     Route::get('/login', [ShopAdminLoginController::class, 'showLoginForm'])->name('shop.login');
     Route::post('/login', [ShopAdminLoginController::class, 'login']);
     Route::post('/logout', [ShopAdminLoginController::class, 'logout'])->name('shop.logout');
 });
+
 Route::group(
     [
         'middleware'=>['auth:shop_admin' , 'verified', 'role:shop_owner' , 'check.shop'],
@@ -95,19 +99,20 @@ Route::group(
         'as' => 'shop.',
     ]
     , function () {
-    Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
-    Route::resource('/product', 'ProductController');
-    Route::resource('/orders', 'OrderController');
-    Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
-    Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
-    Route::post('/card-to-card', [CardToCardController::class, 'update'])->name('card-to-card.store');
-    Route::post('/bale/connect', [BaleConnectionController::class, 'connect'])->name('bale.connect');
-    Route::post('/bale/disconnect', [BaleConnectionController::class, 'disconnect'])->name('bale.disconnect');
-    Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
-    Route::post('/category/create', 'CategoryController@save')->name('catProduct.save');
-    Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
-    Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
-});
+        Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
+        Route::resource('/product', 'ProductController');
+        Route::resource('/orders', 'OrderController');
+        Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
+        Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
+        Route::post('/card-to-card', [CardToCardController::class, 'update'])->name('card-to-card.store');
+        Route::post('/bale/connect', [BaleConnectionController::class, 'connect'])->name('bale.connect');
+        Route::post('/bale/disconnect', [BaleConnectionController::class, 'disconnect'])->name('bale.disconnect');
+        Route::get('/category/create/product' , 'CategoryController@create')->name('catProduct.create');
+        Route::post('/category/create', 'CategoryController@save')->name('catProduct.save');
+        Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
+        Route::delete('/category/delete', 'CategoryController@delete')->name('catProduct.delete');
+    }
+);
 
 // خریدار
 Route::prefix('buyer')->group(function () {
@@ -154,7 +159,7 @@ Route::prefix('buyer')->group(function () {
 });
 
 Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
-Route::resource('buyer/order', 'App\\Http\\Controllers\\front\\OrderController');
+Route::resource('buyer/order', OrderController::class);
 
 Route::group(
     [
@@ -164,9 +169,10 @@ Route::group(
         'as' => 'buyer.',
     ]
     , function () {
-    Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
-    Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
-});
+        Route::get('/dashboard', [BuyerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/order/completed', [OrderController::class, 'completedOrders'])->name('orders.completed');
+    }
+);
 
 // Checkout / Payment
 Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
