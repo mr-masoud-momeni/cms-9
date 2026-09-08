@@ -12,7 +12,7 @@
                 <h2 class="fw-bold">{{ $product->title}}</h2>
                 <p class="text-muted">{!! $product->body !!}</p>
                 <h4 class="text-danger">{{ $product->price}}</h4>
-                <form method="post" action="{{route('order.store')}}" class="AddProduct" >
+                <form method="post" action="{{route('buyer.order.store')}}" class="AddProduct" >
                     {!! csrf_field() !!}
                     <input type="hidden" name="product_id" value="{{$product->id}}">
                     <div class="text-center">
