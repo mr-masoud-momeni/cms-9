@@ -8,6 +8,7 @@
     <link href="{{ asset('/frontend/vendor/bootstrap/css/bootstrap-rtl.css') }}" rel="stylesheet">
     <link href="{{ asset('/frontend/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('/frontend/vendor/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('/frontend/vendor/store-theme.css') }}" rel="stylesheet">
 </head>
 <body>
 <header class="store-header store-header-minimal">
