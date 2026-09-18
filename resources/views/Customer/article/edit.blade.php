@@ -59,7 +59,7 @@
                                                             {{ $category->name }}
                                                         </label>
 
-                                                        @if(count($category->subcategory))
+                                                        @if($category->subcategory && $category->subcategory->count())
                                                             @include('Customer.article.subCategoryListEdit', [
                                                                 'subcategories' => $category->subcategory,
                                                                 'article' => $article
