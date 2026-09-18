@@ -62,13 +62,6 @@ Route::group(
     , function () {
         Route::get('/dashboard', function () {return view('Backend.layouts.Master');})->name('admin.dashboard');
         Route::resource('/register' , 'UserController');
-        Route::get('/article', 'ArticleController@index')->name('article.index');
-        Route::get('/article/edit/{article}', 'ArticleController@edit')->name('article.edit');
-        Route::get('/article/create', 'ArticleController@create')->name('article.create');
-        Route::patch('/article/{article}', 'ArticleController@update')->name('article.update');
-        Route::delete('/article/delete', 'ArticleController@delete')->name('article.delete');
-        Route::post('/article', 'ArticleController@save')->name('article.save');
-        Route::get('/category/create/article', 'CategoryController@create')->name('catArticle.create');
         Route::post('/category/create', 'CategoryController@save')->name('category.save');
         Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
         Route::delete('/category/delete', 'CategoryController@delete')->name('category.delete');
@@ -102,6 +95,12 @@ Route::group(
         Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
         Route::resource('/product', 'ProductController');
         Route::resource('/orders', 'OrderController');
+        Route::resource('/article', 'ArticleController');
+        Route::post('/article/upload-image', 'ArticleController@uploadImageInText')->name('article.upload-image');
+        Route::get('/category/create/article', 'CategoryController@create')->name('catArticle.create');
+        Route::post('/category/create/article', 'CategoryController@save')->name('catArticle.save');
+        Route::patch('/category/edit/article', 'CategoryController@edit')->name('catArticle.edit');
+        Route::delete('/category/delete/article', 'CategoryController@delete')->name('catArticle.delete');
         Route::get('/gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
         Route::post('/gateways', [GatewayController::class, 'store'])->name('gateways.store');
         Route::post('/card-to-card', [CardToCardController::class, 'update'])->name('card-to-card.store');
