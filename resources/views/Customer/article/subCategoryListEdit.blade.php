@@ -8,7 +8,7 @@
             </label>
         </li>
 
-        @if(count($subcategory->subcategory))
+        @if($subcategory->subcategory && $subcategory->subcategory->count())
             @include('Customer.article.subCategoryListEdit', ['subcategories' => $subcategory->subcategory, 'article' => $article])
         @endif
     </ul>
