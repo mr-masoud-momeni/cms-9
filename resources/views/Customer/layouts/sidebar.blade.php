@@ -13,8 +13,8 @@
                 <li><a class="{{Route::currentRouteName() == 'shop.catProduct.create' ? 'active-sidebar' : ''}}" href="{{route('shop.catProduct.create')}}">ایجاد دسته بندی</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.gateways.edit' ? 'active-sidebar' : ''}}" href="{{route('shop.gateways.edit')}}">مدیریت درگاه پرداخت</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.orders.index' ? 'active-sidebar' : ''}}" href="{{route('shop.orders.index')}}">سفارش ها</a></li>
-                <li><a class="{{in_array(Route::currentRouteName(), ['shop.article.create', 'shop.article.index', 'shop.article.edit']) ? 'active-sidebar' : ''}}" href="{{route('shop.article.create')}}">ایجاد مقاله</a></li>
-                <li><a class="{{in_array(Route::currentRouteName(), ['shop.article.create', 'shop.article.index', 'shop.article.edit']) ? 'active-sidebar' : ''}}" href="{{route('shop.article.index')}}">لیست مقالات</a></li>
+                <li><a class="{{Route::currentRouteName() == 'shop.article.create' ? 'active-sidebar' : ''}}" href="{{route('shop.article.create')}}">ایجاد مقاله</a></li>
+                <li><a class="{{Route::currentRouteName() == 'shop.article.index' ? 'active-sidebar' : ''}}" href="{{route('shop.article.index')}}">لیست مقالات</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.catArticle.create' ? 'active-sidebar' : ''}}" href="{{route('shop.catArticle.create')}}">دسته‌بندی مقالات</a></li>
             </ul>
         </li>
