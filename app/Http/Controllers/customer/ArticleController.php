@@ -120,12 +120,13 @@ class ArticleController extends CustomerController
             ->with('articleupdate', 'مقاله شما با موفقیت ویرایش شد.');
     }
 
-    public function destroy(Request $request)
+    public function destroy($article)
     {
         $shop = auth('shop_admin')->user()->shop()->firstOrFail();
 
         $article = Article::where('shop_id', $shop->id)
-            ->findOrFail($request->id);
+            ->where('slug', $article)
+            ->firstOrFail();
 
         $article->delete();
 
