@@ -1,0 +1,219 @@
+/* =========================================================
+   STORE - GLOBAL
+   Shared styles for all Store pages
+   ========================================================= */
+
+
+/* =========================================================
+   Base / Box Sizing
+   ========================================================= */
+
+.store-page,
+.store-page *,
+.store-container,
+.store-container * {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   Main Container
+   ========================================================= */
+
+.store-container {
+    width: 100%;
+    max-width: 1136px;
+
+    margin-right: auto;
+    margin-left: auto;
+
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+
+/* =========================================================
+   Common Typography
+   ========================================================= */
+
+.store-page {
+    color: #222;
+
+    font-family: inherit;
+
+    direction: rtl;
+}
+
+.store-page h1,
+.store-page h2,
+.store-page h3,
+.store-page h4,
+.store-page h5,
+.store-page h6,
+.store-page p {
+    margin-top: 0;
+}
+
+
+/* =========================================================
+   Links
+   ========================================================= */
+
+.store-page a {
+    text-decoration: none;
+}
+
+.store-page a:hover {
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+.store-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 44px;
+
+    padding: 0 18px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #111;
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        transform .2s ease;
+}
+
+.store-button:hover {
+    background: #292929;
+    color: #fff;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   Common Empty State
+   ========================================================= */
+
+.store-empty {
+    min-height: 300px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    text-align: center;
+}
+
+.store-empty-icon {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 16px;
+
+    border-radius: 50%;
+
+    background: #f5f5f5;
+    color: #888;
+}
+
+.store-empty-icon i {
+    font-size: 26px;
+}
+
+.store-empty h2 {
+    margin-bottom: 8px;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: #222;
+}
+
+.store-empty p {
+    margin-bottom: 0;
+
+    font-size: 13px;
+    line-height: 1.8;
+
+    color: #888;
+}
+
+
+/* =========================================================
+   Common Form Elements
+   ========================================================= */
+
+.store-page input,
+.store-page textarea,
+.store-page select {
+    font-family: inherit;
+}
+
+.store-page input:focus,
+.store-page textarea:focus,
+.store-page select:focus {
+    outline: none;
+}
+
+
+/* =========================================================
+   Responsive Container
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .store-container {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .store-container {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+}
+
+
+#toastContainer .toast {
+    min-width: 280px;
+    max-width: 360px;
+    border-radius: 10px;
+}
+
+#toastContainer .toast-body {
+    font-size: 14px;
+    padding: 12px 14px;
+}

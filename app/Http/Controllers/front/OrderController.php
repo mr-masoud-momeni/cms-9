@@ -20,7 +20,7 @@ class OrderController extends Controller
             $cart = session('cart', []);
 
             if (empty($cart)) {
-                return view('Frontend.Shop.Pay.Cart', [
+                return view('Frontend.Store.Pages.cart', [
                     'products' => collect(),
                     'totalAmount' => 0,
                 ]);
@@ -42,7 +42,7 @@ class OrderController extends Controller
                 $totalAmount += $product->cart_price * $product->cart_quantity;
             }
 
-            return view('Frontend.Shop.Pay.Cart', compact('products', 'totalAmount'));
+            return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount'));
         }
 
         $order = $buyer->orders()
@@ -52,7 +52,7 @@ class OrderController extends Controller
             ->first();
 
         if (!$order) {
-            return view('Frontend.Shop.Pay.Cart', [
+            return view('Frontend.Store.Pages.cart', [
                 'products' => collect(),
                 'totalAmount' => 0,
             ]);
@@ -67,7 +67,7 @@ class OrderController extends Controller
             $totalAmount += $product->cart_price * $product->cart_quantity;
         }
 
-        return view('Frontend.Shop.Pay.Cart', compact('products', 'totalAmount'));
+        return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount'));
     }
 
     public function create()

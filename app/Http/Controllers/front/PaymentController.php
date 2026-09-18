@@ -119,7 +119,7 @@ class PaymentController extends Controller
             ->first();
         $bankAccount = $shop->bankAccount;
 
-        return view('Frontend.Shop.Pay.payment', compact(
+        return view('Frontend.Store.Pages.payment', compact(
             'order', 'totalAmount', 'gateway', 'bankAccount'
         ));
     }

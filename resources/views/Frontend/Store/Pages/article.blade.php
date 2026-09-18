@@ -1,4 +1,14 @@
-@extends('Frontend.Store.Layouts.MasterMinimal')
+@extends('Frontend.Store.Layouts.MasterMain')
+
+
+
+@section('header')
+    @include('Frontend.Store.Layouts.header-minimal')
+@endsection
+
+@section('page-styles')
+    <link rel="stylesheet" href="{{ asset('frontend/css/store-show.css') }}">
+@endsection
 
 @section('Main')
     <main class="store-detail store-blog-detail" aria-label="مقاله">
@@ -19,7 +29,7 @@
                 @endif
 
                 <div class="store-blog-comments">
-                    @include('Frontend.layouts.comment')
+                    <!-- @include('Frontend.layouts.comment') -->
                 </div>
             </article>
 

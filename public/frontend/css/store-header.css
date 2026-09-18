@@ -1,0 +1,180 @@
+.store-header {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.store-header-inner {
+    width: 100%;
+    max-width: 1136px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    box-sizing: border-box;
+}
+
+.store-header-top {
+    display: flex;
+    align-items: center;
+    direction: rtl;
+    gap: 14px;
+}
+
+/* آواتار */
+.store-avatar {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    flex: 0 0 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #f3f3f3;
+    border: 1px solid #ddd;
+
+    font-size: 25px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* نام فروشگاه */
+.store-title {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #171717;
+
+    white-space: nowrap;
+}
+
+/* سبد خرید */
+.store-cart {
+    margin-right: auto;
+    flex: 0 0 auto;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #f7f7f7;
+    color: #222;
+
+    text-decoration: none;
+}
+
+.store-cart i {
+    font-size: 19px;
+}
+
+/* آمار */
+.store-stats {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+
+    margin-top: 12px;
+
+    font-size: 13px;
+    color: #555;
+}
+
+.store-stats strong {
+    color: #111;
+    font-weight: 700;
+}
+
+/* توضیحات */
+.store-description {
+    max-width: 650px;
+
+    margin: 10px 0 0;
+
+    font-size: 13px;
+    line-height: 1.8;
+    color: #555;
+}
+
+
+/* موبایل */
+@media (max-width: 767px) {
+
+    .store-header-inner {
+        padding: 16px;
+    }
+
+    .store-header-top {
+        gap: 12px;
+    }
+
+    .store-avatar {
+        width: 58px;
+        height: 58px;
+        min-width: 58px;
+        flex-basis: 58px;
+        font-size: 23px;
+    }
+
+    .store-title {
+        font-size: 17px;
+    }
+
+    .store-cart {
+        width: 36px;
+        height: 36px;
+    }
+
+    .store-cart i {
+        font-size: 17px;
+    }
+
+    .store-stats {
+        margin-top: 10px;
+        gap: 18px;
+    }
+
+    .store-description {
+        margin-top: 8px;
+        font-size: 12px;
+    }
+}
+.store-header .store-header-top {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    gap: 14px;
+}
+
+.store-header .store-title {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    flex: 0 1 auto !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    white-space: nowrap !important;
+}
+
+.store-header .store-cart {
+    display: flex !important;
+    flex: 0 0 40px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    margin-right: auto !important;
+}
+.store-header h1.store-title {
+    position: static !important;
+    float: none !important;
+    clear: none !important;
+    text-align: right !important;
+}

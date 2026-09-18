@@ -1,0 +1,356 @@
+/* =========================================================
+   Instagram Store Grid
+   ========================================================= */
+
+.shop-products,
+.shop-posts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    width: 100%;
+}
+
+
+/* =========================================================
+   Product / Post Card
+   ========================================================= */
+
+.shop-product,
+.store-post {
+    position: relative;
+    display: block;
+
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    margin: 0;
+    padding: 0;
+
+    background: #f5f5f5;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   Image
+   ========================================================= */
+
+.shop-product-image,
+.store-post-image {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+.shop-product-image img,
+.store-post-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition: transform .35s ease;
+}
+
+
+/* Placeholder */
+
+.shop-product-placeholder,
+.store-post-placeholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f1f1f1;
+    color: #aaa;
+}
+
+.shop-product-placeholder i,
+.store-post-placeholder i {
+    font-size: 32px;
+}
+
+
+/* =========================================================
+   Overlay
+   ========================================================= */
+
+.shop-product::after,
+.store-post::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, .48);
+
+    opacity: 0;
+
+    transition: opacity .25s ease;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Info
+   ========================================================= */
+
+.shop-product-info,
+.store-post-info {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    text-align: center;
+
+    opacity: 0;
+
+    transform: translateY(8px);
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+
+    pointer-events: none;
+}
+
+
+/* عنوان */
+
+.shop-product-info h2,
+.store-post-info h2 {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    line-height: 1.7;
+
+    text-align: center;
+}
+
+
+/* قیمت */
+
+.shop-product-info span {
+    margin-top: 8px;
+
+    color: rgba(255, 255, 255, .9);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   Hover
+   ========================================================= */
+
+.shop-product:hover::after,
+.store-post:hover::after {
+    opacity: 1;
+}
+
+.shop-product:hover img,
+.store-post:hover img {
+    transform: scale(1.05);
+}
+
+.shop-product:hover .shop-product-info,
+.store-post:hover .store-post-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   Tablet + Mobile
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .shop-products,
+    .shop-posts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3px;
+    }
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .shop-products,
+    .shop-posts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2px;
+    }
+
+    /*
+     * موبایل hover ندارد،
+     * بنابراین عنوان را همیشه پایین تصویر نشان می‌دهیم.
+     */
+
+    .shop-product::after,
+    .store-post::after {
+        opacity: 1;
+
+        top: auto;
+        bottom: 0;
+
+        height: 45%;
+
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, .7),
+            transparent
+        );
+    }
+
+    .shop-product-info,
+    .store-post-info {
+        inset: auto 0 0 0;
+
+        height: auto;
+
+        align-items: flex-start;
+        justify-content: flex-end;
+
+        padding: 12px;
+
+        opacity: 1;
+
+        transform: none;
+
+        text-align: right;
+    }
+
+    .shop-product-info h2,
+    .store-post-info h2 {
+        width: 100%;
+
+        font-size: 12px;
+        line-height: 1.6;
+
+        text-align: right;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+
+        overflow: hidden;
+    }
+
+    .shop-product-info span {
+        margin-top: 3px;
+        font-size: 10px;
+    }
+}
+
+/* =========================================================
+   Store Tabs - Fix
+   ========================================================= */
+
+.store-tab-content {
+    display: none !important;
+}
+
+.store-tab-content.active {
+    display: block !important;
+}
+
+
+/* خود تب‌ها */
+
+.store-tabs {
+    display: flex !important;
+    justify-content: center;
+    align-items: stretch;
+
+    width: 100%;
+    height: 54px;
+
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+
+    margin-bottom: 18px;
+}
+
+.store-tab {
+    position: relative;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+
+    width: auto !important;
+    height: 54px;
+
+    padding: 0 24px !important;
+    margin: 0 !important;
+
+    border: 0 !important;
+    outline: none !important;
+
+    background: transparent !important;
+
+    color: #999;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.store-tab.active {
+    color: #111 !important;
+}
+
+.store-tab::after {
+    content: "";
+
+    position: absolute;
+
+    right: 0;
+    bottom: -1px;
+    left: 0;
+
+    height: 2px;
+
+    background: #111;
+
+    transform: scaleX(0);
+    transition: transform .2s ease;
+}
+
+.store-tab.active::after {
+    transform: scaleX(1);
+}
