@@ -40,8 +40,11 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="deleteAjax" data-toggle="modal" data-target="#DeleteModal"
-                                       data-id="{{ $article->id }}">
+                                    <a class="deleteAjax"
+                                       data-toggle="modal"
+                                       data-target="#DeleteModal"
+                                       data-id="{{ $article->id }}"
+                                       data-url="{{ route('shop.article.destroy', $article->slug) }}">
                                         <i class="fa fa-2x fa-trash-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
@@ -63,11 +66,10 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">حذف مقاله</h4>
                         </div>
-                        <form method="post" action="{{ route('shop.article.destroy') }}" class="articleFormDelete">
+                        <form method="post" action="" class="articleFormDelete">
                             <div class="modal-body">
                                 {!! csrf_field() !!}
                                 {{ method_field('delete') }}
-                                <input type="hidden" id="articleDeleteID" name="id" value="">
                                 <p>آیا از حذف این مقاله اطمینان دارید؟</p>
                             </div>
                             <div class="modal-footer">
@@ -85,7 +87,7 @@
 @section('scripts')
     <script>
         $(document).on('click', '.deleteAjax', function () {
-            $('#DeleteModal #articleDeleteID').val($(this).data('id'));
+            $('.articleFormDelete').attr('action', $(this).data('url'));
         });
 
         $(document).on('submit', '.articleFormDelete', function (event) {
