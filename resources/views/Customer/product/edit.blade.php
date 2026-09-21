@@ -8,108 +8,56 @@
                 <div class="panel-body">
                     <div class="row">
                         <form action="{{route('shop.product.update',['product'=>$product->slug])}}" method="post" enctype="multipart/form-data">
+                            {!! csrf_field() !!}
+                            {{method_field('patch')}}
+
                             <div class="col-md-8">
-                                {!! csrf_field() !!}
-                                {{method_field('patch')}}
                                 <div class="form-group">
                                     <label for="title">عنوان محصول</label>
-                                    <input type="text" name="title" class="form-control" id="title" placeholder="عنوان را وارد کنید..." value="{{$product->title}}">
+                                    <input type="text" name="title" class="form-control" id="title"
+                                           value="{{old('title', $product->title)}}" required>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="body">متن محصول</label>
-                                    <textarea name="body" class="form-control" cols="30" id="body" rows="10" placeholder="متن را وارد کنید.">{{$product->body}}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="type">نوع محصول</label>
-                                    <div class="radio">
-                                        <label><input type="radio" name="type" value="physical" @php if(!$product->link){ echo 'checked';} @endphp>محصول فیزیکی</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="type" value="virtual" @php if($product->link){ echo 'checked';} @endphp>محصول مجازی</label>
-                                    </div>
-                                </div>
-                                <div class="form-group" id="link" style="display:none;">
-                                    <label for="link">لینک محصول</label>
-                                    <input type="text" name="link" class="form-control">
-                                </div>
-                                <div class="form-group" id="product-body-display" style="display:none;">
-                                    <label for="product-body">متن محصول</label>
-                                    <textarea name="product-body" class="form-control" cols="30" id="product-body" rows="10" placeholder="متن را وارد کنید.">{{old('product-body')}}</textarea>
+                                    <label for="body">توضیحات</label>
+                                    <textarea name="body" class="form-control" id="body" rows="8"
+                                              placeholder="توضیحات محصول را بنویسید..." required>{{old('body', $product->body)}}</textarea>
                                 </div>
                             </div>
+
                             <div class="col-md-4">
-                                <div class="form-group" id="price-type">
-                                    <label for="price-type">نوع دسترسی</label>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" @php if($product['price-type'] =='non-membership') echo 'checked';@endphp value="non-membership" checked>بدون عضویت</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" @php if($product['price-type']=='membership') echo 'checked';@endphp value="membership">عضویت</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" @php if($product['price-type']=='special-membership') echo 'checked';@endphp value="special-membership">اعضای ویژه</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" @php if($product->price) echo 'checked';@endphp value="cash">نقدی</label>
-                                    </div>
-                                </div>
-                                <div class="form-group" id="price" style="display: @php echo $product->price ? '' : 'none'; @endphp">
-                                    <label for="price">قیمت محصول</label>
-                                    <input type="text" name="price" class="form-control" value="@php echo $product->price ? $product->price : ''; @endphp">
-                                </div>
                                 <div class="form-group">
-                                    <label for="images">تصویر شاخص</label>
-                                    <input type="file" name="images" id="images">
+                                    <label for="price">قیمت</label>
+                                    <input type="number" name="price" class="form-control" id="price"
+                                           min="0" step="any" value="{{old('price', $product->price)}}" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">ویرایش محصول</button>
+
+                                <div class="form-group">
+                                    <label for="unit">واحد فروش</label>
+                                    @php($units = ['عدد', 'متر', 'سانتی‌متر', 'کیلوگرم', 'گرم', 'لیتر'])
+                                    <select name="unit" id="unit" class="form-control" required>
+                                        @foreach($units as $unit)
+                                            <option value="{{$unit}}" @selected(old('unit', $product->unit ?: 'عدد') === $unit)>{{$unit}}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">قیمت بر اساس هر واحد محاسبه می‌شود.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="images">تصویر محصول</label>
+                                    <input type="file" name="images" id="images" class="form-control"
+                                           accept="image/jpeg,image/png,image/webp">
+                                    <small class="text-muted">اگر نمی‌خواهید تصویر عوض شود، خالی بگذارید.</small>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-block">ذخیره تغییرات</button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <div class="panel-footer">Panel Footer</div>
             </div>
         </div>
     </div>
 @endsection
 @section('scripts')
-    <script src="{{asset('/ckeditor/ckeditor.js')}}"></script>
-    <script>
-        CKEDITOR.replace('body',{
-            filebrowserUploadUrl: '{{route('uploadImage')}}',
-            filebrowserImageUploadUrl: '{{route('uploadImage')}}'
-        });
-        CKEDITOR.replace('product-body',{
-            filebrowserUploadUrl: '{{route('uploadImage')}}',
-            filebrowserImageUploadUrl: '{{route('uploadImage')}}'
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("input[type='radio']").change(function() {
-                if ($(this).val() == "virtual") {
-                    $("#link").show();
-                    $("#product-body-display").show();
-                } else {
-                    $("#link").hide();
-                    $("#product-body-display").hide();
-                }
-            });
-            var radioValue = $("input[name='type']:checked").val();
-            if(radioValue == 'virtual'){
-                $("#link").show();
-                $("#product-body-display").show();
-            }
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("#price-type input[type='radio']").change(function() {
-                if ($(this).val() == "cash") {
-                    $("#price").show();
-                } else {
-                    $("#price").hide();
-                }
-            });
-        });
-    </script>
 @endsection
