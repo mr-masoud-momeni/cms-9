@@ -51,9 +51,24 @@
 
                                 <div class="form-group">
                                     <label for="images">تصویر محصول</label>
+
+                                    @php
+                                        $currentImage = is_array($product->images)
+                                            ? ($product->images['original'] ?? $product->images['thum'] ?? null)
+                                            : $product->images;
+                                    @endphp
+
+                                    @if($currentImage)
+                                        <div style="margin-bottom: 12px;">
+                                            <img src="{{asset(ltrim($currentImage, '/'))}}"
+                                                 alt="{{ $product->title }}"
+                                                 style="display:block;width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
+                                        </div>
+                                    @endif
+
                                     <input type="file" name="images" id="images" class="form-control"
                                            accept="image/jpeg,image/png,image/webp">
-                                    <small class="text-muted">اگر نمی‌خواهید تصویر عوض شود، خالی بگذارید.</small>
+                                    <small class="text-muted">برای جایگزینی تصویر، فایل جدید را انتخاب کنید.</small>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary btn-block">ذخیره تغییرات</button>
