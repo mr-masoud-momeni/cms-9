@@ -34,10 +34,16 @@
 
                                 <div class="form-group">
                                     <label for="unit">واحد فروش</label>
-                                    @php($units = ['عدد', 'متر', 'سانتی‌متر', 'کیلوگرم', 'گرم', 'لیتر'])
+                                    @php
+                                        $units = ['عدد', 'متر', 'سانتی‌متر', 'کیلوگرم', 'گرم', 'لیتر'];
+                                        $selectedUnit = old('unit') ?: ($product->unit ?: 'عدد');
+                                        if (!in_array($selectedUnit, $units, true)) {
+                                            $selectedUnit = 'عدد';
+                                        }
+                                    @endphp
                                     <select name="unit" id="unit" class="form-control" required>
                                         @foreach($units as $unit)
-                                            <option value="{{$unit}}" @selected(old('unit', $product->unit ?: 'عدد') === $unit)>{{$unit}}</option>
+                                            <option value="{{$unit}}" @selected($selectedUnit === $unit)>{{$unit}}</option>
                                         @endforeach
                                     </select>
                                     <small class="text-muted">قیمت بر اساس هر واحد محاسبه می‌شود.</small>
