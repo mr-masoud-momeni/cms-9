@@ -19,7 +19,6 @@
                         <tr>
                             <th>عنوان مقاله</th>
                             <th>تاریخ ارسال</th>
-                            <th>دسته‌ها</th>
                             <th width="50px"></th>
                             <th width="50px"></th>
                         </tr>
@@ -29,11 +28,6 @@
                             <tr class="item{{ $article->id }}">
                                 <td>{{ $article->title }}</td>
                                 <td>{{ $article->created_at }}</td>
-                                <td>
-                                    @foreach($article->categories as $cat)
-                                        {{ $cat->name }}@if(!$loop->last) - @endif
-                                    @endforeach
-                                </td>
                                 <td>
                                     <a href="{{ route('shop.article.edit', $article->slug) }}">
                                         <i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i>
