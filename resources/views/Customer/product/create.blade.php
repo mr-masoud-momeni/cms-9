@@ -8,103 +8,54 @@
                 <div class="panel-body">
                     <div class="row">
                         <form action="{{route('shop.product.store')}}" method="post" enctype="multipart/form-data">
-                        <div class="col-md-8">
-                                {!! csrf_field() !!}
+                            {!! csrf_field() !!}
+                            <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="title">عنوان محصول</label>
-                                    <input type="text" name="title" class="form-control" id="title" placeholder="عنوان را وارد کنید..." value="{{old('title')}}">
+                                    <input type="text" name="title" class="form-control" id="title"
+                                           placeholder="مثلاً: پارچه لینن" value="{{old('title')}}" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="body">متن محصول</label>
-                                    <textarea name="body" class="form-control" cols="30" id="body" rows="10" placeholder="متن را وارد کنید.">{{old('body')}}</textarea>
+                                    <label for="body">توضیحات</label>
+                                    <textarea name="body" class="form-control" id="body" rows="8"
+                                              placeholder="توضیحات محصول را بنویسید..." required>{{old('body')}}</textarea>
                                 </div>
+                            </div>
+
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="type">نوع محصول</label>
-                                    <div class="radio">
-                                        <label><input type="radio" name="type" value="physical" checked>محصول فیزیکی</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="type" value="virtual">محصول مجازی</label>
-                                    </div>
+                                    <label for="price">قیمت</label>
+                                    <input type="number" name="price" class="form-control" id="price"
+                                           min="0" step="any" placeholder="مثلاً 250000" value="{{old('price')}}" required>
                                 </div>
-                                <div class="form-group" id="link" style="display:none;">
-                                    <label for="link">لینک محصول</label>
-                                    <input type="text" name="link" class="form-control">
-                                </div>
-                                <div class="form-group" id="product-body-display" style="display:none;">
-                                    <label for="product-body">متن محصول</label>
-                                    <textarea name="product-body" class="form-control" cols="30" id="product-body" rows="10" placeholder="متن را وارد کنید.">{{old('product-body')}}</textarea>
-                                </div>
-                        </div>
-                        <div class="col-md-4">
-                                <div class="form-group" id="price-type">
-                                    <label for="price-type">نوع دسترسی</label>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" value="non-membership" checked>بدون عضویت</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" value="membership">عضویت</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" value="special-membership">اعضای ویژه</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="price-type" value="cash">نقدی</label>
-                                    </div>
-                                </div>
-                                <div class="form-group" id="price" style="display: none;">
-                                    <label for="price">قیمت محصول</label>
-                                    <input type="text" name="price" class="form-control">
-                                </div>
+
                                 <div class="form-group">
-                                    <label for="images">تصویر شاخص</label>
-                                    <input type="file" name="images" id="images">
+                                    <label for="unit">واحد فروش</label>
+                                    <select name="unit" id="unit" class="form-control" required>
+                                        @php($units = ['عدد', 'متر', 'سانتی‌متر', 'کیلوگرم', 'گرم', 'لیتر'])
+                                        @foreach($units as $unit)
+                                            <option value="{{$unit}}" @selected(old('unit', 'عدد') === $unit)>{{$unit}}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">قیمت بر اساس هر واحد محاسبه می‌شود.</small>
                                 </div>
-                                <button type="submit" class="btn btn-success">افزودن محصول</button>
-                        </div>
+
+                                <div class="form-group">
+                                    <label for="images">تصویر محصول</label>
+                                    <input type="file" name="images" id="images" class="form-control"
+                                           accept="image/jpeg,image/png,image/webp" required>
+                                    <small class="text-muted">یک تصویر انتخاب کنید.</small>
+                                </div>
+
+                                <button type="submit" class="btn btn-success btn-block">افزودن محصول</button>
+                            </div>
                         </form>
                     </div>
                 </div>
-                <div class="panel-footer">Panel Footer</div>
             </div>
         </div>
     </div>
 @endsection
 @section('scripts')
-    <script src="{{asset('/ckeditor/ckeditor.js')}}"></script>
-    <script>
-        CKEDITOR.replace('body',{
-            filebrowserUploadUrl: '{{route('uploadImage')}}',
-            filebrowserImageUploadUrl: '{{route('uploadImage')}}'
-        });
-        CKEDITOR.replace('product-body',{
-            filebrowserUploadUrl: '{{route('uploadImage')}}',
-            filebrowserImageUploadUrl: '{{route('uploadImage')}}'
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("input[type='radio']").change(function() {
-                if ($(this).val() == "virtual") {
-                    $("#link").show();
-                    $("#product-body-display").show();
-                } else {
-                    $("#link").hide();
-                    $("#product-body-display").hide();
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("#price-type input[type='radio']").change(function() {
-                if ($(this).val() == "cash") {
-                    $("#price").show();
-                } else {
-                    $("#price").hide();
-                }
-            });
-        });
-    </script>
 @endsection
