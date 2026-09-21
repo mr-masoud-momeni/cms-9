@@ -35,4 +35,4 @@ const app = new Vue({
 // Echo.channel('notification')
 //     .Listen('App\\Events\\NotificationEvent' , function (e) {
 //         console.log(e);
-//     });
+//     });\n
