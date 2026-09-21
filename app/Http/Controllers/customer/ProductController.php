@@ -5,6 +5,7 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\customer\CustomerController;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\Order;
 use App\Order_Product;
 use Illuminate\Http\Request;
@@ -16,13 +17,24 @@ class ProductController extends CustomerController
 {
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+
+        $products = Product::where('shop_id', $shop->id)
+            ->latest()
+            ->paginate(10);
+
         return view('Customer.product.index', compact('products'));
     }
 
     public function create()
     {
-        $parentCategories = Category::where('parent_id', 0)->where('type', 'product')->get();
+        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+
+        $parentCategories = Category::where('shop_id', $shop->id)
+            ->where('parent_id', 0)
+            ->where('type', 'product')
+            ->get();
+
         return view('Customer.product.create', compact('parentCategories'));
     }
 
@@ -38,8 +50,9 @@ class ProductController extends CustomerController
             'title' => 'required',
             'body' => 'required',
         ]);
-        $userId = auth()->id();
-        $shopId = auth()->user()->shop()->first()->id;
+        $userId = auth('shop_admin')->id();
+        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+        $shopId = $shop->id;
         $imageUrl = $this->UploadImages($request->file('images'));
         $productData = array_merge($validated, ['user_id' => $userId, 'shop_id' => $shopId, 'images' => $imageUrl]);
         $product = Product::create($productData);
@@ -52,14 +65,30 @@ class ProductController extends CustomerController
 
     public function show(Product $product) {}
 
-    public function edit(Product $product)
+    public function edit($product)
     {
-        $parentCategories = Category::where('parent_id', 0)->where('type', 'product')->get();
+        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+
+        $product = Product::where('shop_id', $shop->id)
+            ->where('slug', $product)
+            ->firstOrFail();
+
+        $parentCategories = Category::where('shop_id', $shop->id)
+            ->where('parent_id', 0)
+            ->where('type', 'product')
+            ->get();
+
         return view('Customer.product.edit', compact('product', 'parentCategories'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $product)
     {
+        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+
+        $product = Product::where('shop_id', $shop->id)
+            ->where('slug', $product)
+            ->firstOrFail();
+
         $validated = $request->validate([
             'price-type' => [new WhiteList(['non-membership' => 'non-membership', 'membership' => 'membership', 'special-membership' => 'special-membership', 'cash' => 'cash'])],
             'type' => [new WhiteList(['physical' => 'physical', 'virtual' => 'virtual'])],
@@ -68,8 +97,8 @@ class ProductController extends CustomerController
             'title' => 'required',
             'body' => 'required',
         ]);
-        $userId = auth()->id();
-        $shopId = auth()->user()->shop()->first()->id;
+        $userId = auth('shop_admin')->id();
+        $shopId = $shop->id;
         if ($request->input('price-type') != 'cash') {
             $validated['price'] = null;
         }
@@ -87,18 +116,20 @@ class ProductController extends CustomerController
         }
 
         session()->flash('createproduct', 'محصول شما با موفقیت ویرایش شد.');
-        return redirect('/customer/product');
+        return redirect()->route('shop.product.index');
     }
 
     public function destroy(Request $request)
     {
         if ($request->ajax()) {
-            $product = new Product();
-            $product = $product->find($request->id);
-            $delete = $product->delete();
-            if ($delete) {
-                return response()->json(['success' => $product]);
-            }
+            $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+
+            $product = Product::where('shop_id', $shop->id)
+                ->findOrFail($request->id);
+
+            $product->delete();
+
+            return response()->json(['success' => $product]);
         }
     }
 }
