@@ -45,16 +45,22 @@ class ProductController extends CustomerController
         $validated = $request->validate([
             'price-type' => [new WhiteList(['non-membership' => 'non-membership', 'membership' => 'membership', 'special-membership' => 'special-membership', 'cash' => 'cash'])],
             'type' => [new WhiteList(['physical' => 'physical', 'virtual' => 'virtual'])],
-            'price' => 'numeric|nullable',
-            'images' => 'nullable|mimes:jpeg,jpg,bmp,png',
-            'title' => 'required',
-            'body' => 'required',
+            'price' => 'required|numeric|min:0',
+            'unit' => 'required|string|max:50',
+            'images' => 'required|image|mimes:jpeg,jpg,bmp,png,webp',
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
         ]);
         $userId = auth('shop_admin')->id();
         $shop = Shop::where('domain', request()->getHost())->firstOrFail();
         $shopId = $shop->id;
         $imageUrl = $this->UploadImages($request->file('images'));
-        $productData = array_merge($validated, ['user_id' => $userId, 'shop_id' => $shopId, 'images' => $imageUrl]);
+        $productData = array_merge($validated, [
+            'user_id' => $userId,
+            'shop_id' => $shopId,
+            'price-type' => 'cash',
+            'images' => $imageUrl,
+        ]);
         $product = Product::create($productData);
         if ($request->has('category')) {
             $product->categories()->attach($request->input('category'));
@@ -92,16 +98,15 @@ class ProductController extends CustomerController
         $validated = $request->validate([
             'price-type' => [new WhiteList(['non-membership' => 'non-membership', 'membership' => 'membership', 'special-membership' => 'special-membership', 'cash' => 'cash'])],
             'type' => [new WhiteList(['physical' => 'physical', 'virtual' => 'virtual'])],
-            'price' => 'numeric|nullable',
-            'images' => 'nullable|mimes:jpeg,jpg,bmp,png',
-            'title' => 'required',
-            'body' => 'required',
+            'price' => 'required|numeric|min:0',
+            'unit' => 'required|string|max:50',
+            'images' => 'nullable|image|mimes:jpeg,jpg,bmp,png,webp',
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
         ]);
         $userId = auth('shop_admin')->id();
         $shopId = $shop->id;
-        if ($request->input('price-type') != 'cash') {
-            $validated['price'] = null;
-        }
+        $validated['price-type'] = 'cash';
         if ($request->file('images')) {
             $imageUrl = $this->UploadImages($request->file('images'));
             $productData = array_merge($validated, ['user_id' => $userId, 'shop_id' => $shopId, 'images' => $imageUrl]);
