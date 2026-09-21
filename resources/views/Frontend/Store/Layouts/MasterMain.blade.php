@@ -8,7 +8,34 @@
     <title>
         @yield('title', $shop->name ?? 'فروشگاه')
     </title>
-        <link href="{{asset('/frontend/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+    <style>
+        @font-face {
+            font-family: 'IRANYekan';
+            src: url('{{ asset('/fonts/iranyekannum/woff/iranyekanwebregularfanum.woff') }}') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'IRANYekan';
+            src: url('{{ asset('/fonts/iranyekannum/woff/iranyekanwebmediumfanum.woff') }}') format('woff');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'IRANYekan';
+            src: url('{{ asset('/fonts/iranyekannum/woff/iranyekanwebboldfanum.woff') }}') format('woff');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+
+    <link href="{{asset('/frontend/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('/frontend/vendor/bootstrap/css/bootstrap-rtl.css')}}" rel="stylesheet">
     <link href="{{ asset('/frontend/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('/frontend/vendor/custom.css') }}" rel="stylesheet">
