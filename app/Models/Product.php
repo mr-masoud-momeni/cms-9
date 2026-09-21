@@ -31,6 +31,7 @@ class Product extends Model
         'product-body',
         'price-type',
         'price',
+        'unit',
     ];
 
     protected $casts = ['images' => 'array'];
