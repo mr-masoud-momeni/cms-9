@@ -20,8 +20,14 @@
 
                                 <div class="form-group">
                                     <label for="body">توضیحات</label>
+                                    @php
+                                        $body = old('body', $product->body);
+                                        $body = preg_replace('/<br\\s*\\/?>(?=\\s*)/i', "\\n", $body);
+                                        $body = preg_replace('/<\\/(p|div|li|h[1-6])>/i', "\\n", $body);
+                                        $body = trim(strip_tags(html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+                                    @endphp
                                     <textarea name="body" class="form-control" id="body" rows="8"
-                                              placeholder="توضیحات محصول را بنویسید..." required>{{old('body', $product->body)}}</textarea>
+                                              placeholder="توضیحات محصول را بنویسید..." required>{{ $body }}</textarea>
                                 </div>
                             </div>
 
