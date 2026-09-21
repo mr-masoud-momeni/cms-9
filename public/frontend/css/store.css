@@ -5,6 +5,35 @@
 
 
 /* =========================================================
+   Store Font
+   ========================================================= */
+
+@font-face {
+    font-family: 'IRANYekan';
+    src: url('/fonts/iranyekannum/woff/iranyekanwebregularfanum.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IRANYekan';
+    src: url('/fonts/iranyekannum/woff/iranyekanwebmediumfanum.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IRANYekan';
+    src: url('/fonts/iranyekannum/woff/iranyekanwebboldfanum.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* =========================================================
    Base / Box Sizing
    ========================================================= */
 
