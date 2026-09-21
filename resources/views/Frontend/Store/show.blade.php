@@ -24,7 +24,7 @@
                 <h1>{{ $product->title }}</h1>
 
                 <div class="store-body">
-                    {!! $product->body !!}
+                    {!! nl2br(e($product->body)) !!}
                 </div>
 
                 <div class="store-price">
