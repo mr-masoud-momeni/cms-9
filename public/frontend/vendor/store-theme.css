@@ -1011,44 +1011,7 @@
 }
 
 
-/* دکمه */
 
-.store-checkout-submit {
-    min-height: 46px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 10px;
-
-    padding: 0 22px;
-
-    border: 0;
-    border-radius: 8px;
-
-    background: #111;
-    color: #fff;
-
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background-color .2s ease,
-        transform .2s ease;
-}
-
-.store-checkout-submit:hover {
-    background: #292929;
-    transform: translateY(-1px);
-}
-
-.store-checkout-submit i {
-    font-size: 15px;
-}
 
 
 /* =========================================================
