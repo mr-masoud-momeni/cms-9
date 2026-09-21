@@ -43,8 +43,8 @@ class ProductController extends CustomerController
         $imageUrl = $this->UploadImages($request->file('images'));
         $productData = array_merge($validated, ['user_id' => $userId, 'shop_id' => $shopId, 'images' => $imageUrl]);
         $product = Product::create($productData);
-        if (request('category')) {
-            $product->categories()->attach(request('category'));
+        if ($request->has('category')) {
+            $product->categories()->attach($request->input('category'));
         }
         session()->flash('createproduct', 'محصول شما با موفقیت ثبت شد.');
         return redirect('/shop/product');
@@ -80,11 +80,12 @@ class ProductController extends CustomerController
             $productData = array_merge($validated, ['user_id' => $userId, 'shop_id' => $shopId]);
         }
         $product->update($productData);
-        if (request('category')) {
-            $product->categories()->sync(request('category'));
-        } else {
-            $product->categories()->detach();
+
+        // Category UI is disabled for launch; only change relations when the field is submitted.
+        if ($request->has('category')) {
+            $product->categories()->sync($request->input('category', []));
         }
+
         session()->flash('createproduct', 'محصول شما با موفقیت ویرایش شد.');
         return redirect('/customer/product');
     }
