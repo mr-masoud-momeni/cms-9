@@ -11,3 +11,5 @@ deployment:
     - /bin/cp artisan $DEPLOYPATH
     - /bin/cp composer.json $DEPLOYPATH
     - /bin/cp composer.lock $DEPLOYPATH
+    - /bin/mkdir -p /home/fmtsnwvt/public_html/fonts/iranyekannum/woff
+    - /bin/cp -R public/fonts/iranyekannum/woff/. /home/fmtsnwvt/public_html/fonts/iranyekannum/woff/
