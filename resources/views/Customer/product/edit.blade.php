@@ -6,8 +6,6 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><h3>ویرایش محصول</h3></div>
                 <div class="panel-body">
-
-
                     <div class="row">
                         <form action="{{route('shop.product.update',['product'=>$product->slug])}}" method="post" enctype="multipart/form-data">
                             <div class="col-md-8">
@@ -17,7 +15,6 @@
                                     <label for="title">عنوان محصول</label>
                                     <input type="text" name="title" class="form-control" id="title" placeholder="عنوان را وارد کنید..." value="{{$product->title}}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="body">متن محصول</label>
                                     <textarea name="body" class="form-control" cols="30" id="body" rows="10" placeholder="متن را وارد کنید.">{{$product->body}}</textarea>
@@ -33,7 +30,7 @@
                                 </div>
                                 <div class="form-group" id="link" style="display:none;">
                                     <label for="link">لینک محصول</label>
-                                    <input  type="text" name="link" class="form-control">
+                                    <input type="text" name="link" class="form-control">
                                 </div>
                                 <div class="form-group" id="product-body-display" style="display:none;">
                                     <label for="product-body">متن محصول</label>
@@ -44,7 +41,7 @@
                                 <div class="form-group" id="price-type">
                                     <label for="price-type">نوع دسترسی</label>
                                     <div class="radio">
-                                        <label><input type="radio" name="price-type" @php if($product['price-type'] =='non-membership') echo 'checked';@endphp  value="non-membership" checked>بدون عضویت</label>
+                                        <label><input type="radio" name="price-type" @php if($product['price-type'] =='non-membership') echo 'checked';@endphp value="non-membership" checked>بدون عضویت</label>
                                     </div>
                                     <div class="radio">
                                         <label><input type="radio" name="price-type" @php if($product['price-type']=='membership') echo 'checked';@endphp value="membership">عضویت</label>
@@ -56,63 +53,23 @@
                                         <label><input type="radio" name="price-type" @php if($product->price) echo 'checked';@endphp value="cash">نقدی</label>
                                     </div>
                                 </div>
-                                <div class="form-group" id="price" style="display: @php echo $product->price ? '' : 'none'; @endphp" >
+                                <div class="form-group" id="price" style="display: @php echo $product->price ? '' : 'none'; @endphp">
                                     <label for="price">قیمت محصول</label>
-                                    <input  type="text" name="price" class="form-control" value="@php echo $product->price ? $product->price : ''; @endphp">
+                                    <input type="text" name="price" class="form-control" value="@php echo $product->price ? $product->price : ''; @endphp">
                                 </div>
                                 <div class="form-group">
                                     <label for="images">تصویر شاخص</label>
-                                    <input type="file" name="images"  id="images"  >
-                                </div>
-                                <div class="form-group">
-                                    <label for="category">دسته بندی ها : </label>
-                                    <div class="ShowCategorySelect">
-                                        {{--@foreach($parentCategories as $category)--}}
-                                            {{--<ul>--}}
-                                                {{--<li>--}}
-                                                    {{--<div class="checkbox">--}}
-                                                        {{--<label>--}}
-                                                            {{--<input type="checkbox" name="category[]" value="{{$category->id}}" >--}}
-                                                            {{--<input type="checkbox" name="category[]" value="{{$category->id}}" >--}}
-                                                            {{--{{$category->name}}--}}
-                                                        {{--</label>--}}
-                                                        {{--@if(count($category->subcategory))--}}
-                                                            {{--@include('Customer.product.subCategoryListEdit',['subcategories' => $category->subcategory])--}}
-                                                        {{--@endif--}}
-                                                    {{--</div>--}}
-                                                {{--</li>--}}
-                                            {{--</ul>--}}
-                                        {{--@endforeach--}}
-                                        @foreach($parentCategories as $category)
-                                            <ul>
-                                                <li>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" name="category[]" value="{{$category->id}}" {{in_array($category->id, $product->categories->pluck('id')->toarray())?'checked':''}}>
-                                                            {{$category->name}}
-                                                        </label>
-                                                        @if(count($category->subcategory))
-                                                            @include('Customer.product.subCategoryListEdit',['subcategories' => $category->subcategory,'product'=>$product])
-                                                        @endif
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        @endforeach
-                                    </div>
+                                    <input type="file" name="images" id="images">
                                 </div>
                                 <button type="submit" class="btn btn-primary">ویرایش محصول</button>
                             </div>
                         </form>
                     </div>
-
-
                 </div>
                 <div class="panel-footer">Panel Footer</div>
             </div>
-
         </div>
     </div>
-
 @endsection
 @section('scripts')
     <script src="{{asset('/ckeditor/ckeditor.js')}}"></script>
@@ -146,11 +103,6 @@
     </script>
     <script>
         $(document).ready(function() {
-//            if($("#price-type input[type='radio']:checked").val() == "cash"){
-//
-//                $("#price").show();
-//            }
-
             $("#price-type input[type='radio']").change(function() {
                 if ($(this).val() == "cash") {
                     $("#price").show();
