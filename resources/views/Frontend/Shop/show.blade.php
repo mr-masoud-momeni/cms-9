@@ -25,8 +25,10 @@
                     <h1 class="product-title">{{ $product->title }}</h1>
                     @php
                         $body = $product->body;
-                        $body = preg_replace('/<br\\s*\\/?>(?=\\s*)/i', "\\n", $body);
-                        $body = preg_replace('/<\\/(p|div|li|h[1-6])>/i', "\\n", $body);
+                        $body = preg_replace('/<br\s*\/?>(?=\s*)/i', "
+", $body);
+                        $body = preg_replace('/<\/(p|div|li|h[1-6])>/i', "
+", $body);
                         $body = trim(strip_tags(html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
                     @endphp
                     <div class="product-description">{!! nl2br(e($body)) !!}</div>
