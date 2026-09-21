@@ -14,10 +14,8 @@
 
                         @php
                             $body = old('body', $article->body);
-                            $body = preg_replace('/<brs*/?>(?=s*)/i', "
-", $body);
-                            $body = preg_replace('/</(p|div|li|h[1-6])>/i', "
-", $body);
+                            $body = preg_replace('/<br\\s*\\/?\\s*>/i', "\n", $body);
+                            $body = preg_replace('/<\\/(p|div|li|h[1-6])>/i', "\n", $body);
                             $body = trim(strip_tags(html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
                             $currentImage = is_array($article->images)
