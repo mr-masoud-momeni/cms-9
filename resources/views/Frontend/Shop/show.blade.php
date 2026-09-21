@@ -31,7 +31,7 @@
 ", $body);
                         $body = trim(strip_tags(html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
                     @endphp
-                    <div class="product-description">{!! nl2br(e($body)) !!}</div>
+                    <div class="product-description" style="white-space: pre-line;">{{ $body }}</div>
                     <div class="product-price">{{ $product->price }}</div>
                     <form method="post" action="{{ route('order.store') }}" class="AddProduct">
                         {!! csrf_field() !!}
