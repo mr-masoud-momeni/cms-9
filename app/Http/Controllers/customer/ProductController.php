@@ -6,12 +6,8 @@ use App\Http\Controllers\customer\CustomerController;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Shop;
-use App\Models\Order;
-use App\Order_Product;
 use Illuminate\Http\Request;
-use App\Models\User;
 use App\Rules\WhiteList;
-use App\Http\Controllers\Controller;
 
 class ProductController extends CustomerController
 {
@@ -51,20 +47,25 @@ class ProductController extends CustomerController
             'title' => 'required|string|max:255',
             'body' => 'required|string',
         ]);
+
         $userId = auth('shop_admin')->id();
         $shop = Shop::where('domain', request()->getHost())->firstOrFail();
         $shopId = $shop->id;
         $imageUrl = $this->UploadImages($request->file('images'));
+
         $productData = array_merge($validated, [
             'user_id' => $userId,
             'shop_id' => $shopId,
             'price-type' => 'cash',
             'images' => $imageUrl,
         ]);
+
         $product = Product::create($productData);
+
         if ($request->has('category')) {
             $product->categories()->attach($request->input('category'));
         }
+
         session()->flash('createproduct', 'محصول شما با موفقیت ثبت شد.');
         return redirect('/shop/product');
     }
@@ -104,16 +105,32 @@ class ProductController extends CustomerController
             'title' => 'required|string|max:255',
             'body' => 'required|string',
         ]);
+
         $userId = auth('shop_admin')->id();
         $shopId = $shop->id;
         $validated['price-type'] = 'cash';
+
         if ($request->file('images')) {
+            $oldImages = $product->images;
             $imageUrl = $this->UploadImages($request->file('images'));
-            $productData = array_merge($validated, ['user_id' => $userId, 'shop_id' => $shopId, 'images' => $imageUrl]);
+
+            $productData = array_merge($validated, [
+                'user_id' => $userId,
+                'shop_id' => $shopId,
+                'images' => $imageUrl,
+            ]);
+
+            $product->update($productData);
+
+            $this->DeleteUploadedImages($oldImages);
         } else {
-            $productData = array_merge($validated, ['user_id' => $userId, 'shop_id' => $shopId]);
+            $productData = array_merge($validated, [
+                'user_id' => $userId,
+                'shop_id' => $shopId,
+            ]);
+
+            $product->update($productData);
         }
-        $product->update($productData);
 
         // Category UI is disabled for launch; only change relations when the field is submitted.
         if ($request->has('category')) {
