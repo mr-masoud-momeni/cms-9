@@ -119,17 +119,15 @@ class ProductController extends CustomerController
         return redirect()->route('shop.product.index');
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, $product)
     {
-        if ($request->ajax()) {
-            $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
 
-            $product = Product::where('shop_id', $shop->id)
-                ->findOrFail($request->id);
+        $product = Product::where('shop_id', $shop->id)
+            ->findOrFail($product);
 
-            $product->delete();
+        $product->delete();
 
-            return response()->json(['success' => $product]);
-        }
+        return response()->json(['success' => $product]);
     }
 }
