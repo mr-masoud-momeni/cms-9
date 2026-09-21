@@ -101,8 +101,10 @@
     <script>
         $(document).on("click", ".deleteAjax", function () {
             var DeleteID = $(this).data('id');
-            $("#DeleteModal .modal-body #DeleteID").val( DeleteID );
-            $(".FormDelete").attr("action", "{{url("/admin/product/")}}/" + DeleteID );
+            $("#DeleteModal .modal-body #ajaxDeleteID").val(DeleteID);
+            var action = '{{ route('shop.product.destroy', ['product' => '__PRODUCT__']) }}';
+            action = action.replace('__PRODUCT__', DeleteID);
+            $(".FormDelete").attr("action", action);
         });
     </script>
     <script>
