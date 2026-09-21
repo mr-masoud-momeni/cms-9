@@ -53,8 +53,8 @@ class ArticleController extends CustomerController
             'images' => $imageUrl,
         ]);
 
-        $categoryIds = $this->shopCategoryIds($shop->id, $validated['category'] ?? []);
-        if ($categoryIds) {
+        if ($request->has('category')) {
+            $categoryIds = $this->shopCategoryIds($shop->id, $validated['category'] ?? []);
             $article->categories()->attach($categoryIds);
         }
 
@@ -113,8 +113,11 @@ class ArticleController extends CustomerController
 
         $article->update($data);
 
-        $categoryIds = $this->shopCategoryIds($shop->id, $validated['category'] ?? []);
-        $article->categories()->sync($categoryIds);
+        // Category UI is disabled for launch; only change relations when the field is submitted.
+        if ($request->has('category')) {
+            $categoryIds = $this->shopCategoryIds($shop->id, $validated['category'] ?? []);
+            $article->categories()->sync($categoryIds);
+        }
 
         return redirect()->route('shop.article.index')
             ->with('articleupdate', 'مقاله شما با موفقیت ویرایش شد.');
