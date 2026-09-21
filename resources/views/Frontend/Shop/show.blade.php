@@ -23,15 +23,7 @@
             <div class="product-info">
                 <div class="product-content">
                     <h1 class="product-title">{{ $product->title }}</h1>
-                    @php
-                        $body = $product->body;
-                        $body = preg_replace('/<br\s*\/?>(?=\s*)/i', "
-", $body);
-                        $body = preg_replace('/<\/(p|div|li|h[1-6])>/i', "
-", $body);
-                        $body = trim(strip_tags(html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
-                    @endphp
-                    <div class="product-description" style="white-space: pre-line;">{{ $body }}</div>
+                    <div class="product-description">{!! nl2br(e($product->body)) !!}</div>
                     <div class="product-price">{{ $product->price }}</div>
                     <form method="post" action="{{ route('order.store') }}" class="AddProduct">
                         {!! csrf_field() !!}
