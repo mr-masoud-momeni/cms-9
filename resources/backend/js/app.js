@@ -31,8 +31,3 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app'
 });
-//
-// Echo.channel('notification')
-//     .Listen('App\\Events\\NotificationEvent' , function (e) {
-//         console.log(e);
-//     });\n
