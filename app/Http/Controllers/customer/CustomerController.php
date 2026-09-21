@@ -4,7 +4,6 @@ namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
 class CustomerController extends Controller
@@ -45,5 +44,28 @@ class CustomerController extends Controller
         }
 
         return $url;
+    }
+
+    protected function DeleteUploadedImages($images)
+    {
+        if (!is_array($images)) {
+            return;
+        }
+
+        $publicPath = config('upload.public_path');
+
+        $paths = array_unique(array_filter([
+            $images['original'] ?? null,
+            $images['thum'] ?? null,
+        ]));
+
+        foreach ($paths as $path) {
+            $relativePath = '/' . ltrim($path, '/');
+            $fullPath = $publicPath . $relativePath;
+
+            if (is_file($fullPath)) {
+                unlink($fullPath);
+            }
+        }
     }
 }
