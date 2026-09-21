@@ -17,36 +17,33 @@ class CustomerController extends Controller
         } else {
             $year = Carbon::now()->year;
             $imagePath = "/upload/images/{$year}/";
-            $filename = $file->getClientOriginalName();
             $publicPath = config('upload.public_path');
 
             if (!is_dir($publicPath . $imagePath)) {
                 mkdir($publicPath . $imagePath, 0755, true);
             }
 
-            $file = $file->move($publicPath . $imagePath, $filename);
-            $sizes = ['300', '600', '800'];
-            $url['images'] = $this->resize($file->getRealPath(), $sizes, $filename, $imagePath);
-            $url['thum'] = $url['images'][$sizes[0]];
+            $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $filename = preg_replace('/[^A-Za-z0-9_-]/', '-', $filename);
+            $filename = trim($filename, '-_') ?: 'image';
+            $filename .= '-' . uniqid() . '.webp';
+
+            $image = Image::make($file->getRealPath());
+
+            $image->resize(800, 800, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            $image->encode('webp', 82);
+            $image->save($publicPath . $imagePath . $filename);
+
+            $imageUrl = $imagePath . $filename;
+
+            $url['images']['original'] = $imageUrl;
+            $url['thum'] = $imageUrl;
         }
 
         return $url;
-    }
-
-    private function resize($path, $sizes, $filename, $imagePath)
-    {
-        $images['original'] = $imagePath . $filename;
-
-        foreach ($sizes as $size) {
-            $images[$size] = $imagePath . "{$size}_" . $filename;
-
-            Image::make($path)
-                ->resize($size, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->save(config('upload.public_path') . $images[$size]);
-        }
-
-        return $images;
     }
 }
