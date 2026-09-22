@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\ShopBaleConnection;
 use App\Models\ShopBaleConnectionToken;
 use App\Services\BaleService;
+use App\Services\OrderReservationService;
 use App\Services\CustomerOrderLinkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -144,13 +145,11 @@ class BaleWebhookController extends Controller
                 }
 
                 if ($action === 'approve') {
-                    $payment->update(['status' => 'paid']);
+                    app(OrderReservationService::class)->commitPayment($payment);
 
                     if ($payment->order) {
                         $payment->order->update([
-                            'status' => Order::STATUS_PAID,
                             'total' => $payment->amount,
-                            'paid_at' => now(),
                         ]);
                     }
                 } else {
