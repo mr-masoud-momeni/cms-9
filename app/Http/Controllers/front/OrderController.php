@@ -103,9 +103,11 @@ class OrderController extends Controller
 
         $quantity = (int) $request->count_product;
 
-        if ($product->stock <= 0) {
+        $availableStock = $product->available_stock;
+
+        if ($availableStock <= 0) {
             return response()->json([
-                'error' => ['این محصول در حال حاضر ناموجود است.']
+                'error' => [Order::MESSAGE_OUT_OF_STOCK]
             ]);
         }
 
@@ -123,10 +125,14 @@ class OrderController extends Controller
             $currentQuantity = $existingProduct ? (int) $existingProduct->pivot->quantity : 0;
             $requestedQuantity = $currentQuantity + $quantity;
 
-            if ($requestedQuantity > $product->stock) {
+            if ($requestedQuantity > $availableStock) {
                 return response()->json([
                     'error' => [
-                        "حداکثر {$product->stock_label} قابل سفارش است."
+                        str_replace(
+                            [':available', ':unit'],
+                            [$availableStock, $product->unit],
+                            Order::MESSAGE_STOCK_CONFLICT
+                        )
                     ]
                 ]);
             }
@@ -170,10 +176,14 @@ class OrderController extends Controller
         $currentQuantity = isset($cart[$product->id]) ? (int) $cart[$product->id] : 0;
         $requestedQuantity = $currentQuantity + $quantity;
 
-        if ($requestedQuantity > $product->stock) {
+        if ($requestedQuantity > $availableStock) {
             return response()->json([
                 'error' => [
-                    "حداکثر {$product->stock_label} قابل سفارش است."
+                    str_replace(
+                        [':available', ':unit'],
+                        [$availableStock, $product->unit],
+                        Order::MESSAGE_STOCK_CONFLICT
+                    )
                 ]
             ]);
         }
