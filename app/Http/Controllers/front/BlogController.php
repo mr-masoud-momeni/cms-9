@@ -18,17 +18,4 @@ class BlogController extends Controller
         return view('Frontend.Store.Pages.article', compact('article', 'shop'));
     }
 
-    public function show1(page $page)
-    {
-        $path = resource_path('views/Frontend/blog/')."Page.blade.php";
-        $f = @fopen($path, "r+");
-        ftruncate($f, 0);
-        fclose($f);
-
-        $template = "<html><head><style>".$page->css."</style></head><body>".$page->html."</body></html>";
-        file_put_contents($path, trim($template));
-
-        $categories = $page->title;
-        return view('Frontend.blog.Page', compact('page', 'categories'));
-    }
 }
