@@ -32,9 +32,18 @@ class Product extends Model
         'price-type',
         'price',
         'unit',
+        'stock',
     ];
 
-    protected $casts = ['images' => 'array'];
+    protected $casts = [
+        'images' => 'array',
+        'stock' => 'integer',
+    ];
+
+    public function getStockLabelAttribute(): string
+    {
+        return $this->stock . ' ' . $this->unit;
+    }
 
     public function getRoutekeyName()
     {
