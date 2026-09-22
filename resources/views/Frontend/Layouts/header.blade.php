@@ -47,15 +47,6 @@
 
         <nav id="navbar" class="navbar order-last order-lg-0">
             <ul>
-                @php
-                    if(isset($menu->content)){
-                        $arrays = json_decode($menu->content , TRUE);
-                    }
-                @endphp
-                @if(isset($arrays))
-                    {{menu_navigation($arrays)}}
-                @endif
-
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
