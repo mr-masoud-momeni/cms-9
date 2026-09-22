@@ -57,7 +57,7 @@
                         <small id="quantity-message" class="text-danger" style="display:none; margin-top:6px;"></small>
                     </div>
 
-                    <button type="submit" class="store-button" @disabled($product->stock <= 0)>
+                    <button type="submit" class="store-button" {{ $product->stock <= 0 ? 'disabled' : '' }}>
                         افزودن به سبد خرید
                     </button>
                 </form>
