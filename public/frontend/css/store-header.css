@@ -37,6 +37,19 @@
     font-size: 25px;
     font-weight: 700;
     color: #333;
+    overflow: hidden;
+}
+
+.store-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.store-header-info {
+    min-width: 0;
+    flex: 0 1 auto;
 }
 
 /* نام فروشگاه */
@@ -94,7 +107,7 @@
 .store-description {
     max-width: 650px;
 
-    margin: 10px 0 0;
+    margin: 4px 0 0;
 
     font-size: 13px;
     line-height: 1.8;
