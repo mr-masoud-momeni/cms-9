@@ -25,6 +25,8 @@ class CreateProductsTable extends Migration
             $table->text('images');
             $table->text('price-type');
             $table->string('price',50)->nullable();
+            $table->string('unit', 50)->default('عدد');
+            $table->unsignedInteger('stock')->default(0);
             $table->integer('comentCount')->default(0);
             $table->integer('veiwCount')->default(0);
             $table->timestamps();
