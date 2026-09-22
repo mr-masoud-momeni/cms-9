@@ -26,14 +26,6 @@ class OrderReservationService
 
             $now = now();
 
-            Order::query()
-                ->where('status', Order::STATUS_RESERVED)
-                ->where('reservation_expires_at', '<=', $now)
-                ->whereDoesntHave('payment', function ($query) {
-                    $query->where('status', 'waiting_confirmation');
-                })
-                ->update(['status' => Order::STATUS_CANCELLED]);
-
             foreach ($order->products as $orderProduct) {
                 $product = $products->get($orderProduct->id);
                 $quantity = (int) $orderProduct->pivot->quantity;
