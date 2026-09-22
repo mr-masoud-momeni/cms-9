@@ -46,7 +46,7 @@ class OrderController extends Controller
         }
 
         $order = $buyer->orders()
-            ->where('status', 0)
+            ->where('status', Order::STATUS_PENDING)
             ->where('shop_id', $currentShop->id)
             ->with('products')
             ->first();
@@ -112,7 +112,7 @@ class OrderController extends Controller
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
             $order = $buyer->orders()
-                ->where('status', 0)
+                ->where('status', Order::STATUS_PENDING)
                 ->where('shop_id', $shop->id)
                 ->first();
 
@@ -135,7 +135,7 @@ class OrderController extends Controller
                 $order = Order::create([
                     'buyer_id' => $buyer->id,
                     'shop_id' => $shop->id,
-                    'status' => 0,
+                    'status' => Order::STATUS_PENDING,
                     'created_at' => now(),
                 ]);
             }
@@ -205,7 +205,7 @@ class OrderController extends Controller
         }
 
         $orders = $buyer->orders()
-            ->where('status', 1)
+            ->where('status', Order::STATUS_PAID)
             ->where('shop_id', $currentShop->id)
             ->with('products')
             ->get();
@@ -252,7 +252,7 @@ class OrderController extends Controller
         }
 
         $order = $buyer->orders()
-            ->where('status', 0)
+            ->where('status', Order::STATUS_PENDING)
             ->where('shop_id', $currentShop->id)
             ->first();
 
