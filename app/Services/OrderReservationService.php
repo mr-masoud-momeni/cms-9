@@ -34,17 +34,7 @@ class OrderReservationService
                     return ['success' => false, 'message' => Order::MESSAGE_PRODUCT_UNAVAILABLE];
                 }
 
-                $reserved = $product->orders()
-                    ->where('orders.status', Order::STATUS_RESERVED)
-                    ->where(function ($query) use ($now) {
-                        $query->where('orders.reservation_expires_at', '>', $now)
-                            ->orWhereHas('payment', function ($paymentQuery) {
-                                $paymentQuery->where('status', 'waiting_confirmation');
-                            });
-                    })
-                    ->sum('order_product.quantity');
-
-                $available = max(0, (int) $product->stock - (int) $reserved);
+                $available = $product->available_stock;
 
                 if ($quantity > $available) {
                     return [
