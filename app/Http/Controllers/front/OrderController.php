@@ -111,18 +111,14 @@ class OrderController extends Controller
 
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
-            $order = Order::firstOrCreate(
-                [
-                    'buyer_id' => $buyer->id,
-                    'shop_id' => $shop->id,
-                    'status' => 0,
-                ],
-                ['created_at' => now()]
-            );
-
-            $existingProduct = $order->products()
-                ->where('product_id', $product->id)
+            $order = $buyer->orders()
+                ->where('status', 0)
+                ->where('shop_id', $shop->id)
                 ->first();
+
+            $existingProduct = $order
+                ? $order->products()->where('product_id', $product->id)->first()
+                : null;
 
             $currentQuantity = $existingProduct ? (int) $existingProduct->pivot->quantity : 0;
             $requestedQuantity = $currentQuantity + $quantity;
@@ -132,6 +128,15 @@ class OrderController extends Controller
                     'error' => [
                         "حداکثر {$product->stock_label} قابل سفارش است."
                     ]
+                ]);
+            }
+
+            if (!$order) {
+                $order = Order::create([
+                    'buyer_id' => $buyer->id,
+                    'shop_id' => $shop->id,
+                    'status' => 0,
+                    'created_at' => now(),
                 ]);
             }
 
