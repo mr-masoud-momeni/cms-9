@@ -16,7 +16,7 @@ class ShopHelper
         $host = request()->getHost();
         $context = session('current_shop');
 
-        if (!$context || ($context['domain'] ?? null) !== $host) {
+        if (!$context || ($context['domain'] ?? null) !== $host || !array_key_exists('logo', $context) || !array_key_exists('description', $context)) {
             $shop = Shop::where('domain', $host)->first();
 
             if (!$shop) {
@@ -27,6 +27,8 @@ class ShopHelper
                 'id' => $shop->id,
                 'user_id' => $shop->user_id,
                 'name' => $shop->name,
+                'logo' => $shop->logo,
+                'description' => $shop->description,
                 'domain' => $shop->domain,
                 'slug' => $shop->slug,
                 'buyer_login_required' => $shop->buyer_login_required,
