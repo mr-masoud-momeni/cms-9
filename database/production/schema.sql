@@ -68,3 +68,8 @@ SET @sql = (
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+
+
+-- Legacy Page Builder
+-- The pages table is no longer used by the current store/article architecture.
+DROP TABLE IF EXISTS pages;
