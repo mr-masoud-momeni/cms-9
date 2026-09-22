@@ -41,7 +41,7 @@ class PaymentController extends Controller
             $order = $buyer->orders()
                 ->where('status', Order::STATUS_PENDING)
                 ->where('shop_id', $shop->id)
-                ->with('products')
+                ->with(['products', 'payment'])
                 ->first();
         } else {
             if ($shop->buyer_login_required) {
@@ -381,17 +381,17 @@ class PaymentController extends Controller
 
             if ($settleResult === 0) {
                 $payment->update([
-                    'status' => 'paid',
                     'ref_id' => $refId,
                     'sale_order_id' => $saleOrderId,
                     'sale_reference_id' => $saleRefId,
                 ]);
 
+                app(OrderReservationService::class)->commitPayment($payment);
+                $payment->refresh()->load('order');
+
                 if ($payment->order) {
                     $payment->order->update([
-                        'status' => Order::STATUS_PAID,
                         'total' => $payment->amount,
-                        'paid_at' => now(),
                     ]);
 
                     session()->forget('cart');
@@ -450,6 +450,13 @@ class PaymentController extends Controller
             ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_RESERVED])
             ->with(['products', 'payment'])
             ->first();
+
+        if ($order && $order->isReservationExpired()) {
+            $order->update(['status' => Order::STATUS_CANCELLED]);
+            return null;
+        }
+
+        return $order;
     }
 
     private function orderAmount(Order $order)
