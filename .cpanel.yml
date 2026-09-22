@@ -1,13 +1,26 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/fmtsnwvt/laravel/
-    - /bin/cp -R app $DEPLOYPATH
-    - /bin/cp -R bootstrap $DEPLOYPATH
-    - /bin/cp -R config $DEPLOYPATH
-    - /bin/cp -R database $DEPLOYPATH
-    - /bin/cp -R resources $DEPLOYPATH
-    - /bin/cp -R routes $DEPLOYPATH
-    - /bin/cp artisan $DEPLOYPATH
-    - /bin/cp composer.json $DEPLOYPATH
-    - /bin/cp composer.lock $DEPLOYPATH
+    # Laravel application
+    - export LARAVELPATH=/home/fmtsnwvt/laravel/
+    - /bin/cp -R app $LARAVELPATH
+    - /bin/cp -R bootstrap $LARAVELPATH
+    - /bin/cp -R config $LARAVELPATH
+    - /bin/cp -R database $LARAVELPATH
+    - /bin/cp -R resources $LARAVELPATH
+    - /bin/cp -R routes $LARAVELPATH
+    - /bin/cp artisan $LARAVELPATH
+    - /bin/cp composer.json $LARAVELPATH
+    - /bin/cp composer.lock $LARAVELPATH
+
+    # Public assets -> Document Root
+    - export PUBLICPATH=/home/fmtsnwvt/public_html/
+    - /bin/cp -R public/backend $PUBLICPATH
+    - /bin/cp -R public/ckeditor $PUBLICPATH
+    - /bin/cp -R public/css $PUBLICPATH
+    - /bin/cp -R public/fonts $PUBLICPATH
+    - /bin/cp -R public/frontend $PUBLICPATH
+    - /bin/cp -R public/js $PUBLICPATH
+    - /bin/cp -R public/vendor $PUBLICPATH
+    - /bin/cp public/favicon.ico $PUBLICPATH
+    - /bin/cp public/robots.txt $PUBLICPATH
