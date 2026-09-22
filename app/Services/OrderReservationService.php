@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Order;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+
+class OrderReservationService
+{
+    public function reserve(Order $order): array
+    {
+        return DB::transaction(function () use ($order) {
+            $order->load('products');
+            $productIds = $order->products->pluck('id')->sort()->values()->all();
+
+            if (!$productIds) {
+                return ['success' => false, 'message' => 'سبد خرید شما خالی است.'];
+            }
+
+            $products = Product::whereIn('id', $productIds)
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('id');
+
+            $now = now();
+
+            Order::query()
+                ->where('status', Order::STATUS_RESERVED)
+                ->where('reservation_expires_at', '<=', $now)
+                ->whereDoesntHave('payment', function ($query) {
+                    $query->where('status', 'waiting_confirmation');
+                })
+                ->update(['status' => Order::STATUS_CANCELLED]);
+
+            foreach ($order->products as $orderProduct) {
+                $product = $products->get($orderProduct->id);
+                $quantity = (int) $orderProduct->pivot->quantity;
+
+                if (!$product) {
+                    return ['success' => false, 'message' => Order::MESSAGE_PRODUCT_UNAVAILABLE];
+                }
+
+                $reserved = $product->orders()
+                    ->where('orders.status', Order::STATUS_RESERVED)
+                    ->where(function ($query) use ($now) {
+                        $query->where('orders.reservation_expires_at', '>', $now)
+                            ->orWhereHas('payment', function ($paymentQuery) {
+                                $paymentQuery->where('status', 'waiting_confirmation');
+                            });
+                    })
+                    ->sum('order_product.quantity');
+
+                $available = max(0, (int) $product->stock - (int) $reserved);
+
+                if ($quantity > $available) {
+                    return [
+                        'success' => false,
+                        'message' => $available > 0
+                            ? Order::MESSAGE_STOCK_CONFLICT . ' حدود ' . $available . ' ' . $product->unit . ' قابل رزرو است.'
+                            : Order::MESSAGE_STOCK_CONFLICT,
+                    ];
+                }
+            }
+
+            $order->update([
+                'status' => Order::STATUS_RESERVED,
+                'reserved_at' => $now,
+                'reservation_expires_at' => $now->copy()->addMinutes(Order::RESERVATION_MINUTES),
+            ]);
+
+            return ['success' => true, 'message' => $order->reservationMessage()];
+        });
+    }
+
+    public function commit(Order $order): void
+    {
+        DB::transaction(function () use ($order) {
+            $order = Order::lockForUpdate()->with('products')->findOrFail($order->id);
+
+            if ($order->status === Order::STATUS_PAID) {
+                return;
+            }
+
+            $products = Product::whereIn('id', $order->products->pluck('id'))
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('id');
+
+            foreach ($order->products as $orderProduct) {
+                $product = $products->get($orderProduct->id);
+                $quantity = (int) $orderProduct->pivot->quantity;
+
+                if (!$product || $product->stock < $quantity) {
+                    throw new \RuntimeException(Order::MESSAGE_STOCK_COMMIT_FAILED);
+                }
+
+                $product->decrement('stock', $quantity);
+            }
+
+            $order->update([
+                'status' => Order::STATUS_PAID,
+                'paid_at' => now(),
+            ]);
+        });
+    }
+}
