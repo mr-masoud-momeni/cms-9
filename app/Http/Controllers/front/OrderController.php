@@ -103,6 +103,12 @@ class OrderController extends Controller
 
         $quantity = (int) $request->count_product;
 
+        if ($product->stock <= 0) {
+            return response()->json([
+                'error' => ['این محصول در حال حاضر ناموجود است.']
+            ]);
+        }
+
         if (auth('buyer')->check()) {
             $buyer = auth('buyer')->user();
             $order = Order::firstOrCreate(
@@ -114,10 +120,24 @@ class OrderController extends Controller
                 ['created_at' => now()]
             );
 
-            if ($order->products()->where('product_id', $product->id)->exists()) {
-                $pivot = $order->products()->where('product_id', $product->id)->first()->pivot;
+            $existingProduct = $order->products()
+                ->where('product_id', $product->id)
+                ->first();
+
+            $currentQuantity = $existingProduct ? (int) $existingProduct->pivot->quantity : 0;
+            $requestedQuantity = $currentQuantity + $quantity;
+
+            if ($requestedQuantity > $product->stock) {
+                return response()->json([
+                    'error' => [
+                        "حداکثر {$product->stock_label} قابل سفارش است."
+                    ]
+                ]);
+            }
+
+            if ($existingProduct) {
                 $order->products()->updateExistingPivot($product->id, [
-                    'quantity' => $pivot->quantity + $quantity,
+                    'quantity' => $requestedQuantity,
                     'price' => $product->price,
                 ]);
                 $addToCart = 0;
@@ -142,9 +162,19 @@ class OrderController extends Controller
         }
 
         $cart = session()->get('cart', []);
+        $currentQuantity = isset($cart[$product->id]) ? (int) $cart[$product->id] : 0;
+        $requestedQuantity = $currentQuantity + $quantity;
 
-        if (isset($cart[$product->id])) {
-            $cart[$product->id] += $quantity;
+        if ($requestedQuantity > $product->stock) {
+            return response()->json([
+                'error' => [
+                    "حداکثر {$product->stock_label} قابل سفارش است."
+                ]
+            ]);
+        }
+
+        if ($currentQuantity > 0) {
+            $cart[$product->id] = $requestedQuantity;
             $addToCart = 0;
         } else {
             $cart[$product->id] = $quantity;
