@@ -73,3 +73,36 @@ DEALLOCATE PREPARE stmt;
 -- Legacy Page Builder
 -- The pages table is no longer used by the current store/article architecture.
 DROP TABLE IF EXISTS pages;
+
+
+-- shops.logo
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        'ALTER TABLE shops ADD COLUMN logo VARCHAR(255) NULL AFTER name',
+        'SELECT 1'
+    )
+    FROM information_schema.columns
+    WHERE table_schema = @db
+      AND table_name = 'shops'
+      AND column_name = 'logo'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- shops.description
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        'ALTER TABLE shops ADD COLUMN description TEXT NULL AFTER logo',
+        'SELECT 1'
+    )
+    FROM information_schema.columns
+    WHERE table_schema = @db
+      AND table_name = 'shops'
+      AND column_name = 'description'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
