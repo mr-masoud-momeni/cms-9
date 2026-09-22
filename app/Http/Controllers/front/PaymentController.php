@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\OrderReservationService;
 use SoapClient;
 use Throwable;
 
@@ -100,7 +101,12 @@ class PaymentController extends Controller
 
         $order->update($validated);
 
-        return redirect()->route('payment.index');
+        $reservation = app(OrderReservationService::class)->reserve($order);
+        if (!$reservation['success']) {
+            return back()->withErrors($reservation['message']);
+        }
+
+        return redirect()->route('payment.index')->with('success', $reservation['message']);
     }
 
     public function index()
@@ -423,7 +429,7 @@ class PaymentController extends Controller
 
         if ($buyer) {
             return $buyer->orders()
-                ->where('status', Order::STATUS_PENDING)
+                ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_RESERVED])
                 ->where('shop_id', $shop->id)
                 ->with('products')
                 ->first();
@@ -441,8 +447,8 @@ class PaymentController extends Controller
         return Order::where('id', $orderId)
             ->where('shop_id', $shop->id)
             ->whereNull('buyer_id')
-            ->where('status', Order::STATUS_PENDING)
-            ->with('products')
+            ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_RESERVED])
+            ->with(['products', 'payment'])
             ->first();
     }
 
