@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-md-6">
 
-                            <form action="{{route('register.store')}}" method="post" >
+                            <form action="{{route('register.store')}}" method="post" enctype="multipart/form-data">
                                 {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="name">نام</label>
@@ -56,6 +56,14 @@
                                 <div class="form-group">
                                     <label for="name">نام دامنه</label>
                                     <input type="text" name="domain" class="form-control" id="domain"  value="{{ old('domain') }}" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">توضیحات فروشگاه</label>
+                                    <textarea name="description" class="form-control" id="description" rows="3">{{ old('description') }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="logo">لوگوی فروشگاه</label>
+                                    <input type="file" name="logo" class="form-control" id="logo" accept="image/jpeg,image/png,image/webp">
                                 </div>
 
                             <button type="submit" class="btn btn-success">ایجاد کاربر</button>
