@@ -428,28 +428,28 @@ class PaymentController extends Controller
         $buyer = auth('buyer')->user();
 
         if ($buyer) {
-            return $buyer->orders()
+            $order = $buyer->orders()
                 ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_RESERVED])
                 ->where('shop_id', $shop->id)
-                ->with('products')
+                ->with(['products', 'payment'])
+                ->first();
+        } else {
+            if ($shop->buyer_login_required) {
+                return null;
+            }
+
+            $orderId = session('checkout_order_id');
+            if (!$orderId) {
+                return null;
+            }
+
+            $order = Order::where('id', $orderId)
+                ->where('shop_id', $shop->id)
+                ->whereNull('buyer_id')
+                ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_RESERVED])
+                ->with(['products', 'payment'])
                 ->first();
         }
-
-        if ($shop->buyer_login_required) {
-            return null;
-        }
-
-        $orderId = session('checkout_order_id');
-        if (!$orderId) {
-            return null;
-        }
-
-        return Order::where('id', $orderId)
-            ->where('shop_id', $shop->id)
-            ->whereNull('buyer_id')
-            ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_RESERVED])
-            ->with(['products', 'payment'])
-            ->first();
 
         if ($order && $order->isReservationExpired()) {
             $order->update(['status' => Order::STATUS_CANCELLED]);
