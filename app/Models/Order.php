@@ -17,7 +17,8 @@ class Order extends Model
 
     const MESSAGE_RESERVATION_CREATED = 'موجودی برای شما رزرو شد. لطفاً حداکثر تا :minutes دقیقه پرداخت خود را انجام دهید؛ در غیر این صورت رزرو شما به‌صورت خودکار آزاد خواهد شد.';
     const MESSAGE_RESERVATION_CARD_TO_CARD = 'موجودی برای شما رزرو شد. لطفاً حداکثر تا :minutes دقیقه واریز را انجام داده و رسید پرداخت را ثبت کنید. پس از این زمان، رزرو شما آزاد خواهد شد.';
-    const MESSAGE_STOCK_CONFLICT = 'این محصول در حال حاضر توسط مشتری دیگری رزرو شده است. موجودی کافی برای رزرو درخواست شما وجود ندارد.';
+    const MESSAGE_STOCK_CONFLICT = 'این محصول در حال حاضر توسط مشتری دیگری رزرو شده است. فقط :available :unit قابل رزرو است.';
+    const MESSAGE_OUT_OF_STOCK = 'این محصول در حال حاضر ناموجود است.';
     const MESSAGE_PRODUCT_UNAVAILABLE = 'یکی از محصولات سبد خرید دیگر قابل سفارش نیست.';
     const MESSAGE_STOCK_COMMIT_FAILED = 'موجودی محصول هنگام نهایی‌سازی سفارش کافی نیست.';
 
