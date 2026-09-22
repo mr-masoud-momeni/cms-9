@@ -12,6 +12,7 @@
                 <li><a class="{{Route::currentRouteName() == 'shop.product.index' ? 'active-sidebar' : ''}}" href="{{route('shop.product.index')}}">لیست محصولات</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.gateways.edit' ? 'active-sidebar' : ''}}" href="{{route('shop.gateways.edit')}}">مدیریت درگاه پرداخت</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.orders.index' ? 'active-sidebar' : ''}}" href="{{route('shop.orders.index')}}">سفارش ها</a></li>
+                <li><a class="{{Route::currentRouteName() == 'shop.settings.edit' ? 'active-sidebar' : ''}}" href="{{route('shop.settings.edit')}}">مشخصات فروشگاه</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.article.create' ? 'active-sidebar' : ''}}" href="{{route('shop.article.create')}}">ایجاد مقاله</a></li>
                 <li><a class="{{Route::currentRouteName() == 'shop.article.index' ? 'active-sidebar' : ''}}" href="{{route('shop.article.index')}}">لیست مقالات</a></li>
             </ul>
