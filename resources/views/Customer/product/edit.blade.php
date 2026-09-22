@@ -22,8 +22,8 @@
                                     <label for="body">توضیحات</label>
                                     @php
                                         $body = old('body', $product->body);
-                                        $body = preg_replace('/<br\\s*\\/?>(?=\\s*)/i', "\\n", $body);
-                                        $body = preg_replace('/<\\/(p|div|li|h[1-6])>/i', "\\n", $body);
+                                        $body = preg_replace('/<br\s*\/?>(?=\s*)/i', "\n", $body);
+                                        $body = preg_replace('/<\/(p|div|li|h[1-6])>/i', "\n", $body);
                                         $body = trim(strip_tags(html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
                                     @endphp
                                     <textarea name="body" class="form-control" id="body" rows="8"
@@ -53,6 +53,13 @@
                                         @endforeach
                                     </select>
                                     <small class="text-muted">قیمت بر اساس هر واحد محاسبه می‌شود.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="stock">موجودی</label>
+                                    <input type="number" name="stock" class="form-control" id="stock"
+                                           min="0" step="1" value="{{old('stock', $product->stock)}}" required>
+                                    <small class="text-muted">مقدار موجودی بر اساس واحد فروش بالا ثبت می‌شود.</small>
                                 </div>
 
                                 <div class="form-group">
