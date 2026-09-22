@@ -84,7 +84,12 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|in:' . implode(',', [\n                Order::STATUS_PAID,\n                Order::STATUS_SHIPPED,\n                Order::STATUS_COMPLETED,\n                Order::STATUS_CANCELLED,\n            ]),
+            'status' => 'required|in:' . implode(',', [
+                Order::STATUS_PAID,
+                Order::STATUS_SHIPPED,
+                Order::STATUS_COMPLETED,
+                Order::STATUS_CANCELLED,
+            ]),
             'tracking_code' => $request->status === 'shipped'
                 ? 'required|string|max:255'
                 : 'nullable',
