@@ -28,7 +28,6 @@ referenceهای مدل‌ها در این فایل‌ها اصلاح شدند:
 - `app/Http/Controllers/admin/CategoryController.php`
 - `app/Http/Controllers/customer/CategoryController.php`
 - `app/Http/Controllers/admin/ArticleController.php`
-- `app/Http/Controllers/admin/PageController.php`
 - `app/Http/Controllers/admin/MenuController.php`
 
 ### Migration
