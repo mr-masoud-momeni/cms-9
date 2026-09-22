@@ -37,7 +37,6 @@ Route::group(
         Route::get('/pay/success/{payment}','PaymentController@success')->name('payments.success');
         Route::get('/pay/failed/{payment}','PaymentController@failed')->name('payments.failed');
         Route::get('/blog/{article}', 'BlogController@show')->name('article.show');
-        Route::get('/page/{page}', 'BlogController@show1')->name('page.showw');
         Route::post('/buy' , 'BuyController@add_order')->name('buy.add');
     }
 );
