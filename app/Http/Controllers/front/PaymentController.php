@@ -309,7 +309,9 @@ class PaymentController extends Controller
             session()->forget('checkout_order_id');
         }
 
-        return view('Frontend.Shop.Pay.card-to-card-success', compact('payment', 'order'));
+        $reservationMessage = $order->reservationMessage(true);
+
+        return view('Frontend.Shop.Pay.card-to-card-success', compact('payment', 'order', 'reservationMessage'));
     }
 
     public function callback(Request $request)
