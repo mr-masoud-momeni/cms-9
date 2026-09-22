@@ -27,7 +27,7 @@ class UserDataComposer
             $shopId = ShopHelper::getShopId();
 
             $loginCart = $buyer->orders()
-                ->where('status', 0)
+                ->where('status', Order::STATUS_PENDING)
                 ->where('shop_id', $shopId)
                 ->with('products')
                 ->first();
