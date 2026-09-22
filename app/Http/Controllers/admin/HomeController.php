@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Page;
 
 class HomeController extends Controller
 {
@@ -16,13 +14,6 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-    public function search(){
-        $search = request('title');
-        $status = request('status');
-        $pages = Page::search($search , $status)->latest()->paginate(10);
-        return view('Backend.page.index' , compact('pages'));
-    }
-
     /**
      * Show the application dashboard.
      *
