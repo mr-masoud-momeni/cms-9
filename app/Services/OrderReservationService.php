@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 
 class OrderReservationService
@@ -73,35 +74,49 @@ class OrderReservationService
         });
     }
 
-    public function commit(Order $order): void
+    public function commitPayment(Payment $payment): void
     {
-        DB::transaction(function () use ($order) {
-            $order = Order::lockForUpdate()->with('products')->findOrFail($order->id);
+        DB::transaction(function () use ($payment) {
+            $payment = Payment::lockForUpdate()->findOrFail($payment->id);
 
-            if ($order->status === Order::STATUS_PAID) {
+            if ($payment->status === 'paid') {
                 return;
             }
 
-            $products = Product::whereIn('id', $order->products->pluck('id'))
-                ->lockForUpdate()
-                ->get()
-                ->keyBy('id');
+            $order = Order::lockForUpdate()->with('products')->findOrFail($payment->order_id);
 
-            foreach ($order->products as $orderProduct) {
-                $product = $products->get($orderProduct->id);
-                $quantity = (int) $orderProduct->pivot->quantity;
-
-                if (!$product || $product->stock < $quantity) {
-                    throw new \RuntimeException(Order::MESSAGE_STOCK_COMMIT_FAILED);
-                }
-
-                $product->decrement('stock', $quantity);
+            if ($order->status === Order::STATUS_PAID) {
+                $payment->update(['status' => 'paid']);
+                return;
             }
 
-            $order->update([
-                'status' => Order::STATUS_PAID,
-                'paid_at' => now(),
-            ]);
+            $this->decrementStockAndMarkPaid($order);
+            $payment->update(['status' => 'paid']);
         });
     }
+
+    private function decrementStockAndMarkPaid(Order $order): void
+    {
+        $products = Product::whereIn('id', $order->products->pluck('id'))
+            ->lockForUpdate()
+            ->get()
+            ->keyBy('id');
+
+        foreach ($order->products as $orderProduct) {
+            $product = $products->get($orderProduct->id);
+            $quantity = (int) $orderProduct->pivot->quantity;
+
+            if (!$product || $product->stock < $quantity) {
+                throw new \RuntimeException(Order::MESSAGE_STOCK_COMMIT_FAILED);
+            }
+
+            $product->decrement('stock', $quantity);
+        }
+
+        $order->update([
+            'status' => Order::STATUS_PAID,
+            'paid_at' => now(),
+        ]);
+    }
+
 }
