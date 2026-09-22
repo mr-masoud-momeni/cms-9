@@ -40,7 +40,7 @@
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                     <div class="store-quantity">
-                        <label for="count_product">مقدار</label>
+                        <label for="count_product">{{ $product->unit }}</label>
 
                         <input
                             id="count_product"
