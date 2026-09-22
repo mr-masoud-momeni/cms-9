@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Helpers\ShopHelper;
 use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Support\Facades\Session;
 
 class MergeCartAfterLogin
@@ -23,7 +24,7 @@ class MergeCartAfterLogin
         $shopId = ShopHelper::getShopId();
 
         $loginCart = $buyer->orders()
-            ->where('status', 0)
+            ->where('status', Order::STATUS_PENDING)
             ->where('shop_id', $shopId)
             ->with('products')
             ->first();
