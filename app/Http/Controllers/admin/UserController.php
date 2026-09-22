@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Services\ShopLogoService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 class UserController extends Controller
@@ -45,6 +46,9 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'nameStore' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ]);
 
         $user = User::create([
@@ -60,10 +64,13 @@ class UserController extends Controller
             $user->attachRoles($request['Role']);
         }
         if(isset($request['nameStore'])){
+            $logo = $request->file('logo') ? app(ShopLogoService::class)->upload($request->file('logo')) : null;
             $user->shop()->create([
                'name' => $request->nameStore,
                'domain' => $request->domain,
                'slug' => $request->nameStoreEn,
+               'logo' => $logo,
+               'description' => $request->description,
             ]);
         }
         return back()->withInput();
@@ -105,6 +112,9 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['string', 'max:255'],
+            'nameStore' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ]);
         $user = auth()->user();
         $user = $user->find($id);
@@ -137,17 +147,28 @@ class UserController extends Controller
             $user->syncPermissions($request->permission);
         }
         if(isset($request['nameStore']) && isset($user->shop()->first()->id) ){
-            $user->shop()->update([
+            $shop = $user->shop()->first();
+            $oldLogo = $shop->logo;
+            $newLogo = $request->file('logo') ? app(ShopLogoService::class)->upload($request->file('logo')) : $oldLogo;
+            $shop->update([
                 'name' => $request->nameStore,
                 'domain' => $request->domain,
                 'slug' => $request->nameStoreEn,
+                'logo' => $newLogo,
+                'description' => $request->description,
             ]);
+            if ($request->file('logo') && $oldLogo) {
+                app(ShopLogoService::class)->delete($oldLogo);
+            }
         }
         else{
+            $logo = $request->file('logo') ? app(ShopLogoService::class)->upload($request->file('logo')) : null;
             $user->shop()->create([
                 'name' => $request->nameStore,
                 'domain' => $request->domain,
                 'slug' => $request->nameStoreEn,
+                'logo' => $logo,
+                'description' => $request->description,
             ]);
         }
         $user->save();
