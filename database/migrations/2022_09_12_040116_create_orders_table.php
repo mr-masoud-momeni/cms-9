@@ -15,6 +15,8 @@ class CreateOrdersTable extends Migration
             $table->string('status')->nullable();
             $table->string('tracking_code')->nullable();
             $table->timestamp('paid_at')->nullable();
+            $table->timestamp('reserved_at')->nullable();
+            $table->timestamp('reservation_expires_at')->nullable();
             $table->string('total', 50)->nullable();
             $table->string('receiver_name')->nullable();
             $table->string('receiver_phone')->nullable();
