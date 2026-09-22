@@ -51,7 +51,7 @@
                             max="{{ $product->stock }}"
                             data-unit="{{ e($product->unit) }}"
                             data-stock="{{ $product->stock }}"
-                            @disabled($product->stock <= 0)
+                            {{ $product->stock <= 0 ? "disabled" : "" }}
                         >
 
                         <small id="quantity-message" class="text-danger" style="display:none; margin-top:6px;"></small>
