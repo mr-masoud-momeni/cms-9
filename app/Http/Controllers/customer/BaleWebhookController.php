@@ -4,6 +4,7 @@ namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Order;
 use App\Models\ShopBaleConnection;
 use App\Models\ShopBaleConnectionToken;
 use App\Services\BaleService;
@@ -147,13 +148,19 @@ class BaleWebhookController extends Controller
 
                     if ($payment->order) {
                         $payment->order->update([
-                            'status' => 1,
+                            'status' => Order::STATUS_PAID,
                             'total' => $payment->amount,
                             'paid_at' => now(),
                         ]);
                     }
                 } else {
                     $payment->update(['status' => 'rejected']);
+
+                    if ($payment->order) {
+                        $payment->order->update([
+                            'status' => Order::STATUS_CANCELLED,
+                        ]);
+                    }
                 }
             });
 
