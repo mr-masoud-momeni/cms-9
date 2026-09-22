@@ -72,7 +72,6 @@ Route::group(
         Route::resource('/page', 'PageController');
         Route::resource('/menu', 'MenuController');
         Route::post('/upload-image', 'panelAdmin@UploadImageInText')->name('uploadImage');
-        Route::get('search','HomeController@search')->name('search');
     }
 );
 
