@@ -18,7 +18,6 @@
 - `article()` → `articles()`
 - `category()` → `categories()`
 - `EmailGroup()` → `emailGroups()`
-- `Page()` → `pages()`
 - `product()` → `products()`
 
 ### Controllers
