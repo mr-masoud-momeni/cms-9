@@ -4,7 +4,6 @@ namespace App\Http\Controllers\front;
 
 use App\Models\Article;
 use App\Http\Controllers\Controller;
-use App\Models\Menu;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\ShopHelper;
@@ -16,10 +15,9 @@ class IndexController extends Controller
     {
         $shop = ShopHelper::getShop();
         $shopId = $shop?->id;
-        $menu = Menu::where('id', 1)->first();
         $articles = Article::where('shop_id', $shopId)->latest()->take(3)->get();
         $products = Product::where('shop_id', $shopId)->latest()->take(3)->get();
-        return view('Frontend.Home.index', compact('articles', 'menu', 'products'));
+        return view('Frontend.Home.index', compact('articles', 'products'));
     }
 
     public function shop()
