@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\ShopAdminLoginController;
 use App\Http\Controllers\Auth\BuyerAuthController;
 use App\Http\Controllers\customer\CardToCardController;
 use App\Http\Controllers\customer\BaleConnectionController;
+use App\Http\Controllers\customer\ShopSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,6 +92,8 @@ Route::group(
     ]
     , function () {
         Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
+        Route::get('/settings', [ShopSettingsController::class, 'edit'])->name('settings.edit');
+        Route::post('/settings', [ShopSettingsController::class, 'update'])->name('settings.update');
         Route::resource('/product', 'ProductController');
         Route::resource('/orders', 'OrderController');
         Route::resource('/article', 'ArticleController');
