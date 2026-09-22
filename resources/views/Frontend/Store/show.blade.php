@@ -26,7 +26,7 @@
                     {{ $product->price }}
                 </div>
 
-                @if($product->stock <= 0)
+                @if($product->available_stock <= 0)
                     <div class="mb-3">
                         <small class="text-danger">این محصول ناموجود است.</small>
                     </div>
@@ -46,16 +46,16 @@
                             name="count_product"
                             value="1"
                             min="1"
-                            max="{{ $product->stock }}"
+                            max="{{ $product->available_stock }}"
                             data-unit="{{ e($product->unit) }}"
-                            data-stock="{{ $product->stock }}"
-                            {{ $product->stock <= 0 ? "disabled" : "" }}
+                            data-stock="{{ $product->available_stock }}"
+                            {{ $product->available_stock <= 0 ? "disabled" : "" }}
                         >
 
                         <small id="quantity-message" class="text-danger" style="display:none; margin-top:6px;"></small>
                     </div>
 
-                    <button type="submit" class="store-button" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                    <button type="submit" class="store-button" {{ $product->available_stock <= 0 ? 'disabled' : '' }}>
                         افزودن به سبد خرید
                     </button>
                 </form>
