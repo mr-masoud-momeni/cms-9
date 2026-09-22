@@ -26,13 +26,11 @@
                     {{ $product->price }}
                 </div>
 
-                <div class="mb-3">
-                    @if($product->stock > 0)
-                        <small class="text-muted">موجودی: موجود</small>
-                    @else
+                @if($product->stock <= 0)
+                    <div class="mb-3">
                         <small class="text-danger">این محصول ناموجود است.</small>
-                    @endif
-                </div>
+                    </div>
+                @endif
 
                 <form method="post" action="{{ route('buyer.order.store') }}" class="AddProduct store-detail-form">
                     {!! csrf_field() !!}
