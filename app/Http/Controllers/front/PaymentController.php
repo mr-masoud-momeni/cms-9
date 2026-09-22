@@ -38,7 +38,7 @@ class PaymentController extends Controller
 
         if ($buyer) {
             $order = $buyer->orders()
-                ->where('status', 0)
+                ->where('status', Order::STATUS_PENDING)
                 ->where('shop_id', $shop->id)
                 ->with('products')
                 ->first();
@@ -58,7 +58,7 @@ class PaymentController extends Controller
                 $order = Order::where('id', $existingOrderId)
                     ->where('shop_id', $shop->id)
                     ->whereNull('buyer_id')
-                    ->where('status', 0)
+                    ->where('status', Order::STATUS_PENDING)
                     ->with('products')
                     ->first();
             }
@@ -76,7 +76,7 @@ class PaymentController extends Controller
                     $order = Order::create([
                         'buyer_id' => null,
                         'shop_id' => $shop->id,
-                        'status' => 0,
+                        'status' => Order::STATUS_PENDING,
                     ]);
 
                     foreach ($products as $product) {
@@ -289,9 +289,9 @@ class PaymentController extends Controller
 
         // کارت‌به‌کارت هنوز پرداخت نهایی نشده، اما سفارش دیگر نباید
         // به‌عنوان سبد خرید فعال نمایش داده شود.
-        // 2 = در انتظار تأیید پرداخت کارت‌به‌کارت
+        // کارت‌به‌کارت در وضعیت رزرو شده قرار می‌گیرد؛ تأیید پرداخت در Payment انجام می‌شود.
         $order->update([
-            'status' => 2,
+            'status' => Order::STATUS_RESERVED,
             'total' => $totalAmount,
         ]);
 
@@ -383,7 +383,7 @@ class PaymentController extends Controller
 
                 if ($payment->order) {
                     $payment->order->update([
-                        'status' => 1,
+                        'status' => Order::STATUS_PAID,
                         'total' => $payment->amount,
                         'paid_at' => now(),
                     ]);
@@ -423,7 +423,7 @@ class PaymentController extends Controller
 
         if ($buyer) {
             return $buyer->orders()
-                ->where('status', 0)
+                ->where('status', Order::STATUS_PENDING)
                 ->where('shop_id', $shop->id)
                 ->with('products')
                 ->first();
@@ -441,7 +441,7 @@ class PaymentController extends Controller
         return Order::where('id', $orderId)
             ->where('shop_id', $shop->id)
             ->whereNull('buyer_id')
-            ->where('status', 0)
+            ->where('status', Order::STATUS_PENDING)
             ->with('products')
             ->first();
     }
