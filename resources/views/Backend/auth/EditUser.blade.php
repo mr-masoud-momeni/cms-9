@@ -12,7 +12,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <form action="{{route('register.update',$User->id)}}" method="post" >
+                            <form action="{{route('register.update',$User->id)}}" method="post" enctype="multipart/form-data">
                                 {{ csrf_field() }}
                                 {{method_field('patch')}}
                                 <div class="form-group">
@@ -75,6 +75,15 @@
                                 <div class="form-group">
                                     <label for="name">نام دامنه</label>
                                     <input type="text" name="domain" class="form-control" id="domain"  value="@if(isset($User->shop->first()->domain)){{ $User->shop->first()->domain }}@endif" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">توضیحات فروشگاه</label>
+                                    <textarea name="description" class="form-control" id="description" rows="3">{{ $User->shop->first()->description ?? '' }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="logo">لوگوی فروشگاه</label>
+                                    @if($User->shop->first()->logo ?? null)<div style="margin-bottom:10px;"><img src="{{ asset($User->shop->first()->logo) }}" alt="لوگوی فروشگاه" style="max-width:100px;max-height:100px;"></div>@endif
+                                    <input type="file" name="logo" class="form-control" id="logo" accept="image/jpeg,image/png,image/webp">
                                 </div>
                                 <button type="submit" class="btn btn-success">ویرایش کاربر</button>
                             </form>
