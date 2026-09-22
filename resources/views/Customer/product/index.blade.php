@@ -19,6 +19,7 @@
                         <thead>
                         <tr>
                             <th>عنوان محصول</th>
+                            <th>موجودی</th>
                             <th>تاریخ ارسال</th>
                             <th>دسته ها</th>
                             <th width="50px"></th>
@@ -27,9 +28,14 @@
                         </thead>
                         <tbody>
                         @foreach($products as $product)
-
                             <tr class="item{{$product->id}}">
                                 <td>{{$product->title}}</td>
+                                <td>
+                                    {{$product->stock_label}}
+                                    @if($product->stock <= 0)
+                                        <span class="text-danger"> (ناموجود)</span>
+                                    @endif
+                                </td>
                                 <td>{{$product->created_at}}</td>
                                 <td>
                                     @foreach($product->categories()->get() as $cat)
@@ -52,12 +58,8 @@
                 </div>
                 <div class="panel-footer">Panel Footer</div>
 
-
-                <!-- Modal -->
                 <div class="modal fade" id="DeleteModal" role="dialog">
                     <div class="modal-dialog margin-top-60">
-
-                        <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -72,32 +74,18 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">خیر</button>
-                                    <button type="submit"  class="btn btn-success">بله</button>
+                                    <button type="submit" class="btn btn-success">بله</button>
                                     <span class="pull-right" id="deleteMsg" style="color:#5cb85c;"></span>
                                 </div>
                             </form>
                         </div>
-
                     </div>
                 </div>
-                <!-- Modal -->
-
-
             </div>
-
         </div>
     </div>
-
 @endsection
 @section('scripts')
-{{--    <script>--}}
-{{--        $(document).on("click", ".deleteAjax", function () {--}}
-{{--            var articleId = $(this).data('id');--}}
-{{--            var action = '{{route('product.destroy' , ['id'=>'string'])}}';--}}
-{{--            action = action.replace('string', articleId);--}}
-{{--            document.getElementById("articleFormDeleteId").action = action;--}}
-{{--        });--}}
-{{--    </script>--}}
     <script>
         $(document).on("click", ".deleteAjax", function () {
             var DeleteID = $(this).data('id');
@@ -106,8 +94,7 @@
             action = action.replace('__PRODUCT__', DeleteID);
             $(".FormDelete").attr("action", action);
         });
-    </script>
-    <script>
+
         $(document).ready(function () {
             $('.FormDelete').submit(function (event) {
                 event.preventDefault();
@@ -125,12 +112,9 @@
                         }
                     }
                 });
-
             });
         });
 
-    </script>
-    <script>
         $('#category').selectpicker();
     </script>
 @endsection
