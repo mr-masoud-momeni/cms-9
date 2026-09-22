@@ -45,6 +45,32 @@ class Product extends Model
         return $this->stock . ' ' . $this->unit;
     }
 
+    public function getAvailableStockAttribute(): int
+    {
+        if ($this->stock <= 0) {
+            return 0;
+        }
+
+        $now = now();
+
+        $reserved = $this->orders()
+            ->where('orders.status', Order::STATUS_RESERVED)
+            ->where(function ($query) use ($now) {
+                $query->where('orders.reservation_expires_at', '>', $now)
+                    ->orWhereHas('payment', function ($paymentQuery) {
+                        $paymentQuery->where('status', 'waiting_confirmation');
+                    });
+            })
+            ->sum('order_product.quantity');
+
+        return max(0, (int) $this->stock - (int) $reserved);
+    }
+
+    public function availableStockLabel(): string
+    {
+        return $this->available_stock . ' ' . $this->unit;
+    }
+
     public function getRoutekeyName()
     {
         return 'slug';
