@@ -13,11 +13,20 @@ class Order extends Model
     const STATUS_COMPLETED = 'completed';
     const STATUS_CANCELLED = 'cancelled';
 
+    const RESERVATION_MINUTES = 5;
+
     protected $casts = [
         'paid_at' => 'datetime',
         'reserved_at' => 'datetime',
         'reservation_expires_at' => 'datetime',
     ];
+
+    public function isReservationExpired(): bool
+    {
+        return $this->status === self::STATUS_RESERVED
+            && $this->reservation_expires_at
+            && $this->reservation_expires_at->isPast();
+    }
 
     protected $fillable = [
         'buyer_id',
