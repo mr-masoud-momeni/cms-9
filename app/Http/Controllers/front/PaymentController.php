@@ -454,11 +454,62 @@ class PaymentController extends Controller
         }
 
         if ($order && $order->isReservationExpired()) {
-            $order->update(['status' => Order::STATUS_CANCELLED]);
+            $this->restoreExpiredOrderToCart($order);
             return null;
         }
 
         return $order;
+    }
+
+    /**
+     * Reservation expiration cancels the checkout order, but its products
+     * must remain in the buyer's cart so the customer can try again.
+     */
+    private function restoreExpiredOrderToCart(Order $order): void
+    {
+        DB::transaction(function () use ($order) {
+            $products = $order->products->map(function ($product) {
+                return [
+                    'product_id' => $product->id,
+                    'quantity' => (int) $product->pivot->quantity,
+                    'price' => $product->pivot->price,
+                ];
+            });
+
+            $order->update([
+                'status' => Order::STATUS_CANCELLED,
+            ]);
+
+            $buyer = auth('buyer')->user();
+
+            if (!$buyer) {
+                session()->forget('checkout_order_id');
+                return;
+            }
+
+            $pendingOrder = $buyer->orders()
+                ->where('status', Order::STATUS_PENDING)
+                ->where('shop_id', $order->shop_id)
+                ->with('products')
+                ->first();
+
+            if ($pendingOrder || $products->isEmpty()) {
+                return;
+            }
+
+            $newOrder = Order::create([
+                'buyer_id' => $buyer->id,
+                'shop_id' => $order->shop_id,
+                'status' => Order::STATUS_PENDING,
+            ]);
+
+            foreach ($products as $product) {
+                $newOrder->products()->attach($product['product_id'], [
+                    'quantity' => $product['quantity'],
+                    'price' => $product['price'],
+                ]);
+            }
+        });
     }
 
     private function orderAmount(Order $order)
