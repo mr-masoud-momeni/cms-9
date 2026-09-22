@@ -30,6 +30,8 @@ class Shop extends Model
         'name',
         'domain',
         'slug',
+        'logo',
+        'description',
     ];
 
     public function getRoutekeyName(){
