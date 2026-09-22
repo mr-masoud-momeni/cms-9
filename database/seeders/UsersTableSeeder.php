@@ -144,6 +144,8 @@ class UsersTableSeeder extends Seeder
                 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
                 'price-type' => 'cash',
                 'price' => $product['price'],
+                'unit' => 'عدد',
+                'stock' => 10,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
