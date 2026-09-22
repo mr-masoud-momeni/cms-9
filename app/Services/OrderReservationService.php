@@ -49,9 +49,13 @@ class OrderReservationService
                 if ($quantity > $available) {
                     return [
                         'success' => false,
-                        'message' => $available > 0
-                            ? Order::MESSAGE_STOCK_CONFLICT . ' حدود ' . $available . ' ' . $product->unit . ' قابل رزرو است.'
-                            : Order::MESSAGE_STOCK_CONFLICT,
+                        'message' => $product->stock <= 0
+                            ? Order::MESSAGE_OUT_OF_STOCK
+                            : str_replace(
+                                [':available', ':unit'],
+                                [$available, $product->unit],
+                                Order::MESSAGE_STOCK_CONFLICT
+                            ),
                     ];
                 }
             }
