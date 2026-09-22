@@ -115,7 +115,7 @@ class PaymentController extends Controller
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
-            return redirect()->route('order.index')
+            return redirect()->route('buyer.order.index')
                 ->withErrors('سبد خرید شما خالی است.');
         }
 
@@ -136,7 +136,7 @@ class PaymentController extends Controller
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
-            return redirect()->route('order.index')
+            return redirect()->route('buyer.order.index')
                 ->withErrors('سفارش قابل پرداخت پیدا نشد.');
         }
 
@@ -159,7 +159,7 @@ class PaymentController extends Controller
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
-            return redirect()->route('order.index')
+            return redirect()->route('buyer.order.index')
                 ->withErrors('سفارش قابل پرداخت پیدا نشد.');
         }
 
@@ -235,7 +235,7 @@ class PaymentController extends Controller
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
-            return redirect()->route('order.index')
+            return redirect()->route('buyer.order.index')
                 ->withErrors('سفارش قابل پرداخت پیدا نشد.');
         }
 
