@@ -42,6 +42,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="stock">موجودی</label>
+                                    <input type="number" name="stock" class="form-control" id="stock"
+                                           min="0" step="1" value="{{old('stock', 0)}}" required>
+                                    <small class="text-muted">مقدار موجودی بر اساس واحد فروش بالا ثبت می‌شود.</small>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="images">تصویر محصول</label>
                                     <input type="file" name="images" id="images" class="form-control"
                                            accept="image/jpeg,image/png,image/webp" required>
