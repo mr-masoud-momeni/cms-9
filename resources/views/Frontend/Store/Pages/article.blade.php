@@ -3,7 +3,7 @@
 
 
 @section('header')
-    @include('Frontend.Store.Layouts.header')
+    @include('Frontend.Store.Layouts.header', ['showStats' => false])
 @endsection
 
 @section('page-styles')
