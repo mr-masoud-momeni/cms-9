@@ -18,10 +18,10 @@
     <script src="{{asset('/frontend/js/jquery-3-5-0.js')}}"></script>
 
     {{-- CSS مشترک تمام صفحات Store --}}
-    <link rel="stylesheet" href="{{ asset('/frontend/css/store.css') }}?v=20260921-font">
+    <link rel="stylesheet" href="{{ asset('/frontend/css/store.css') }}?v=20260923">
 
     {{-- CSS مشترک هدر --}}
-    <link rel="stylesheet" href="{{ asset('/frontend/css/store-header.css') }}">
+    <link rel="stylesheet" href="{{ asset('/frontend/css/store-header.css') . '?v=20260923' }}">
 
     {{-- CSS اختصاصی صفحه --}}
     @yield('page-styles')
