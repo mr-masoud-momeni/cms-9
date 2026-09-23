@@ -3,7 +3,7 @@
 @section('title', $shop->name)
 
 @section('header')
-    @include('Frontend.Store.Layouts.header')
+    @include('Frontend.Store.Layouts.header', ['showStats' => true])
 @endsection
 
 @section('page-styles')
