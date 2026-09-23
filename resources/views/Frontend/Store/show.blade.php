@@ -2,7 +2,6 @@
 
 @section('header')
     @include('Frontend.Store.Layouts.header', ['showStats' => false])
-    <div style="text-align:center; padding:4px 0; font-size:11px; color:#777;">PRODUCT-HEADER-TEST</div>
 @endsection
 
 @section('page-styles')
