@@ -13,10 +13,12 @@
                 <i class="bi bi-bag"></i>
             </a>
         </div>
+        @if($showStats ?? false)
         <div class="store-stats">
             <span><strong>{{ $postCount }}</strong> پست</span>
             <span><strong>{{ $productCount }}</strong> محصول</span>
         </div>
+        @endif
         <p class="store-description">{!! nl2br(e($shop->description ?? 'محصولات و مطالب این فروشگاه را اینجا ببینید.')) !!}</p>
     </div>
 </header>
