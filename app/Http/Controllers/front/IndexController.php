@@ -41,6 +41,6 @@ class IndexController extends Controller
 
         abort_unless($product->shop_id === $shop->id, 404);
 
-        return view('Frontend.Store.show', compact('product'));
+        return view('Frontend.Store.show', compact('product', 'shop'));
     }
 }
