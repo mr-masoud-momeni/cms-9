@@ -11,17 +11,22 @@
                 </div>
                 <h1 class="store-title">{{ $shop->name ?? 'فروشگاه' }}</h1>
             </a>
+
             <a href="{{ route('buyer.order.index') }}" class="store-cart" aria-label="سبد خرید">
                 <i class="bi bi-bag"></i>
                 <span id="cart-val" class="store-cart-badge">{{ $orderCount ?? 0 }}</span>
             </a>
         </div>
-        @if($showStats ?? false)
-        <div class="store-stats">
-            <span><strong>{{ $postCount }}</strong> پست</span>
-            <span><strong>{{ $productCount }}</strong> محصول</span>
+
+        <div class="store-header-bottom">
+            @if($showStats ?? false)
+            <div class="store-stats">
+                <span><strong>{{ $postCount }}</strong> پست</span>
+                <span><strong>{{ $productCount }}</strong> محصول</span>
+            </div>
+            @endif
+
+            <p class="store-description">{!! nl2br(e($shop->description ?? 'محصولات و مطالب این فروشگاه را اینجا ببینید.')) !!}</p>
         </div>
-        @endif
-        <p class="store-description">{!! nl2br(e($shop->description ?? 'محصولات و مطالب این فروشگاه را اینجا ببینید.')) !!}</p>
     </div>
 </header>
