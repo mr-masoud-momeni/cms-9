@@ -1,5 +1,6 @@
 @extends('Frontend.Store.Layouts.MasterMain')
 
+@section('title', $article->title)
 
 
 @section('header')
