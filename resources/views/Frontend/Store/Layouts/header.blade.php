@@ -11,6 +11,7 @@
             <h1 class="store-title">{{ $shop->name ?? 'فروشگاه' }}</h1>
             <a href="{{ route('buyer.order.index') }}" class="store-cart" aria-label="سبد خرید">
                 <i class="bi bi-bag"></i>
+                <span id="cart-val" class="store-cart-badge">{{ $orderCount ?? 0 }}</span>
             </a>
         </div>
         @if($showStats ?? false)
