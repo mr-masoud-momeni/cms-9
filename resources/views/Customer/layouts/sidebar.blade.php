@@ -15,7 +15,7 @@
             );
         @endphp
 
-        <li class="dropdown {{ $shopMenuOpen ? 'sidebar-dropdown-open' : '' }}">
+        <li class="dropdown {{ $shopMenuOpen ? 'open' : '' }}">
             <a href="#" class="dropdown-toggle {{ $shopMenuOpen ? 'active-sidebar' : '' }}" data-toggle="dropdown">
                 فروشگاه<span class="caret"></span>
             </a>
