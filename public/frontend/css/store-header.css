@@ -62,6 +62,11 @@
     text-decoration: none;
 }
 
+.store-header-bottom {
+    margin-top: 10px;
+    padding-right: 78px;
+}
+
 .store-header-info {
     min-width: 0;
     flex: 0 1 auto;
@@ -107,7 +112,7 @@
     align-items: center;
     gap: 22px;
 
-    margin-top: 12px;
+    margin-top: 0;
 
     font-size: 13px;
     color: #555;
@@ -162,13 +167,18 @@
         font-size: 17px;
     }
 
+    .store-header-bottom {
+        margin-top: 8px;
+        padding-right: 70px;
+    }
+
     .store-stats {
-        margin-top: 10px;
+        margin-top: 0;
         gap: 18px;
     }
 
     .store-description {
-        margin-top: 8px;
+        margin-top: 4px;
         font-size: 12px;
     }
 }
