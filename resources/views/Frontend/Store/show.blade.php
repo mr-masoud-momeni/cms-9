@@ -1,5 +1,7 @@
 @extends('Frontend.Store.Layouts.MasterMain')
 
+@section('title', $product->title)
+
 @section('header')
     @include('Frontend.Store.Layouts.header', ['showStats' => false])
 @endsection
