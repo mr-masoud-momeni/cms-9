@@ -152,8 +152,3 @@ i{font-family:fontawesome !important;}
 }
 
 
-
-/* Keep the shop submenu open when the current page belongs to it. */
-.sidebar-nav .dropdown.sidebar-dropdown-open > .dropdown-menu {
-    display: block;
-}
