@@ -3,7 +3,7 @@
 
 
 @section('header')
-    @include('Frontend.Store.Layouts.header-minimal')
+    @include('Frontend.Store.Layouts.header')
 @endsection
 
 @section('page-styles')
