@@ -39,6 +39,7 @@ class SendCardToCardPaymentToBale
         $text = "🟡 پرداخت کارت‌به‌کارت جدید\n\n"
             . "سفارش: #{$order->id}\n"
             . "مبلغ: " . number_format((float) $payment->amount) . " تومان\n"
+            . "هزینه ارسال: " . (($order?->shipping_amount ?? 0) > 0 ? number_format((float) $order->shipping_amount) . " تومان" : "رایگان") . "\n"
             . "مشتری: {$buyerName}\n"
             . "موبایل: {$buyerPhone}\n"
             . "کد پیگیری: {$trackingCode}\n\n"
