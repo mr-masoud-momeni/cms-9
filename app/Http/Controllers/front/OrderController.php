@@ -259,13 +259,13 @@ class OrderController extends Controller
                     ->with('warning', 'برای ادامه خرید باید وارد حساب کاربری شوید.');
             }
 
-            $cart = session('cart', []);
+            $cart = ShopHelper::getGuestCart();
 
             if (isset($cart[$id])) {
                 unset($cart[$id]);
             }
 
-            session()->put('cart', $cart);
+            ShopHelper::putGuestCart($cart);
 
             return redirect()->back()
                 ->with('success', 'محصول از سبد خرید حذف شد.');
