@@ -34,6 +34,11 @@ class ShopHelper
         return self::getShop()?->id;
     }
 
+    public static function getShippingCost(): int
+    {
+        return (int) (self::getShop()->shipping_cost ?? 0);
+    }
+
     public static function getGuestCart(): array
     {
         $key = self::guestCartKey();
