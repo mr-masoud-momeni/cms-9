@@ -55,6 +55,7 @@ class Order extends Model
         'shop_id',
         'status',
         'total',
+        'shipping_amount',
         'paid_at',
         'reserved_at',
         'reservation_expires_at',
@@ -84,6 +85,6 @@ class Order extends Model
 
     public function payment()
     {
-        return $this->hasOne(Payment::class); // یک سفارش یک پرداخت نهایی دارد
+        return $this->hasOne(Payment::class);
     }
 }
