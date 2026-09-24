@@ -128,9 +128,12 @@ class PaymentController extends Controller
             ->first();
         $bankAccount = $shop->bankAccount;
 
-        return view('Frontend.Store.Pages.payment', compact(
-            'order', 'totalAmount', 'gateway', 'bankAccount'
-        ));
+        return view('Frontend.Store.Pages.payment', [
+            'checkoutOrder' => $order,
+            'totalAmount' => $totalAmount,
+            'gateway' => $gateway,
+            'bankAccount' => $bankAccount,
+        ]);
     }
 
     public function cardToCardForm()
@@ -151,9 +154,11 @@ class PaymentController extends Controller
 
         $totalAmount = $this->orderAmount($order);
 
-        return view('Frontend.Shop.Pay.card-to-card', compact(
-            'order', 'totalAmount', 'bankAccount'
-        ));
+        return view('Frontend.Shop.Pay.card-to-card', [
+            'checkoutOrder' => $order,
+            'totalAmount' => $totalAmount,
+            'bankAccount' => $bankAccount,
+        ]);
     }
 
     public function init(Request $request)
