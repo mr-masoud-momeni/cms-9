@@ -325,84 +325,88 @@
                 </div>
 
 
-                {{-- تغییر وضعیت سفارش --}}
+                {{-- وضعیت سفارش --}}
                 <div class="mb-4">
+                    <h4>وضعیت سفارش</h4>
 
-                    <h4>مدیریت سفارش</h4>
-
-                    <form
-                        method="POST"
-                        action="{{ route('shop.orders.update', $order) }}"
-                    >
-
+                    <form method="POST" action="{{ route('shop.orders.update', $order) }}">
                         @csrf
                         @method('PATCH')
 
+                        <div class="form-group">
+                            <label for="order-status">وضعیت سفارش</label>
+                            <select name="status" id="order-status" class="form-control">
+                                <option value="pending" @if($order->status === 'pending') selected @endif>در انتظار پرداخت</option>
+                                <option value="reserved" @if($order->status === 'reserved') selected @endif>رزرو شده</option>
+                                <option value="paid" @if($order->status === 'paid') selected @endif>پرداخت شده</option>
+                                <option value="shipped" @if($order->status === 'shipped') selected @endif>ارسال شده</option>
+                                <option value="completed" @if($order->status === 'completed') selected @endif>انجام شده</option>
+                                <option value="cancelled" @if($order->status === 'cancelled') selected @endif>لغو شده</option>
+                            </select>
+                        </div>
 
-                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            ثبت وضعیت سفارش
+                        </button>
+                    </form>
+                </div>
 
-                        <label for="order-status">
-                            وضعیت سفارش
-                        </label>
-                        @php
-                            $status = $order->status;
-                        @endphp
-                        <select name="status" id="order-status">
+                {{-- کد رهگیری --}}
+                <div class="mb-4">
+                    <h4>کد رهگیری مرسوله</h4>
 
-                            <option value="pending" @if($status == 'pending') selected @endif>
-                                در انتظار پرداخت
-                            </option>
+                    <form method="POST" action="{{ route('shop.orders.tracking.update', $order) }}">
+                        @csrf
 
-                            <option value="paid" @if($status == 'paid') selected @endif>
-                                پرداخت شده
-                            </option>
-
-                            <option value="shipped" @if($status == 'shipped') selected @endif>
-                                ارسال شده
-                            </option>
-
-                            <option value="completed" @if($status == 'completed') selected @endif>
-                                انجام شده
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                        {{-- کد رهگیری --}}
-                        <div
-                            class="mb-3"
-                            id="tracking-wrapper"
-                            style="{{ $order->status === 'shipped' ? '' : 'display:none;' }}"
-                        >
-
-                            <label for="tracking_code">
-                                کد رهگیری پستی
-                            </label>
-
+                        <div class="form-group">
+                            <label for="tracking-code">کد رهگیری</label>
                             <input
                                 type="text"
-                                id="tracking_code"
+                                id="tracking-code"
                                 name="tracking_code"
                                 value="{{ old('tracking_code', $order->tracking_code) }}"
                                 class="form-control"
+                                placeholder="کد رهگیری مرسوله"
                             >
-
                         </div>
 
-
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
-                            ثبت تغییرات
+                        <button type="submit" class="btn btn-primary">
+                            ثبت کد رهگیری
                         </button>
-
                     </form>
-
                 </div>
 
+                {{-- پیامک --}}
+                @php
+                    $smsPhone = $order->receiver_phone ?? optional($order->buyer)->phone;
+                    $smsText = "مشتری گرامی، سفارش شما با شماره #{$order->id}";
+                    if ($order->tracking_code) {
+                        $smsText .= " با کد رهگیری {$order->tracking_code}";
+                    }
+                    $smsText .= " ثبت شده است.";
+                @endphp
+
+                <div class="mb-4">
+                    <h4>پیامک به مشتری</h4>
+
+                    <div class="form-group">
+                        <textarea id="sms-text" class="form-control" rows="4">{{ $smsText }}</textarea>
+                    </div>
+
+                    <a
+                        href="{{ $smsPhone ? 'sms:' . $smsPhone . '?body=' . rawurlencode($smsText) : '#' }}"
+                        id="send-sms-button"
+                        class="btn btn-primary"
+                    >
+                        ارسال پیامک
+                    </a>
+
+                    @if(!$smsPhone)
+                        <p class="text-muted" style="margin-top: 8px;">
+                            شماره موبایل مشتری ثبت نشده است.
+                        </p>
+                    @endif
+                </div>
 
                 {{-- بازگشت --}}
                 <a
