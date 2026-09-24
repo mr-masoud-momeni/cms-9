@@ -43,7 +43,7 @@ class OrderController extends Controller
                 $totalAmount += $product->cart_price * $product->cart_quantity;
             }
 
-            $shippingAmount = (int) ($currentShop->shipping_cost ?? 0);
+            $shippingAmount = ShopHelper::getShippingCost();
 
             return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount', 'shippingAmount'));
         }
@@ -71,11 +71,7 @@ class OrderController extends Controller
             $totalAmount += $product->cart_price * $product->cart_quantity;
         }
 
-        $shippingAmount = (int) ($order->shipping_amount ?? 0);
-
-        if ($shippingAmount === 0) {
-            $shippingAmount = (int) ($currentShop->shipping_cost ?? 0);
-        }
+        $shippingAmount = ShopHelper::getShippingCost();
 
         return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount', 'shippingAmount'));
     }
