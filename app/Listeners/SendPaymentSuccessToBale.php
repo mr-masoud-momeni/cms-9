@@ -37,6 +37,7 @@ class SendPaymentSuccessToBale
         $text = "🟢 پرداخت آنلاین موفق\n\n"
             . "سفارش: #{$order->id}\n"
             . "مبلغ: " . number_format((float) $payment->amount) . " تومان\n"
+            . "هزینه ارسال: " . (($order?->shipping_amount ?? 0) > 0 ? number_format((float) $order->shipping_amount) . " تومان" : "رایگان") . "\n"
             . "مشتری: {$buyerName}\n"
             . "موبایل: {$buyerPhone}\n"
             . "شماره مرجع: " . ($payment->sale_reference_id ?: '-') . "\n\n"
