@@ -40,7 +40,7 @@ class UserDataComposer
         } elseif (auth('web')->check()) {
             $order = 0;
         } else {
-            $sessionCart = session()->get('cart', []);
+            $sessionCart = ShopHelper::getGuestCart();
             $order = $sessionCart;
             $orderCount = is_array($sessionCart) ? array_sum($sessionCart) : 0;
             $orderNumber = is_array($sessionCart) ? count($sessionCart) : 0;
