@@ -53,6 +53,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'فروشگاه تستی من',
             'domain' => 'localhost',
             'slug' => 'localhost',
+            'shipping_cost' => 0,
         ]);
 
         // خریدار تستی
@@ -211,6 +212,7 @@ class UsersTableSeeder extends Seeder
             'tracking_code' => null,
             'paid_at' => now(),
             'total' => '4980000',
+            'shipping_amount' => 0,
             'receiver_name' => 'علی رضایی',
             'receiver_phone' => '09121234567',
             'receiver_province' => 'لرستان',
@@ -228,6 +230,7 @@ class UsersTableSeeder extends Seeder
             'tracking_code' => null,
             'paid_at' => null,
             'total' => null,
+            'shipping_amount' => 0,
             'receiver_name' => null,
             'receiver_phone' => null,
             'receiver_province' => null,
