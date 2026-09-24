@@ -75,6 +75,39 @@ DEALLOCATE PREPARE stmt;
 DROP TABLE IF EXISTS pages;
 
 
+
+-- shops.shipping_cost
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        'ALTER TABLE shops ADD COLUMN shipping_cost BIGINT UNSIGNED NOT NULL DEFAULT 0 AFTER buyer_login_required',
+        'SELECT 1'
+    )
+    FROM information_schema.columns
+    WHERE table_schema = @db
+      AND table_name = 'shops'
+      AND column_name = 'shipping_cost'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- orders.shipping_amount
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        'ALTER TABLE orders ADD COLUMN shipping_amount BIGINT UNSIGNED NOT NULL DEFAULT 0 AFTER total',
+        'SELECT 1'
+    )
+    FROM information_schema.columns
+    WHERE table_schema = @db
+      AND table_name = 'orders'
+      AND column_name = 'shipping_amount'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
 -- shops.logo
 SET @sql = (
     SELECT IF(
