@@ -12,6 +12,7 @@ use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\OrderReservationService;
+use App\Helpers\ShopHelper;
 use SoapClient;
 use Throwable;
 
@@ -49,12 +50,12 @@ class PaymentController extends Controller
                     ->with('warning', 'برای ادامه خرید باید وارد حساب کاربری شوید.');
             }
 
-            $cart = session('cart', []);
+            $cart = ShopHelper::getGuestCart();
             if (empty($cart)) {
                 return back()->withErrors('سبد خرید شما خالی است.');
             }
 
-            $existingOrderId = session('checkout_order_id');
+            $existingOrderId = ShopHelper::getCheckoutOrderId();
             if ($existingOrderId) {
                 $order = Order::where('id', $existingOrderId)
                     ->where('shop_id', $shop->id)
@@ -91,7 +92,7 @@ class PaymentController extends Controller
                     return $order;
                 });
 
-                session()->put('checkout_order_id', $order->id);
+                ShopHelper::putCheckoutOrderId($order->id);
             }
         }
 
@@ -307,8 +308,8 @@ class PaymentController extends Controller
         // برای کاربر لاگین‌شده، تغییر status به 2 باعث می‌شود OrderController
         // دیگر این سفارش را به‌عنوان سبد خرید فعال نخواند.
         if (!auth('buyer')->check()) {
-            session()->forget('cart');
-            session()->forget('checkout_order_id');
+            ShopHelper::forgetGuestCart();
+            ShopHelper::forgetCheckoutOrderId();
         }
 
         $reservationMessage = $order->reservationMessage(true);
@@ -398,8 +399,8 @@ class PaymentController extends Controller
                         'total' => $payment->amount,
                     ]);
 
-                    session()->forget('cart');
-                    session()->forget('checkout_order_id');
+                    ShopHelper::forgetGuestCart();
+                    ShopHelper::forgetCheckoutOrderId();
                     event(new \App\Events\PaymentWasSuccessful($payment->order));
                 }
 
@@ -442,7 +443,7 @@ class PaymentController extends Controller
                 return null;
             }
 
-            $orderId = session('checkout_order_id');
+            $orderId = ShopHelper::getCheckoutOrderId();
             if (!$orderId) {
                 return null;
             }
@@ -485,7 +486,7 @@ class PaymentController extends Controller
             $buyer = auth('buyer')->user();
 
             if (!$buyer) {
-                session()->forget('checkout_order_id');
+                ShopHelper::forgetCheckoutOrderId();
                 return;
             }
 
