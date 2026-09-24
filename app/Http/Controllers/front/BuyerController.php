@@ -4,7 +4,6 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Buyer;
-use App\Models\Shop;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerificationMail;
@@ -40,7 +39,7 @@ class BuyerController extends Controller
         } else {
             $domain = "{$scheme}://{$host}";
         }
-        $shop = Shop::where('domain', $host)->firstOrFail(); // پیدا کردن فروشگاه با استفاده از دامنه
+        $shop = ShopHelper::getShop();
 
         // بررسی اینکه آیا خریدار قبلاً ثبت‌نام کرده است یا نه
         $buyer = Buyer::where('email', $request->email)
