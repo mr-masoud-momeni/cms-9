@@ -23,6 +23,7 @@ class ShopSettingsController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
+            'shipping_cost' => ['required', 'integer', 'min:0'],
         ]);
 
         $shop = auth('shop_admin')->user()->shop;
@@ -37,6 +38,7 @@ class ShopSettingsController extends Controller
 
         $shop->name = $request->name;
         $shop->description = $request->description;
+        $shop->shipping_cost = $request->shipping_cost;
         $shop->save();
 
         if ($request->file('logo') && $oldLogo) {
