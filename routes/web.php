@@ -44,6 +44,7 @@ Route::group(
 
 // لینک عمومی و امن مشاهده سفارش مشتری
 Route::get('/order/{order}/track/{expires}/{token}', [OrderTrackingController::class, 'show'])
+    ->middleware('shop.context')
     ->name('customer.order.track');
 
 // ادمین اصلی
@@ -115,7 +116,7 @@ Route::group(
 );
 
 // خریدار
-Route::prefix('buyer')->group(function () {
+Route::prefix('buyer')->middleware('shop.context')->group(function () {
 
     // ---------- Login / Phone ----------
     Route::get('/auth/phone', [BuyerAuthController::class, 'showPhone'])
@@ -158,8 +159,12 @@ Route::prefix('buyer')->group(function () {
     Route::post('/auth/reset-password', [BuyerAuthController::class, 'resetPassword'])->name('buyer.reset.submit');
 });
 
-Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])->name('buyer.verify.email');
-Route::resource('buyer/order', OrderController::class)->names('buyer.order');
+Route::get('/verify-email-user/{uuid}/{token}', [BuyerController::class, 'verifyEmail'])
+    ->middleware('shop.context')
+    ->name('buyer.verify.email');
+Route::resource('buyer/order', OrderController::class)
+    ->middleware('shop.context')
+    ->names('buyer.order');
 
 Route::group(
     [
@@ -175,8 +180,8 @@ Route::group(
 );
 
 // Checkout / Payment
-Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
-Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
-Route::post('/payment/online', [PaymentController::class, 'init'])->name('payment.online');
-Route::get('/payment/card-to-card', [PaymentController::class, 'cardToCardForm'])->name('payment.card_to_card');
-Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])->name('payment.card_to_card.submit');
+Route::post('/checkout', [PaymentController::class, 'checkout'])->middleware('shop.context')->name('checkout');
+Route::get('/payment', [PaymentController::class, 'index'])->middleware('shop.context')->name('payment.index');
+Route::post('/payment/online', [PaymentController::class, 'init'])->middleware('shop.context')->name('payment.online');
+Route::get('/payment/card-to-card', [PaymentController::class, 'cardToCardForm'])->middleware('shop.context')->name('payment.card_to_card');
+Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])->middleware('shop.context')->name('payment.card_to_card.submit');
