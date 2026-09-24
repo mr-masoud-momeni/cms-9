@@ -28,6 +28,7 @@ use App\Http\Controllers\customer\ShopSettingsController;
 //Route::get('/user/active/email/{token}','UserController@activation')->name('activation.account');
 Route::group(
     [
+        'middleware'=>['shop.context'],
         'namespace'=> 'App\\Http\\Controllers\\front',
     ]
     , function () {
