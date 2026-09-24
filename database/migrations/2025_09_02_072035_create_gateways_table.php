@@ -15,8 +15,8 @@ class CreateGatewaysTable extends Migration
     {
         Schema::create('gateways', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('shop_id'); // شناسه فروشگاه
-            $table->string('title'); // نام درگاه (مثلا Mellat)
+            $table->unsignedBigInteger('shop_id');
+            $table->string('title');
             $table->string('terminal_id');
             $table->string('username');
             $table->string('password');
@@ -24,6 +24,8 @@ class CreateGatewaysTable extends Migration
             $table->string('gateway_url');
             $table->boolean('active')->default(true);
             $table->timestamps();
+
+            $table->index('shop_id');
 
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
         });
