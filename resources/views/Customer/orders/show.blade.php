@@ -410,8 +410,8 @@
                 {{-- پیامک --}}
                 @php
                     $smsPhone = $order->receiver_phone ?? optional($order->buyer)->phone;
-                    $orderUrl = app(\\App\\Services\\CustomerOrderLinkService::class)
-                        ->makeOrderUrl(\\App\\Models\\Shop::current(), $order);
+                    $orderUrl = app(\App\Services\CustomerOrderLinkService::class)
+                        ->makeOrderUrl(\App\Models\Shop::current(), $order);
 
                     $smsText = "مشتری گرامی، سفارش شما با شماره #{$order->id}";
                     if ($order->tracking_code) {
