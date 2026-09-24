@@ -11,10 +11,10 @@
 
                 <div class="alert alert-light border mb-4">
                     @php
-                        $itemsTotal = $order->products->sum(function ($product) {
+                        $itemsTotal = $checkoutOrder->products->sum(function ($product) {
                             return $product->pivot->price * $product->pivot->quantity;
                         });
-                        $shippingAmount = (int) ($order->shipping_amount ?? 0);
+                        $shippingAmount = (int) ($checkoutOrder->shipping_amount ?? 0);
                     @endphp
                     <div class="mb-2"><strong>جمع کالاها:</strong> {{ number_format($itemsTotal) }} تومان</div>
                     <div class="mb-2"><strong>هزینه ارسال:</strong> {{ $shippingAmount > 0 ? number_format($shippingAmount) . ' تومان' : 'رایگان' }}</div>
