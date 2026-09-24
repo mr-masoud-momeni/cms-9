@@ -26,6 +26,12 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="shipping_cost">هزینه ثابت ارسال (تومان)</label>
+                            <input type="number" name="shipping_cost" id="shipping_cost" class="form-control" min="0" step="1" value="{{ old('shipping_cost', $shop->shipping_cost ?? 0) }}" required>
+                            <small class="help-block">این مبلغ هنگام ثبت سفارش در سفارش ذخیره و به مبلغ نهایی اضافه می‌شود.</small>
+                        </div>
+
+                        <div class="form-group">
                             <label for="logo">لوگوی فروشگاه</label>
                             @if($shop->logo)
                                 <div style="margin-bottom:10px;">
