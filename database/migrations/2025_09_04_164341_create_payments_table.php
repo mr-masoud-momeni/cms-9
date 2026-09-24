@@ -18,10 +18,10 @@ class CreatePaymentsTable extends Migration
             $table->unsignedBigInteger('shop_id');
             $table->string('method')->default('online');
             $table->unsignedBigInteger('gateway_id')->nullable();
-            $table->unsignedBigInteger('order_id')->nullable(); // اگر سفارش داری
-            $table->string('ref_id')->nullable();    // کد ارجاع بانک (token)
-            $table->string('sale_reference_id')->nullable(); // شماره پیگیری
-            $table->string('sale_order_id')->nullable();     // شماره سفارش بانک
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->string('ref_id')->nullable();
+            $table->string('sale_reference_id')->nullable();
+            $table->string('sale_order_id')->nullable();
             $table->unsignedBigInteger('amount');
             $table->enum('status', [
                 'pending',
@@ -32,6 +32,8 @@ class CreatePaymentsTable extends Migration
                 'failed'
             ])->default('pending');
             $table->timestamps();
+
+            $table->index('shop_id');
 
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('gateway_id')->references('id')->on('gateways')->onDelete('cascade');
