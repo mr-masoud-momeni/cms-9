@@ -8,7 +8,6 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentReceipt;
 use App\Models\Product;
-use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\OrderReservationService;
@@ -20,7 +19,7 @@ class PaymentController extends Controller
 {
     public function checkout(Request $request)
     {
-        $shop = Shop::current();
+        $shop = ShopHelper::getShop();
 
         if (!$shop) {
             abort(404);
@@ -114,7 +113,7 @@ class PaymentController extends Controller
 
     public function index()
     {
-        $shop = Shop::current();
+        $shop = ShopHelper::getShop();
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
@@ -135,7 +134,7 @@ class PaymentController extends Controller
 
     public function cardToCardForm()
     {
-        $shop = Shop::current();
+        $shop = ShopHelper::getShop();
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
@@ -158,7 +157,7 @@ class PaymentController extends Controller
 
     public function init(Request $request)
     {
-        $shop = Shop::current();
+        $shop = ShopHelper::getShop();
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
@@ -234,7 +233,7 @@ class PaymentController extends Controller
 
     public function cardToCard(Request $request)
     {
-        $shop = Shop::current();
+        $shop = ShopHelper::getShop();
         $order = $this->checkoutOrder($shop);
 
         if (!$order || $order->products->isEmpty()) {
