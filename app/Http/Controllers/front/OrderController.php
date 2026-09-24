@@ -58,6 +58,7 @@ class OrderController extends Controller
             return view('Frontend.Store.Pages.cart', [
                 'products' => collect(),
                 'totalAmount' => 0,
+                'shippingAmount' => 0,
             ]);
         }
 
