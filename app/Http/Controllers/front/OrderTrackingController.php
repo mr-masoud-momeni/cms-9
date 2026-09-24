@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\front;
 
+use App\Helpers\ShopHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\Shop;
 use App\Services\CustomerOrderLinkService;
 use Illuminate\Http\Request;
 
@@ -16,10 +16,7 @@ class OrderTrackingController extends Controller
             abort(404);
         }
 
-        $shop = Shop::current();
-        if (!$shop) {
-            abort(404);
-        }
+        $shop = ShopHelper::getShop();
 
         $orderModel = Order::with('products')
             ->where('id', (int) $order)
@@ -35,7 +32,6 @@ class OrderTrackingController extends Controller
 
         return view('Frontend.Shop.Orders.track', [
             'trackedOrder' => $orderModel,
-            'shop' => $shop,
         ]);
     }
 }
