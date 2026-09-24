@@ -434,28 +434,26 @@
 @section('scripts')
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
+    const smsText = document.getElementById('sms-text');
+    const sendSmsButton = document.getElementById('send-sms-button');
 
-    const statusSelect = document.getElementById('order-status');
-    const trackingBox = document.getElementById('tracking-wrapper');
-
-    function toggleTracking() {
-
-        if (statusSelect.value === 'shipped') {
-            trackingBox.style.display = 'block';
-        } else {
-            trackingBox.style.display = 'none';
-        }
-
+    if (!smsText || !sendSmsButton) {
+        return;
     }
 
-    toggleTracking();
+    const phone = @json($smsPhone);
 
-    statusSelect.addEventListener('change', toggleTracking);
+    sendSmsButton.addEventListener('click', function (event) {
+        if (!phone) {
+            event.preventDefault();
+            alert('شماره موبایل مشتری ثبت نشده است.');
+            return;
+        }
 
+        sendSmsButton.href = 'sms:' + phone + '?body=' + encodeURIComponent(smsText.value);
+    });
 });
-
 </script>
 
 @endsection
