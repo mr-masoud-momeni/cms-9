@@ -1,5 +1,9 @@
 @extends('Customer.layouts.Master')
 
+@php
+    use App\\Models\\Order;
+@endphp
+
 @section('content')
     <div class="row">
         <div class="col-lg-12">
