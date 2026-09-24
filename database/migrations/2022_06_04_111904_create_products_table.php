@@ -31,6 +31,8 @@ class CreateProductsTable extends Migration
             $table->integer('veiwCount')->default(0);
             $table->timestamps();
 
+            $table->index('shop_id');
+
             //Define foreign keys
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
