@@ -97,6 +97,8 @@ Route::group(
         Route::get('/settings', [ShopSettingsController::class, 'edit'])->name('settings.edit');
         Route::post('/settings', [ShopSettingsController::class, 'update'])->name('settings.update');
         Route::resource('/product', 'ProductController');
+        Route::post('/orders/{order}/payment/approve', 'OrderController@approvePayment')->name('orders.payment.approve');
+        Route::post('/orders/{order}/payment/reject', 'OrderController@rejectPayment')->name('orders.payment.reject');
         Route::resource('/orders', 'OrderController');
         Route::resource('/article', 'ArticleController');
         Route::post('/article/upload-image', 'ArticleController@uploadImageInText')->name('article.upload-image');
