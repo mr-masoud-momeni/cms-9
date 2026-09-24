@@ -112,6 +112,10 @@
             {{-- خلاصه سفارش --}}
             <aside class="store-cart-summary">
 
+                @php
+                    $grandTotal = $totalAmount + $shippingAmount;
+                @endphp
+
                 <h2>خلاصه سفارش</h2>
 
                 <div class="store-cart-summary-row">
@@ -119,12 +123,22 @@
                     <strong>{{ $products->count() }}</strong>
                 </div>
 
+                <div class="store-cart-summary-row">
+                    <span>جمع کالاها</span>
+                    <strong>{{ number_format($totalAmount) }} تومان</strong>
+                </div>
+
+                <div class="store-cart-summary-row">
+                    <span>هزینه ارسال</span>
+                    <strong>{{ $shippingAmount > 0 ? number_format($shippingAmount) . ' تومان' : 'رایگان' }}</strong>
+                </div>
+
                 <div class="store-cart-summary-divider"></div>
 
                 <div class="store-cart-summary-total">
                     <span>مبلغ قابل پرداخت</span>
                     <strong>
-                        {{ number_format($totalAmount) }}
+                        {{ number_format($grandTotal) }}
                         <small>تومان</small>
                     </strong>
                 </div>
@@ -251,7 +265,7 @@
                         <span>مبلغ نهایی</span>
 
                         <strong>
-                            {{ number_format($totalAmount) }}
+                            {{ number_format($grandTotal) }}
                             <small>تومان</small>
                         </strong>
                     </div>
