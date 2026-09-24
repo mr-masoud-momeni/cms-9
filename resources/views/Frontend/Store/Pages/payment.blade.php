@@ -34,10 +34,10 @@
             <div class="store-payment-amount">
 
                 @php
-                    $itemsTotal = $order->products->sum(function ($product) {
+                    $itemsTotal = $checkoutOrder->products->sum(function ($product) {
                         return $product->pivot->price * $product->pivot->quantity;
                     });
-                    $shippingAmount = (int) ($order->shipping_amount ?? 0);
+                    $shippingAmount = (int) ($checkoutOrder->shipping_amount ?? 0);
                 @endphp
 
                 <div>جمع کالاها: {{ number_format($itemsTotal) }} تومان</div>
