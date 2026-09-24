@@ -23,6 +23,7 @@ class OrderController extends Controller
                 return view('Frontend.Store.Pages.cart', [
                     'products' => collect(),
                     'totalAmount' => 0,
+                    'shippingAmount' => 0,
                 ]);
             }
 
@@ -42,7 +43,9 @@ class OrderController extends Controller
                 $totalAmount += $product->cart_price * $product->cart_quantity;
             }
 
-            return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount'));
+            $shippingAmount = (int) ($currentShop->shipping_cost ?? 0);
+
+            return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount', 'shippingAmount'));
         }
 
         $order = $buyer->orders()
@@ -67,7 +70,13 @@ class OrderController extends Controller
             $totalAmount += $product->cart_price * $product->cart_quantity;
         }
 
-        return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount'));
+        $shippingAmount = (int) ($order->shipping_amount ?? 0);
+
+        if ($shippingAmount === 0) {
+            $shippingAmount = (int) ($currentShop->shipping_cost ?? 0);
+        }
+
+        return view('Frontend.Store.Pages.cart', compact('products', 'totalAmount', 'shippingAmount'));
     }
 
     public function create()
