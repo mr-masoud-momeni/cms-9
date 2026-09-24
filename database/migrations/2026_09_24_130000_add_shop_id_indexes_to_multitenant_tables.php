@@ -2,53 +2,59 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private array $indexes = [
+        'products' => 'products_shop_id_index',
+        'orders' => 'orders_shop_id_index',
+        'categories' => 'categories_shop_id_index',
+        'payments' => 'payments_shop_id_index',
+        'gateways' => 'gateways_shop_id_index',
+    ];
+
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->index('shop_id', 'products_shop_id_index');
-        });
+        foreach ($this->indexes as $table => $indexName) {
+            if ($this->hasLeadingShopIdIndex($table)) {
+                continue;
+            }
 
-        Schema::table('orders', function (Blueprint $table) {
-            $table->index('shop_id', 'orders_shop_id_index');
-        });
-
-        Schema::table('categories', function (Blueprint $table) {
-            $table->index('shop_id', 'categories_shop_id_index');
-        });
-
-        Schema::table('payments', function (Blueprint $table) {
-            $table->index('shop_id', 'payments_shop_id_index');
-        });
-
-        Schema::table('gateways', function (Blueprint $table) {
-            $table->index('shop_id', 'gateways_shop_id_index');
-        });
+            Schema::table($table, function (Blueprint $table) use ($indexName) {
+                $table->index('shop_id', $indexName);
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropIndex('products_shop_id_index');
-        });
+        foreach ($this->indexes as $table => $indexName) {
+            if ($this->hasIndex($table, $indexName)) {
+                Schema::table($table, function (Blueprint $table) use ($indexName) {
+                    $table->dropIndex($indexName);
+                });
+            }
+        }
+    }
 
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropIndex('orders_shop_id_index');
-        });
+    private function hasLeadingShopIdIndex(string $table): bool
+    {
+        return DB::table('information_schema.statistics')
+            ->where('table_schema', DB::raw('DATABASE()'))
+            ->where('table_name', $table)
+            ->where('column_name', 'shop_id')
+            ->where('seq_in_index', 1)
+            ->exists();
+    }
 
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropIndex('categories_shop_id_index');
-        });
-
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropIndex('payments_shop_id_index');
-        });
-
-        Schema::table('gateways', function (Blueprint $table) {
-            $table->dropIndex('gateways_shop_id_index');
-        });
+    private function hasIndex(string $table, string $indexName): bool
+    {
+        return DB::table('information_schema.statistics')
+            ->where('table_schema', DB::raw('DATABASE()'))
+            ->where('table_name', $table)
+            ->where('index_name', $indexName)
+            ->exists();
     }
 };
