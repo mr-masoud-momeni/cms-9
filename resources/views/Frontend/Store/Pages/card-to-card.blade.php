@@ -5,7 +5,7 @@
 @endsection
 
 @section('page-styles')
-    <link rel="stylesheet" href="{{ asset('frontend/css/store-payment.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/store-payment.css') }}?v=20260924">
 @endsection
 
 @section('Main')
