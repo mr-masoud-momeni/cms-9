@@ -30,7 +30,7 @@ class OrderTrackingController extends Controller
             abort(404);
         }
 
-        return view('Frontend.Shop.Orders.track', [
+        return view('Frontend.Store.Pages.order-track', [
             'trackedOrder' => $orderModel,
         ]);
     }
