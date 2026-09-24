@@ -17,7 +17,7 @@ class OrderController extends Controller
         $currentShop = ShopHelper::getShop();
 
         if (!$buyer) {
-            $cart = session('cart', []);
+            $cart = ShopHelper::getGuestCart();
 
             if (empty($cart)) {
                 return view('Frontend.Store.Pages.cart', [
@@ -182,7 +182,7 @@ class OrderController extends Controller
             ]);
         }
 
-        $cart = session()->get('cart', []);
+        $cart = ShopHelper::getGuestCart();
         $currentQuantity = isset($cart[$product->id]) ? (int) $cart[$product->id] : 0;
         $requestedQuantity = $currentQuantity + $quantity;
 
@@ -206,7 +206,7 @@ class OrderController extends Controller
             $addToCart = 1;
         }
 
-        session()->put('cart', $cart);
+        ShopHelper::putGuestCart($cart);
 
         return response()->json([
             'success' => $addToCart,
