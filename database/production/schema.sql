@@ -1,11 +1,23 @@
--- Production database schema updates
+-- =========================================================
+-- Production Database Schema Changes
+-- =========================================================
 -- This file is cumulative and safe to run repeatedly.
 -- Run it manually in phpMyAdmin on the production database.
 -- It changes schema only; it does not import or modify product images/data.
+--
+-- IMPORTANT:
+-- This file records Production schema changes separately from
+-- Laravel migrations used for local development.
+-- =========================================================
 
 SET @db = DATABASE();
 
--- products.unit
+
+-- =========================================================
+-- 1. Product: unit
+-- تاریخ دقیق ثبت تغییر در این فایل مشخص نیست.
+-- =========================================================
+
 SET @sql = (
     SELECT IF(
         COUNT(*) = 0,
@@ -21,7 +33,12 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- products.stock
+
+-- =========================================================
+-- 2. Product: stock
+-- تاریخ دقیق ثبت تغییر در این فایل مشخص نیست.
+-- =========================================================
+
 SET @sql = (
     SELECT IF(
         COUNT(*) = 0,
@@ -37,7 +54,13 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- orders.reserved_at
+
+-- =========================================================
+-- 3. Order: reservation
+-- تاریخ دقیق ثبت تغییر در این فایل مشخص نیست.
+-- =========================================================
+
+-- زمان شروع رزرو سفارش
 SET @sql = (
     SELECT IF(
         COUNT(*) = 0,
@@ -53,7 +76,7 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- orders.reservation_expires_at
+-- زمان پایان رزرو سفارش
 SET @sql = (
     SELECT IF(
         COUNT(*) = 0,
@@ -70,45 +93,21 @@ EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
 
--- Legacy Page Builder
--- The pages table is no longer used by the current store/article architecture.
+-- =========================================================
+-- 4. Legacy: حذف Page Builder قدیمی
+-- تاریخ دقیق ثبت تغییر در این فایل مشخص نیست.
+-- =========================================================
+-- جدول pages دیگر توسط معماری فعلی store/article استفاده نمی‌شود.
+
 DROP TABLE IF EXISTS pages;
 
 
+-- =========================================================
+-- 5. Shop: اطلاعات فروشگاه
+-- تاریخ دقیق ثبت تغییر در این فایل مشخص نیست.
+-- =========================================================
 
--- shops.shipping_cost
-SET @sql = (
-    SELECT IF(
-        COUNT(*) = 0,
-        'ALTER TABLE shops ADD COLUMN shipping_cost BIGINT UNSIGNED NOT NULL DEFAULT 0 AFTER buyer_login_required',
-        'SELECT 1'
-    )
-    FROM information_schema.columns
-    WHERE table_schema = @db
-      AND table_name = 'shops'
-      AND column_name = 'shipping_cost'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- orders.shipping_amount
-SET @sql = (
-    SELECT IF(
-        COUNT(*) = 0,
-        'ALTER TABLE orders ADD COLUMN shipping_amount BIGINT UNSIGNED NOT NULL DEFAULT 0 AFTER total',
-        'SELECT 1'
-    )
-    FROM information_schema.columns
-    WHERE table_schema = @db
-      AND table_name = 'orders'
-      AND column_name = 'shipping_amount'
-);
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- shops.logo
+-- لوگوی فروشگاه
 SET @sql = (
     SELECT IF(
         COUNT(*) = 0,
@@ -124,7 +123,7 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- shops.description
+-- توضیحات فروشگاه
 SET @sql = (
     SELECT IF(
         COUNT(*) = 0,
@@ -135,6 +134,46 @@ SET @sql = (
     WHERE table_schema = @db
       AND table_name = 'shops'
       AND column_name = 'description'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+
+-- =========================================================
+-- 6. Shipping: هزینه ارسال
+-- 2026-09-24
+-- =========================================================
+
+-- هزینه ثابت ارسال در تنظیمات فروشگاه
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        'ALTER TABLE shops ADD COLUMN shipping_cost BIGINT UNSIGNED NOT NULL DEFAULT 0 AFTER buyer_login_required',
+        'SELECT 1'
+    )
+    FROM information_schema.columns
+    WHERE table_schema = @db
+      AND table_name = 'shops'
+      AND column_name = 'shipping_cost'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- هزینه ارسال ذخیره‌شده روی سفارش
+-- این مقدار هنگام ثبت/پرداخت سفارش snapshot می‌شود تا
+-- تغییر هزینه ارسال فروشگاه روی سفارش‌های قبلی اثر نگذارد.
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        'ALTER TABLE orders ADD COLUMN shipping_amount BIGINT UNSIGNED NOT NULL DEFAULT 0 AFTER total',
+        'SELECT 1'
+    )
+    FROM information_schema.columns
+    WHERE table_schema = @db
+      AND table_name = 'orders'
+      AND column_name = 'shipping_amount'
 );
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
