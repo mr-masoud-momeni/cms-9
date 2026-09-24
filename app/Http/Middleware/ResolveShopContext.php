@@ -13,6 +13,7 @@ class ResolveShopContext
         $shop = ShopHelper::getShop();
 
         View::share('shop', $shop);
+        View::share('shippingCost', (int) ($shop->shipping_cost ?? 0));
 
         return $next($request);
     }
