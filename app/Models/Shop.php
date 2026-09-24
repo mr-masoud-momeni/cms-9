@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Helpers\ShopHelper;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 
@@ -55,8 +56,7 @@ class Shop extends Model
 
     public static function current()
     {
-        $host = request()->getHost();
-        return self::where('domain', $host)->first();
+        return ShopHelper::getShop();
     }
 
     public function orders()
