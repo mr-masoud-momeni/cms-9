@@ -10,7 +10,15 @@
                 <h5 class="mb-4">پرداخت کارت به کارت</h5>
 
                 <div class="alert alert-light border mb-4">
-                    <div class="mb-2"><strong>مبلغ سفارش:</strong> {{ number_format($totalAmount) }} ریال</div>
+                    @php
+                        $itemsTotal = $order->products->sum(function ($product) {
+                            return $product->pivot->price * $product->pivot->quantity;
+                        });
+                        $shippingAmount = (int) ($order->shipping_amount ?? 0);
+                    @endphp
+                    <div class="mb-2"><strong>جمع کالاها:</strong> {{ number_format($itemsTotal) }} تومان</div>
+                    <div class="mb-2"><strong>هزینه ارسال:</strong> {{ $shippingAmount > 0 ? number_format($shippingAmount) . ' تومان' : 'رایگان' }}</div>
+                    <div class="mb-2"><strong>مبلغ سفارش:</strong> {{ number_format($totalAmount) }} تومان</div>
                     <div class="mb-2"><strong>صاحب حساب:</strong> {{ $bankAccount->account_holder }}</div>
                     <div class="mb-2"><strong>شماره کارت:</strong> {{ $bankAccount->card_number }}</div>
                     <div><strong>شماره شبا:</strong> {{ $bankAccount->sheba }}</div>
