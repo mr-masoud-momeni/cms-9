@@ -14,9 +14,11 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $shop = Shop::current();
+
+        $paymentMethod = $request->query('payment_method');
 
         $orders = Order::with([
             'buyer',
@@ -24,11 +26,17 @@ class OrderController extends Controller
             'products',
         ])
             ->where('shop_id', $shop->id)
+            ->when($paymentMethod, function ($query) use ($paymentMethod) {
+                $query->whereHas('payment', function ($paymentQuery) use ($paymentMethod) {
+                    $paymentQuery->where('method', $paymentMethod);
+                });
+            })
             ->latest()
             ->get();
 
-        return view('Customer.Orders.index', compact('orders'));
+        return view('Customer.Orders.index', compact('orders', 'paymentMethod'));
     }
+
     /**
      * Show the form for creating a new resource.
      *
