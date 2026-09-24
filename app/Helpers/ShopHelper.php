@@ -1,9 +1,9 @@
 <?php
-// app/Helpers/ShopHelper.php
 
 namespace App\Helpers;
 
 use App\Models\Shop;
+use Illuminate\Support\Facades\Cache;
 
 class ShopHelper
 {
@@ -14,32 +14,15 @@ class ShopHelper
         }
 
         $host = request()->getHost();
-        $context = session('current_shop');
+        $cacheKey = 'shop:domain:' . $host;
 
-        if (!$context || ($context['domain'] ?? null) !== $host || !array_key_exists('logo', $context) || !array_key_exists('description', $context)) {
-            $shop = Shop::where('domain', $host)->first();
+        $shop = Cache::rememberForever($cacheKey, function () use ($host) {
+            return Shop::where('domain', $host)->first();
+        });
 
-            if (!$shop) {
-                abort(404);
-            }
-
-            $context = [
-                'id' => $shop->id,
-                'user_id' => $shop->user_id,
-                'name' => $shop->name,
-                'logo' => $shop->logo,
-                'description' => $shop->description,
-                'domain' => $shop->domain,
-                'slug' => $shop->slug,
-                'buyer_login_required' => $shop->buyer_login_required,
-            ];
-
-            session()->put('current_shop', $context);
+        if (!$shop) {
+            abort(404);
         }
-
-        $shop = new Shop($context);
-        $shop->exists = true;
-        $shop->setRawAttributes($context);
 
         request()->attributes->set('current_shop', $shop);
 
@@ -49,5 +32,12 @@ class ShopHelper
     public static function getShopId()
     {
         return self::getShop()?->id;
+    }
+
+    public static function forgetShopCache(?string $domain = null): void
+    {
+        $domain ??= request()->getHost();
+
+        Cache::forget('shop:domain:' . $domain);
     }
 }
