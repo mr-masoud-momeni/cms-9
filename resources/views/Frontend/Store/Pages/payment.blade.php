@@ -33,6 +33,16 @@
 
             <div class="store-payment-amount">
 
+                @php
+                    $itemsTotal = $order->products->sum(function ($product) {
+                        return $product->pivot->price * $product->pivot->quantity;
+                    });
+                    $shippingAmount = (int) ($order->shipping_amount ?? 0);
+                @endphp
+
+                <div>جمع کالاها: {{ number_format($itemsTotal) }} تومان</div>
+                <div>هزینه ارسال: {{ $shippingAmount > 0 ? number_format($shippingAmount) . ' تومان' : 'رایگان' }}</div>
+
                 <span>مبلغ قابل پرداخت</span>
 
                 <strong>
