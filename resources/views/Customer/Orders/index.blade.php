@@ -1,7 +1,7 @@
 @extends('Customer.layouts.Master')
 
 @php
-    use App\\Models\\Order;
+    use App\Models\Order;
 @endphp
 
 @section('content')
