@@ -12,6 +12,23 @@ class Shop extends Model
     use HasFactory;
     use Sluggable;
 
+    protected static function booted(): void
+    {
+        static::updating(function (Shop $shop) {
+            if ($shop->isDirty('domain')) {
+                ShopHelper::forgetShopCache($shop->getOriginal('domain'));
+            }
+        });
+
+        static::saved(function (Shop $shop) {
+            ShopHelper::forgetShopCache($shop->domain);
+        });
+
+        static::deleted(function (Shop $shop) {
+            ShopHelper::forgetShopCache($shop->domain);
+        });
+    }
+
     public function sluggable(): array
     {
         return [
