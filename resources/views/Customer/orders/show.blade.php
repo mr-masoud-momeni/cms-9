@@ -30,6 +30,19 @@
                     </p>
 
                     <p>
+                        <strong>مبلغ کالاها:</strong>
+                        {{ number_format($order->products->sum(function ($product) {
+                            return $product->pivot->price * $product->pivot->quantity;
+                        })) }}
+                        تومان
+                    </p>
+
+                    <p>
+                        <strong>هزینه ارسال:</strong>
+                        {{ ($order->shipping_amount ?? 0) > 0 ? number_format($order->shipping_amount) . ' تومان' : 'رایگان' }}
+                    </p>
+
+                    <p>
                         <strong>مبلغ نهایی:</strong>
                         {{ number_format($order->total ?? 0) }}
                         تومان
