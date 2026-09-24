@@ -8,7 +8,7 @@ use App\Models\Order;
 use App\Models\ShopBaleConnection;
 use App\Models\ShopBaleConnectionToken;
 use App\Services\BaleService;
-use App\Services\OrderReservationService;
+use App\Services\PaymentConfirmationService;
 use App\Services\CustomerOrderLinkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -137,31 +137,13 @@ class BaleWebhookController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-            DB::transaction(function () use ($payment, $action) {
-                $payment = Payment::lockForUpdate()->find($payment->id);
+            $confirmationService = app(PaymentConfirmationService::class);
 
-                if (!$payment || $payment->status !== 'waiting_confirmation') {
-                    return;
-                }
-
-                if ($action === 'approve') {
-                    app(OrderReservationService::class)->commitPayment($payment);
-
-                    if ($payment->order) {
-                        $payment->order->update([
-                            'total' => $payment->amount,
-                        ]);
-                    }
-                } else {
-                    $payment->update(['status' => 'rejected']);
-
-                    if ($payment->order) {
-                        $payment->order->update([
-                            'status' => Order::STATUS_CANCELLED,
-                        ]);
-                    }
-                }
-            });
+            if ($action === 'approve') {
+                $confirmationService->approve($payment);
+            } else {
+                $confirmationService->reject($payment);
+            }
 
             $payment->refresh()->load([
                 'order.buyer',
