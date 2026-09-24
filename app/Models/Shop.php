@@ -11,12 +11,6 @@ class Shop extends Model
     use HasFactory;
     use Sluggable;
 
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
-     */
-
     public function sluggable(): array
     {
         return [
@@ -25,6 +19,7 @@ class Shop extends Model
             ]
         ];
     }
+
     protected $fillable =[
         'user_id',
         'name',
@@ -32,40 +27,48 @@ class Shop extends Model
         'slug',
         'logo',
         'description',
+        'shipping_cost',
     ];
 
     public function getRoutekeyName(){
         return 'slug';
     }
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
     public function product(){
         return $this->hasMany(product::class);
     }
+
     public function articles()
     {
         return $this->hasMany(Article::class);
     }
+
     public function buyers()
     {
         return $this->belongsToMany(buyer::class)->withPivot('email', 'phone', 'email_verification_token', 'email_verified_at')->withTimestamps();
     }
+
     public static function current()
     {
-        $host = request()->getHost(); // مثلاً: shop.example.com
+        $host = request()->getHost();
         return self::where('domain', $host)->first();
     }
-    // سفارش‌هایی که در این فروشگاه ثبت شده
+
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
+
     public function gateways()
     {
         return $this->hasMany(Gateway::class);
     }
+
     public function baleConnections()
     {
         return $this->hasMany(ShopBaleConnection::class);
@@ -75,6 +78,7 @@ class Shop extends Model
     {
         return $this->hasMany(ShopBaleConnectionToken::class);
     }
+
     public function bankAccount()
     {
         return $this->hasOne(ShopBankAccount::class);
