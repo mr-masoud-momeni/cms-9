@@ -185,6 +185,7 @@ class BaleWebhookController extends Controller
                     . "مشتری گرامی {$buyerName}،\n"
                     . "پرداخت سفارش #{$order?->id} با موفقیت تأیید شد.\n"
                     . "مبلغ: " . number_format((float) $payment->amount) . " تومان\n"
+                    . "هزینه ارسال: " . (($order?->shipping_amount ?? 0) > 0 ? number_format((float) $order->shipping_amount) . " تومان" : "رایگان") . "\n"
                     . ($orderUrl ? "مشاهده جزئیات سفارش:\n{$orderUrl}" : '');
 
                 $keyboard = [];
