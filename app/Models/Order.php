@@ -26,7 +26,6 @@ class Order extends Model
         'paid_at' => 'datetime',
         'reserved_at' => 'datetime',
         'reservation_expires_at' => 'datetime',
-        'bale_notification_sent' => 'boolean',
     ];
 
     public function isReservationExpired(): bool
@@ -61,7 +60,6 @@ class Order extends Model
         'reserved_at',
         'reservation_expires_at',
         'tracking_code',
-        'bale_notification_sent',
         'receiver_name',
         'receiver_phone',
         'receiver_province',
