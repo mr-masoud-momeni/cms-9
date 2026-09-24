@@ -4,8 +4,9 @@ namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
-use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Services\PaymentConfirmationService;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -66,9 +67,55 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        // لود کردن روابط خریدار، پرداخت و محصولات
-        $order->load(['buyer', 'payment', 'products']);
+        $shop = Shop::current();
+
+        $order = Order::where('shop_id', $shop->id)
+            ->with(['buyer', 'payment.receipt', 'products'])
+            ->findOrFail($order->id);
+
         return view('Customer.orders.show', compact('order'));
+    }
+
+    public function approvePayment(Order $order)
+    {
+        $shop = Shop::current();
+
+        $order = Order::where('shop_id', $shop->id)
+            ->with('payment')
+            ->findOrFail($order->id);
+
+        if (!$order->payment || !$order->payment->isCardToCard()) {
+            return back()->withErrors('پرداخت کارت‌به‌کارت برای این سفارش پیدا نشد.');
+        }
+
+        try {
+            app(PaymentConfirmationService::class)->approve($order->payment);
+        } catch (\Throwable $e) {
+            return back()->withErrors($e->getMessage());
+        }
+
+        return back()->with('success', 'پرداخت کارت‌به‌کارت تأیید شد.');
+    }
+
+    public function rejectPayment(Order $order)
+    {
+        $shop = Shop::current();
+
+        $order = Order::where('shop_id', $shop->id)
+            ->with('payment')
+            ->findOrFail($order->id);
+
+        if (!$order->payment || !$order->payment->isCardToCard()) {
+            return back()->withErrors('پرداخت کارت‌به‌کارت برای این سفارش پیدا نشد.');
+        }
+
+        try {
+            app(PaymentConfirmationService::class)->reject($order->payment);
+        } catch (\Throwable $e) {
+            return back()->withErrors($e->getMessage());
+        }
+
+        return back()->with('success', 'پرداخت کارت‌به‌کارت رد شد.');
     }
 
     /**
@@ -111,6 +158,11 @@ class OrderController extends Controller
             $data['tracking_code'] = $request->tracking_code;
             $data['shipped_at'] = now();
         }
+
+        $shop = Shop::current();
+
+        $order = Order::where('shop_id', $shop->id)
+            ->findOrFail($order->id);
 
         $order->update($data);
 
