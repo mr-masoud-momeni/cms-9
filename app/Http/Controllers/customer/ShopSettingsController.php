@@ -4,6 +4,7 @@ namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
 use App\Services\ShopLogoService;
+use App\Helpers\ShopHelper;
 use Illuminate\Http\Request;
 
 class ShopSettingsController extends Controller
@@ -40,6 +41,7 @@ class ShopSettingsController extends Controller
         $shop->description = $request->description;
         $shop->shipping_cost = $request->shipping_cost;
         $shop->save();
+        ShopHelper::forgetShopCache($shop->domain);
 
         if ($request->file('logo') && $oldLogo) {
             app(ShopLogoService::class)->delete($oldLogo);
