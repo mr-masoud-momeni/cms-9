@@ -26,9 +26,26 @@
                         @endforeach
                     </div>
 
-                    <div class="d-flex justify-content-between fw-bold fs-5 border-top pt-3">
-                        <span>مبلغ کل</span>
-                        <span>{{ number_format((float) $trackedOrder->total) }} تومان</span>
+                    @php
+                        $itemsTotal = $trackedOrder->products->sum(function ($product) {
+                            return $product->pivot->price * $product->pivot->quantity;
+                        });
+                        $shippingAmount = (int) ($trackedOrder->shipping_amount ?? 0);
+                    @endphp
+
+                    <div class="border-top pt-3">
+                        <div class="d-flex justify-content-between py-1">
+                            <span>جمع کالاها</span>
+                            <span>{{ number_format($itemsTotal) }} تومان</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-1">
+                            <span>هزینه ارسال</span>
+                            <span>{{ $shippingAmount > 0 ? number_format($shippingAmount) . ' تومان' : 'رایگان' }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold fs-5 pt-2">
+                            <span>مبلغ کل</span>
+                            <span>{{ number_format((float) $trackedOrder->total) }} تومان</span>
+                        </div>
                     </div>
 
                     @if($trackedOrder->receiver_name || $trackedOrder->receiver_address)
