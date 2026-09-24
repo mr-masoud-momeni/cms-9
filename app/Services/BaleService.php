@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 class BaleService
@@ -15,14 +16,47 @@ class BaleService
             throw new RuntimeException('BALE_BOT_TOKEN تنظیم نشده است.');
         }
 
-        $response = Http::timeout(10)
-            ->post("https://tapi.bale.ai/bot{$token}/{$method}", $payload);
+        $url = "https://tapi.bale.ai/bot{$token}/{$method}";
 
-        if (!$response->successful() || !$response->json('ok')) {
+        try {
+            $response = Http::timeout(10)
+                ->retry(
+                    3,
+                    500,
+                    function ($exception, $request) {
+                        return $exception instanceof \Throwable;
+                    },
+                    throw: false
+                )
+                ->post($url, $payload);
+        } catch (\Throwable $e) {
+            Log::error('Bale API request failed', [
+                'method' => $method,
+                'error' => $e->getMessage(),
+            ]);
+
+            throw $e;
+        }
+
+        $body = $response->body();
+        $ok = $response->json('ok');
+
+        if (!$response->successful() || !$ok) {
+            Log::error('Bale API returned an error', [
+                'method' => $method,
+                'status' => $response->status(),
+                'response' => $body,
+            ]);
+
             throw new RuntimeException(
-                'Bale API error: ' . $response->body()
+                "Bale API error [{$method}] HTTP {$response->status()}: {$body}"
             );
         }
+
+        Log::info('Bale API request succeeded', [
+            'method' => $method,
+            'status' => $response->status(),
+        ]);
 
         return $response->json();
     }
@@ -70,6 +104,14 @@ class BaleService
 
         try {
             $response = Http::timeout(20)
+                ->retry(
+                    3,
+                    750,
+                    function ($exception, $request) {
+                        return $exception instanceof \Throwable;
+                    },
+                    throw: false
+                )
                 ->attach('photo', $handle, basename($photoPath))
                 ->post("https://tapi.bale.ai/bot{$token}/sendPhoto", $payload);
         } finally {
@@ -78,11 +120,22 @@ class BaleService
             }
         }
 
+        $body = $response->body();
+
         if (!$response->successful() || !$response->json('ok')) {
+            Log::error('Bale sendPhoto returned an error', [
+                'status' => $response->status(),
+                'response' => $body,
+            ]);
+
             throw new RuntimeException(
-                'Bale API error: ' . $response->body()
+                "Bale API error [sendPhoto] HTTP {$response->status()}: {$body}"
             );
         }
+
+        Log::info('Bale sendPhoto succeeded', [
+            'status' => $response->status(),
+        ]);
 
         return $response->json();
     }
