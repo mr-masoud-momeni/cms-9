@@ -49,5 +49,6 @@ class Kernel extends HttpKernel
         'role.buyer' => \App\Http\Middleware\BuyerRole::class,
         'platform.domain' => \App\Http\Middleware\PlatformDomainOnly::class,
         'check.shop.buyer' => \App\Http\Middleware\CheckBuyerShopContext::class,
+        'shop.context' => \App\Http\Middleware\ResolveShopContext::class,
     ];
 }
