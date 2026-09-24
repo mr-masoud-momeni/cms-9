@@ -216,9 +216,44 @@ class BaleWebhookController extends Controller
                 $keyboard = [];
             }
 
-            $bale->answerCallbackQuery($callbackId, $callbackText);
-            $bale->editMessageReplyMarkup($chatId, (int) $message['message_id'], $keyboard);
-            $bale->sendMessage($chatId, $messageText);
+            // A successful callback acknowledgement must not depend on the
+            // follow-up notification calls. Each outbound request is isolated so
+            // one Bale API failure cannot prevent the other notification.
+            try {
+                $bale->answerCallbackQuery($callbackId, $callbackText);
+            } catch (\Throwable $e) {
+                Log::error('Bale callback acknowledgement failed', [
+                    'callback_id' => $callbackId,
+                    'payment_id' => $payment->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            try {
+                $bale->editMessageReplyMarkup(
+                    $chatId,
+                    (int) ($message['message_id'] ?? 0),
+                    $keyboard
+                );
+            } catch (\Throwable $e) {
+                Log::error('Bale payment message update failed', [
+                    'chat_id' => $chatId,
+                    'message_id' => $message['message_id'] ?? null,
+                    'payment_id' => $payment->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            try {
+                $bale->sendMessage($chatId, $messageText);
+            } catch (\Throwable $e) {
+                Log::error('Bale payment notification failed', [
+                    'chat_id' => $chatId,
+                    'payment_id' => $payment->id,
+                    'action' => $action,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         } catch (\Throwable $e) {
             Log::error('Bale payment callback failed', [
                 'callback' => $callback,
