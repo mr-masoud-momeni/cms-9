@@ -145,20 +145,11 @@ class OrderController extends Controller
                 Order::STATUS_COMPLETED,
                 Order::STATUS_CANCELLED,
             ]),
-            'tracking_code' => $request->status === 'shipped'
-                ? 'required|string|max:255'
-                : 'nullable',
         ]);
 
         $data = [
             'status' => $request->status,
         ];
-
-        if ($request->status === Order::STATUS_SHIPPED) {
-            $data['tracking_code'] = $request->tracking_code;
-            $data['shipped_at'] = now();
-        }
-
         $shop = Shop::current();
 
         $order = Order::where('shop_id', $shop->id)
@@ -175,6 +166,24 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function updateTrackingCode(Request $request, Order $order)
+    {
+        $request->validate([
+            'tracking_code' => 'required|string|max:255',
+        ]);
+
+        $shop = Shop::current();
+
+        $order = Order::where('shop_id', $shop->id)
+            ->findOrFail($order->id);
+
+        $order->update([
+            'tracking_code' => $request->tracking_code,
+        ]);
+
+        return back()->with('success', 'کد رهگیری ثبت شد.');
+    }
+
     public function destroy($id)
     {
         //
