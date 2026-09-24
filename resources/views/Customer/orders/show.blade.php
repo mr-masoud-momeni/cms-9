@@ -75,6 +75,18 @@
                                 انجام شده
                             </span>
 
+                        @elseif($order->status === 'reserved')
+
+                            <span class="label label-warning">
+                                رزرو شده
+                            </span>
+
+                        @elseif($order->status === 'cancelled')
+
+                            <span class="label label-danger">
+                                لغو شده
+                            </span>
+
                         @else
 
                             <span class="label label-default">
@@ -98,6 +110,84 @@
 
                 </div>
 
+
+                {{-- پرداخت --}}
+                @if($order->payment)
+                    <div class="mb-4">
+                        <h4>اطلاعات پرداخت</h4>
+
+                        <p>
+                            <strong>روش پرداخت:</strong>
+                            {{ $order->payment->isCardToCard() ? 'کارت‌به‌کارت' : 'آنلاین' }}
+                        </p>
+
+                        <p>
+                            <strong>وضعیت پرداخت:</strong>
+                            @if($order->payment->status === 'waiting_confirmation')
+                                <span class="label label-warning">در انتظار تأیید</span>
+                            @elseif($order->payment->status === 'paid')
+                                <span class="label label-success">تأیید شده</span>
+                            @elseif($order->payment->status === 'rejected')
+                                <span class="label label-danger">رد شده</span>
+                            @else
+                                <span class="label label-default">{{ $order->payment->status }}</span>
+                            @endif
+                        </p>
+
+                        <p>
+                            <strong>مبلغ پرداخت:</strong>
+                            {{ number_format($order->payment->amount ?? 0) }} تومان
+                        </p>
+
+                        @if($order->payment->isCardToCard() && $order->payment->receipt)
+                            <div style="margin-top: 20px;">
+                                <strong>رسید پرداخت:</strong>
+
+                                <div style="margin-top: 10px;">
+                                    <a href="{{ asset($order->payment->receipt->image) }}" target="_blank">
+                                        <img
+                                            src="{{ asset($order->payment->receipt->image) }}"
+                                            alt="رسید پرداخت"
+                                            style="max-width: 420px; width: 100%; height: auto; border: 1px solid #ddd; padding: 4px;"
+                                        >
+                                    </a>
+                                </div>
+
+                                @if($order->payment->receipt->tracking_code)
+                                    <p style="margin-top: 10px;">
+                                        <strong>کد پیگیری واریز:</strong>
+                                        {{ $order->payment->receipt->tracking_code }}
+                                    </p>
+                                @endif
+
+                                @if($order->payment->receipt->description)
+                                    <p>
+                                        <strong>توضیحات مشتری:</strong>
+                                        {{ $order->payment->receipt->description }}
+                                    </p>
+                                @endif
+                            </div>
+                        @endif
+
+                        @if($order->payment->isCardToCard() && $order->payment->status === 'waiting_confirmation')
+                            <div style="margin-top: 20px;">
+                                <form method="POST" action="{{ route('shop.orders.payment.approve', $order) }}" style="display:inline-block; margin-left:8px;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">
+                                        تأیید پرداخت
+                                    </button>
+                                </form>
+
+                                <form method="POST" action="{{ route('shop.orders.payment.reject', $order) }}" style="display:inline-block;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">
+                                        رد پرداخت
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    </div>
+                @endif
 
                 {{-- اطلاعات گیرنده --}}
                 <div class="mb-4">
