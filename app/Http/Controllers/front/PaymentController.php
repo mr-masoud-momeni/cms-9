@@ -154,7 +154,7 @@ class PaymentController extends Controller
 
         $totalAmount = $this->orderAmount($order);
 
-        return view('Frontend.Shop.Pay.card-to-card', [
+        return view('Frontend.Store.Pages.card-to-card', [
             'checkoutOrder' => $order,
             'totalAmount' => $totalAmount,
             'bankAccount' => $bankAccount,
@@ -319,7 +319,7 @@ class PaymentController extends Controller
 
         $reservationMessage = $order->reservationMessage(true);
 
-        return view('Frontend.Shop.Pay.card-to-card-success', compact('payment', 'order', 'reservationMessage'));
+        return view('Frontend.Store.Pages.card-to-card-success', compact('payment', 'order', 'reservationMessage'));
     }
 
     public function callback(Request $request)
