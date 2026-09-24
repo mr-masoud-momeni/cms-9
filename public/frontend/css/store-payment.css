@@ -371,3 +371,65 @@
         font-size: 10px;
     }
 }
+
+/* =========================================================
+   Card-to-card success
+   ========================================================= */
+
+.store-payment-success {
+    text-align: center;
+    padding: 10px 0 5px;
+}
+
+.store-payment-success .store-payment-icon {
+    margin: 0 auto 18px;
+    width: 54px;
+    height: 54px;
+    background: #f3f3f3;
+}
+
+.store-payment-success .store-payment-icon i {
+    font-size: 25px;
+}
+
+.store-payment-success h1 {
+    margin: 0 0 8px;
+    font-size: 19px;
+    font-weight: 700;
+    color: #222;
+}
+
+.store-payment-success > p {
+    margin: 0 auto 22px;
+    max-width: 430px;
+    font-size: 13px;
+    line-height: 2;
+    color: #777;
+}
+
+.store-payment-success .store-payment-order {
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    background: #f7f7f7;
+    color: #555;
+    font-size: 13px;
+}
+
+.store-payment-success .store-payment-order strong {
+    color: #222;
+}
+
+.store-payment-success .btn {
+    min-width: 180px;
+}
+
+@media (max-width: 600px) {
+    .store-payment-success h1 {
+        font-size: 17px;
+    }
+
+    .store-payment-success > p {
+        font-size: 12px;
+    }
+}
