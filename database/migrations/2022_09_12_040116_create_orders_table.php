@@ -25,6 +25,9 @@ class CreateOrdersTable extends Migration
             $table->text('receiver_address')->nullable();
             $table->string('receiver_postal_code', 20)->nullable();
             $table->timestamps();
+
+            $table->index('shop_id');
+
             $table->foreign('buyer_id')->references('id')->on('buyers')->onDelete('cascade');
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
         });
