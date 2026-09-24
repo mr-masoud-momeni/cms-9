@@ -11,8 +11,7 @@ class IndexController extends Controller
 {
     public function shop()
     {
-        $shop = ShopHelper::getShop();
-        $shopId = $shop?->id;
+        $shopId = ShopHelper::getShopId();
 
         $products = Product::where('shop_id', $shopId)
             ->latest()
@@ -29,7 +28,6 @@ class IndexController extends Controller
         return view('Frontend.Store.index', compact(
             'products',
             'articles',
-            'shop',
             'productCount',
             'postCount'
         ));
@@ -41,6 +39,6 @@ class IndexController extends Controller
 
         abort_unless($product->shop_id === $shop->id, 404);
 
-        return view('Frontend.Store.show', compact('product', 'shop'));
+        return view('Frontend.Store.show', compact('product'));
     }
 }
