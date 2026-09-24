@@ -99,7 +99,9 @@ class PaymentController extends Controller
             return back()->withErrors('سبد خرید شما خالی است.');
         }
 
-        $order->update($validated);
+        $order->update(array_merge($validated, [
+            'shipping_amount' => (int) ($shop->shipping_cost ?? 0),
+        ]));
 
         $reservation = app(OrderReservationService::class)->reserve($order);
         if (!$reservation['success']) {
@@ -514,8 +516,10 @@ class PaymentController extends Controller
 
     private function orderAmount(Order $order)
     {
-        return $order->products->sum(function ($product) {
+        $itemsTotal = $order->products->sum(function ($product) {
             return $product->pivot->price * $product->pivot->quantity;
         });
+
+        return $itemsTotal + (int) ($order->shipping_amount ?? 0);
     }
 }
