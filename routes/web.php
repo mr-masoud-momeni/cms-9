@@ -99,6 +99,7 @@ Route::group(
         Route::resource('/product', 'ProductController');
         Route::post('/orders/{order}/payment/approve', 'OrderController@approvePayment')->name('orders.payment.approve');
         Route::post('/orders/{order}/payment/reject', 'OrderController@rejectPayment')->name('orders.payment.reject');
+        Route::post('/orders/{order}/tracking', 'OrderController@updateTrackingCode')->name('orders.tracking.update');
         Route::resource('/orders', 'OrderController');
         Route::resource('/article', 'ArticleController');
         Route::post('/article/upload-image', 'ArticleController@uploadImageInText')->name('article.upload-image');
