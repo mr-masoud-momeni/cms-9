@@ -156,6 +156,7 @@ class BaleWebhookController extends Controller
             if ($action === 'approve') {
                 $order = $payment->order;
                 $shop = $order?->shop;
+                $buyerName = $order?->buyer?->name ?? $order?->receiver_name ?? '';
                 $buyerPhone = $order?->buyer?->phone ?? $order?->receiver_phone ?? '';
 
                 $smsText = $shop
