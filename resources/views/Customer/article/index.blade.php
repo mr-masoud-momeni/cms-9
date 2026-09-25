@@ -12,7 +12,10 @@
             @endif
 
             <div class="panel panel-default">
-                <div class="panel-heading">لیست مقالات</div>
+                <div class="panel-heading clearfix">
+                    <span>لیست مقالات</span>
+                    <a href="{{ route('shop.article.create') }}" class="btn btn-primary btn-sm pull-left">ایجاد مقاله</a>
+                </div>
                 <div class="panel-body">
                     <table class="table table-striped">
                         <thead>
