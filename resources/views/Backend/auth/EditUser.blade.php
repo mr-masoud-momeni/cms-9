@@ -22,7 +22,7 @@
 
                                 <div class="form-group">
                                     <label for="phone">شماره همراه</label>
-                                    <input type="text" name="phone" class="form-control" id="phone" value="{{ $User->phone }}" required dir="ltr">
+                                    <input type="text" name="phone" class="form-control" id="phone" value="{{ $User->phone }}" dir="ltr">
                                 </div>
 
                                 <div class="form-group">
