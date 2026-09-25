@@ -93,7 +93,7 @@ Route::group(
         'as' => 'shop.',
     ]
     , function () {
-        Route::get('/dashboard', function () {return view('Customer.layouts.Master');})->name('dashboard');
+        Route::get('/dashboard', function () { return view('Customer.dashboard'); })->name('dashboard');
         Route::get('/settings', [ShopSettingsController::class, 'edit'])->name('settings.edit');
         Route::post('/settings', [ShopSettingsController::class, 'update'])->name('settings.update');
         Route::resource('/product', 'ProductController');
