@@ -13,7 +13,10 @@
                  </div>
             @endif
             <div class="panel panel-default">
-                <div class="panel-heading">لیست محصولات</div>
+                <div class="panel-heading clearfix">
+                    <span>لیست محصولات</span>
+                    <a href="{{ route('shop.product.create') }}" class="btn btn-primary btn-sm pull-left">ایجاد محصول</a>
+                </div>
                 <div class="panel-body">
                     <table class="table table-striped">
                         <thead>
