@@ -9,20 +9,24 @@ class CheckShopContext
 public function handle($request, Closure $next){
 
     if (!Auth::guard('shop_admin')->check()) {
-        return redirect()->route('shop.login');
+        return redirect('/');
     }
+
     $context = session('shop_context');
+
     if (!$context) {
         Auth::guard('shop_admin')->logout();
-        return redirect()->route('shop.login');
+        return redirect('/');
     }
+
     // مقایسه دامنه یا path فعلی با context ذخیره‌شده
     if ($request->getHost() !== $context['domain']) {
         Auth::guard('shop_admin')->logout();
         session()->forget('shop_context');
-        return redirect()->route('shop.login')
-        ->withErrors(['email' => 'دسترسی به این دامنه مجاز نیست.']);
+        return redirect('/')
+            ->withErrors(['email' => 'دسترسی به این دامنه مجاز نیست.']);
     }
+
     return $next($request);
 }
 }
