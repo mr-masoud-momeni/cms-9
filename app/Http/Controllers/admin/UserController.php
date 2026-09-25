@@ -191,7 +191,7 @@ class UserController extends Controller
         $user->phone = $request->phone;
         if($request->email && $request->email !== $user->email){
             $request->validate([
-                'email' => ['string', 'email', 'max:255', 'unique:users'],
+                'email' => ['string', 'email', 'max:255', 'unique:users,email,' . $id],
             ]);
             $user->email= $request->email;
             $user->email_verified_at = NULL;
@@ -235,7 +235,7 @@ class UserController extends Controller
             $logo = $request->file('logo') ? app(ShopLogoService::class)->upload($request->file('logo')) : null;
             $user->shop()->create([
                 'name' => $request->nameStore,
-                'domain' => $request->domain,
+                'domain' => $this->normalizeDomain($request->domain),
                 'slug' => $request->nameStoreEn,
                 'logo' => $logo,
                 'description' => $request->description,
