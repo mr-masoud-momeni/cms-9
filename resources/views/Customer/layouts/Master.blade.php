@@ -12,9 +12,9 @@
             </form>
         </div>
         <div class="logo-cms">
-            <a href="#">
-            Start Bootstrap
-        </a>
+            <a href="{{ route('shop.dashboard') }}">
+                داشبورد فروشگاه
+            </a>
         </div>
         <div style="float: right;">
             <a href="#menu-toggle" id="menu-toggle" style="color: #fff;">
