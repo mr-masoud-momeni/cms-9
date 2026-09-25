@@ -106,3 +106,10 @@ EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
 -- articles already defines an explicit shop_id index in its Laravel migration.
+
+
+-- 2026-09-25
+-- Add seller phone number to users.
+ALTER TABLE users
+    ADD COLUMN phone VARCHAR(20) NULL AFTER email,
+    ADD UNIQUE KEY users_phone_unique (phone);
