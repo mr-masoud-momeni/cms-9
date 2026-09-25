@@ -1,6 +1,11 @@
 <div id="sidebar-wrapper">
     <ul class="sidebar-nav">
         <li>
+            <a href="{{ route('shop.dashboard') }}" class="{{ Route::currentRouteName() == 'shop.dashboard' ? 'active-sidebar' : '' }}">
+                داشبورد
+            </a>
+        </li>
+        <li>
             <a href="{{ URL::to('/') }}" target="_blank">نمایش سایت</a>
         </li>
 
