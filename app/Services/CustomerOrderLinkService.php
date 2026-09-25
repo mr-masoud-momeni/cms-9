@@ -27,6 +27,21 @@ class CustomerOrderLinkService
         return 'sms:' . ($phone ?: '') . '?body=' . rawurlencode($message);
     }
 
+    public function makePaymentConfirmationMessage(Shop $shop, Order $order, float $amount): string
+    {
+        $buyerName = $order->buyer?->name ?? $order->receiver_name ?? 'مشتری';
+        $orderUrl = $this->makeOrderUrl($shop, $order);
+
+        return ($shop->name ?? 'فروشگاه') . "\n"
+            . "مشتری گرامی {$buyerName}،\n"
+            . "پرداخت سفارش #{$order->id} با موفقیت تأیید شد.\n"
+            . "مبلغ: " . number_format($amount) . " تومان\n"
+            . "هزینه ارسال: " . (($order->shipping_amount ?? 0) > 0
+                ? number_format((float) $order->shipping_amount) . " تومان"
+                : "رایگان") . "\n"
+            . "مشاهده جزئیات سفارش:\n{$orderUrl}";
+    }
+
     public function makeToken(Shop $shop, Order $order, int $expiresAt): string
     {
         return hash_hmac(
