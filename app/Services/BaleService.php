@@ -25,8 +25,7 @@ class BaleService
                     500,
                     function ($exception, $request) {
                         return $exception instanceof \Throwable;
-                    },
-                    throw: false
+                    }
                 )
                 ->post($url, $payload);
         } catch (\Throwable $e) {
@@ -109,8 +108,7 @@ class BaleService
                     750,
                     function ($exception, $request) {
                         return $exception instanceof \Throwable;
-                    },
-                    throw: false
+                    }
                 )
                 ->attach('photo', $handle, basename($photoPath))
                 ->post("https://tapi.bale.ai/bot{$token}/sendPhoto", $payload);
