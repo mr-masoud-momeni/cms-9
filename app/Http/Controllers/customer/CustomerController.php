@@ -4,7 +4,7 @@ namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use Intervention\Image\Facades\Image;
+use App\Services\ImageUploadService;
 
 class CustomerController extends Controller
 {
@@ -15,29 +15,15 @@ class CustomerController extends Controller
             $url['thum'] = $url['images']['original'];
         } else {
             $year = Carbon::now()->year;
-            $imagePath = "/upload/images/{$year}/";
-            $publicPath = config('upload.public_path');
+            $imagePath = "upload/images/{$year}";
 
-            if (!is_dir($publicPath . $imagePath)) {
-                mkdir($publicPath . $imagePath, 0755, true);
-            }
+            $imageUrl = app(ImageUploadService::class)->storeWebp(
+                $file,
+                $imagePath,
+                'image'
+            );
 
-            $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $filename = preg_replace('/[^A-Za-z0-9_-]/', '-', $filename);
-            $filename = trim($filename, '-_') ?: 'image';
-            $filename .= '-' . uniqid() . '.webp';
-
-            $image = Image::make($file->getRealPath());
-
-            $image->resize(800, 800, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-
-            $image->encode('webp', 82);
-            $image->save($publicPath . $imagePath . $filename);
-
-            $imageUrl = $imagePath . $filename;
+            $imageUrl = '/' . ltrim($imageUrl, '/');
 
             $url['images']['original'] = $imageUrl;
             $url['thum'] = $imageUrl;
@@ -52,20 +38,15 @@ class CustomerController extends Controller
             return;
         }
 
-        $publicPath = config('upload.public_path');
-
         $paths = array_unique(array_filter([
             $images['original'] ?? null,
             $images['thum'] ?? null,
         ]));
 
-        foreach ($paths as $path) {
-            $relativePath = '/' . ltrim($path, '/');
-            $fullPath = $publicPath . $relativePath;
+        $imageService = app(ImageUploadService::class);
 
-            if (is_file($fullPath)) {
-                unlink($fullPath);
-            }
+        foreach ($paths as $path) {
+            $imageService->delete($path);
         }
     }
 }
