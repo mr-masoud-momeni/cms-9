@@ -24,9 +24,8 @@
 
                     <button type="button" class="btn btn-primary btn-sm" id="copyCredentials">کپی اطلاعات ورود</button>
 
-                    @php($credentialUser = \App\Models\User::where('email', $credentials['email'])->first())
-                    @if($credentialUser)
-                        <form method="post" action="{{ route('register.password.regenerate', $credentialUser->uuid) }}" style="display:inline-block;">
+                    @if(!empty($credentials['uuid']))
+                        <form method="post" action="{{ route('register.password.regenerate', $credentials['uuid']) }}" style="display:inline-block;">
                             @csrf
                             <button type="submit" class="btn btn-warning btn-sm"
                                     onclick="return confirm('با تولید رمز جدید، رمز فعلی فروشنده دیگر قابل استفاده نخواهد بود. ادامه می‌دهید؟');">
@@ -135,7 +134,7 @@
                                             <td>{{ $User->name }}</td>
                                             <td dir="ltr">{{ $User->phone ?? '—' }}</td>
                                             <td>
-                                                @if($User->shop && $User->domain)
+                                                @if($User->shop && $User->shop->domain)
                                                     <a href="{{ preg_match('#^https?://#i', $User->shop->domain) ? rtrim($User->shop->domain, '/') : 'https://' . rtrim($User->shop->domain, '/') }}/shop/{{ $User->path }}/login" target="_blank">ورود</a>
                                                 @else
                                                     —
