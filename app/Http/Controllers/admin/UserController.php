@@ -44,36 +44,101 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20', 'unique:users,phone'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'nameStore' => ['required', 'string', 'max:255'],
+            'domain' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ]);
 
+        $password = $this->generatePassword();
+
         $user = User::create([
             'name' => $request->name,
+            'phone' => $request->phone,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($password),
         ]);
-        if(isset($request['permission'])){
-            $user->attachPermissions($request['permission']);
+
+        if ($request->filled('permission')) {
+            $user->attachPermissions($request->permission);
         }
 
-        if(isset($request['Role'])){
-            $user->attachRoles($request['Role']);
+        if ($request->filled('Role')) {
+            $user->attachRoles($request->Role);
         }
-        if(isset($request['nameStore'])){
-            $logo = $request->file('logo') ? app(ShopLogoService::class)->upload($request->file('logo')) : null;
-            $user->shop()->create([
-               'name' => $request->nameStore,
-               'domain' => $request->domain,
-               'slug' => $request->nameStoreEn,
-               'logo' => $logo,
-               'description' => $request->description,
+
+        $logo = $request->file('logo')
+            ? app(ShopLogoService::class)->upload($request->file('logo'))
+            : null;
+
+        $domain = $this->normalizeDomain($request->domain);
+
+        $shop = $user->shop()->create([
+            'name' => $request->nameStore,
+            'domain' => $domain,
+            'slug' => $request->nameStoreEn,
+            'logo' => $logo,
+            'description' => $request->description,
+        ]);
+
+        return redirect()
+            ->route('register.index')
+            ->with('credentials', [
+                'user_name' => $user->name,
+                'phone' => $user->phone,
+                'email' => $user->email,
+                'shop_name' => $shop->name,
+                'login_url' => $this->buildLoginUrl($user),
+                'password' => $password,
             ]);
+    }
+
+    public function regeneratePassword($uuid)
+    {
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        abort_unless($user->shop, 404);
+
+        $password = $this->generatePassword();
+
+        $user->update([
+            'password' => Hash::make($password),
+        ]);
+
+        return redirect()
+            ->route('register.index')
+            ->with('credentials', [
+                'user_name' => $user->name,
+                'phone' => $user->phone,
+                'email' => $user->email,
+                'shop_name' => $user->shop->name,
+                'login_url' => $this->buildLoginUrl($user),
+                'password' => $password,
+            ])
+            ->with('password_regenerated', true);
+    }
+
+    private function generatePassword(): string
+    {
+        return bin2hex(random_bytes(8));
+    }
+
+    private function normalizeDomain(string $domain): string
+    {
+        return trim($domain, " /\\");
+    }
+
+    private function buildLoginUrl(User $user): string
+    {
+        $domain = $this->normalizeDomain($user->shop->domain);
+
+        if (!preg_match('#^https?://#i', $domain)) {
+            $domain = 'https://' . $domain;
         }
-        return back()->withInput();
+
+        return rtrim($domain, '/') . '/shop/' . $user->path . '/login';
     }
 
     /**
