@@ -179,7 +179,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20', 'unique:users,phone,' . $id],
+            'phone' => ['nullable', 'string', 'max:20', 'unique:users,phone,' . $id],
             'nameStore' => ['required', 'string', 'max:255'],
             'domain' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
