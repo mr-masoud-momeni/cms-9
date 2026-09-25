@@ -154,8 +154,11 @@ i{font-family:fontawesome !important;}
 
 
 @media(max-width:767px) {
-    /* Keep the seller sidebar closed by default on mobile. */
+    /* Keep the seller sidebar below the fixed top bar on mobile. */
     #sidebar-wrapper {
+        top: 50px;
+        margin-top: 0;
+
         width: 0 !important;
     }
 
