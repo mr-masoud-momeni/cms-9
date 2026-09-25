@@ -163,7 +163,7 @@
     <script>
         $(document).on('click', '#copyCredentials', function () {
             var box = $('#sellerCredentials');
-            var text = box.text().replace(/\\n+/g, '\\n').trim();
+            var text = box.text().trim();
 
             navigator.clipboard.writeText(text).then(function () {
                 $('#copyCredentials').text('کپی شد');
