@@ -114,6 +114,7 @@ class UserController extends Controller
                 'user_name' => $user->name,
                 'phone' => $user->phone,
                 'email' => $user->email,
+                'uuid' => $user->uuid,
                 'shop_name' => $user->shop->name,
                 'login_url' => $this->buildLoginUrl($user),
                 'password' => $password,
