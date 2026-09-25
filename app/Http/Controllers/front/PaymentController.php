@@ -12,6 +12,7 @@ use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\OrderReservationService;
+use App\Services\ImageUploadService;
 use App\Helpers\ShopHelper;
 use SoapClient;
 use Throwable;
@@ -278,22 +279,28 @@ class PaymentController extends Controller
             ]);
         }
 
-        $directory = public_path('uploads/payment-receipts');
-        if (!is_dir($directory)) {
-            mkdir($directory, 0755, true);
-        }
+        $receipt = PaymentReceipt::firstOrNew([
+            'payment_id' => $payment->id,
+        ]);
 
-        $filename = uniqid('receipt_', true) . '.' . $request->file('receipt')->extension();
-        $request->file('receipt')->move($directory, $filename);
+        $oldReceiptImage = $receipt->image;
 
-        PaymentReceipt::updateOrCreate(
-            ['payment_id' => $payment->id],
-            [
-                'image' => 'uploads/payment-receipts/' . $filename,
-                'tracking_code' => $validated['tracking_code'] ?? null,
-                'description' => $validated['description'] ?? null,
-            ]
+        $receiptImage = app(ImageUploadService::class)->storeWebp(
+            $request->file('receipt'),
+            'uploads/payment-receipts',
+            'receipt'
         );
+
+        $receipt->fill([
+            'image' => $receiptImage,
+            'tracking_code' => $validated['tracking_code'] ?? null,
+            'description' => $validated['description'] ?? null,
+        ]);
+        $receipt->save();
+
+        if ($oldReceiptImage && $oldReceiptImage !== $receiptImage) {
+            app(ImageUploadService::class)->delete($oldReceiptImage);
+        }
 
         $payment->update([
             'method' => 'card_to_card',
