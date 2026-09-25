@@ -156,19 +156,15 @@ class BaleWebhookController extends Controller
             if ($action === 'approve') {
                 $order = $payment->order;
                 $shop = $order?->shop;
-                $buyerName = $order?->buyer?->name ?? $order?->receiver_name ?? 'مشتری';
                 $buyerPhone = $order?->buyer?->phone ?? $order?->receiver_phone ?? '';
 
-                $orderUrl = $shop
-                    ? app(CustomerOrderLinkService::class)->makeOrderUrl($shop, $order)
-                    : null;
-
-                $smsText = ($shop?->name ?? 'فروشگاه') . "\n"
-                    . "مشتری گرامی {$buyerName}،\n"
-                    . "پرداخت سفارش #{$order?->id} با موفقیت تأیید شد.\n"
-                    . "مبلغ: " . number_format((float) $payment->amount) . " تومان\n"
-                    . "هزینه ارسال: " . (($order?->shipping_amount ?? 0) > 0 ? number_format((float) $order->shipping_amount) . " تومان" : "رایگان") . "\n"
-                    . ($orderUrl ? "مشاهده جزئیات سفارش:\n{$orderUrl}" : '');
+                $smsText = $shop
+                    ? app(CustomerOrderLinkService::class)->makePaymentConfirmationMessage(
+                        $shop,
+                        $order,
+                        (float) $payment->amount
+                    )
+                    : '';
 
                 $keyboard = [];
 
