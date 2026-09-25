@@ -14,6 +14,10 @@ class Shop extends Model
 
     protected static function booted(): void
     {
+        static::creating(function (Shop $shop) {
+            $shop->uuid = (string) \Illuminate\Support\Str::uuid();
+        });
+
         static::updating(function (Shop $shop) {
             if ($shop->isDirty('domain')) {
                 ShopHelper::forgetShopCache($shop->getOriginal('domain'));
