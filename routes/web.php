@@ -64,6 +64,7 @@ Route::group(
     , function () {
         Route::get('/dashboard', function () {return view('Backend.layouts.Master');})->name('admin.dashboard');
         Route::resource('/register' , 'UserController');
+   Route::post('/register/{uuid}/regenerate-password', 'UserController@regeneratePassword')->name('register.password.regenerate');
         Route::post('/category/create', 'CategoryController@save')->name('category.save');
         Route::patch('/category/edit', 'CategoryController@edit')->name('category.edit');
         Route::delete('/category/delete', 'CategoryController@delete')->name('category.delete');
