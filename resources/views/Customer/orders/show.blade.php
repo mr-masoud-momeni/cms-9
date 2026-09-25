@@ -355,6 +355,16 @@
                                     <th colspan="3">جمع اقلام</th>
                                     <th>{{ number_format($itemsTotal) }} تومان</th>
                                 </tr>
+                                <tr>
+                                    <th colspan="3">هزینه ارسال</th>
+                                    <th>
+                                        {{ ($order->shipping_amount ?? 0) > 0 ? number_format($order->shipping_amount) . ' تومان' : 'رایگان' }}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3">مبلغ نهایی سفارش</th>
+                                    <th>{{ number_format($order->total ?? 0) }} تومان</th>
+                                </tr>
                                 </tfoot>
                             @endif
                         </table>
