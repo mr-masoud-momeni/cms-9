@@ -89,6 +89,7 @@ class UserController extends Controller
                 'user_name' => $user->name,
                 'phone' => $user->phone,
                 'email' => $user->email,
+                'uuid' => $user->uuid,
                 'shop_name' => $shop->name,
                 'login_url' => $this->buildLoginUrl($user),
                 'password' => $password,
@@ -176,15 +177,18 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => ['string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20', 'unique:users,phone,' . $id],
             'nameStore' => ['required', 'string', 'max:255'],
+            'domain' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ]);
         $user = auth()->user();
         $user = $user->find($id);
         $user->name = $request->name;
-        if($request->email == !$user->email){
+        $user->phone = $request->phone;
+        if($request->email && $request->email !== $user->email){
             $request->validate([
                 'email' => ['string', 'email', 'max:255', 'unique:users'],
             ]);
@@ -217,7 +221,7 @@ class UserController extends Controller
             $newLogo = $request->file('logo') ? app(ShopLogoService::class)->upload($request->file('logo')) : $oldLogo;
             $shop->update([
                 'name' => $request->nameStore,
-                'domain' => $request->domain,
+                'domain' => $this->normalizeDomain($request->domain),
                 'slug' => $request->nameStoreEn,
                 'logo' => $newLogo,
                 'description' => $request->description,
