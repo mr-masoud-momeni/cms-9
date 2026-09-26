@@ -12,8 +12,9 @@
 }
 
 .quantity-control {
-    display: inline-flex;
+    display: flex;
     align-items: stretch;
+    width: 170px;
     height: 44px;
     direction: ltr;
     border: 1px solid #ddd;
@@ -23,8 +24,10 @@
 }
 
 .quantity-button {
+    flex: 0 0 44px;
     width: 44px;
     min-width: 44px;
+    padding: 0;
     border: 0;
     background: #f7f7f7;
     color: #333;
@@ -48,8 +51,9 @@
 }
 
 .quantity-control input[type="number"] {
-    width: 52px;
-    min-width: 52px;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
     padding: 0 4px;
     border: 0;
     border-right: 1px solid #ddd;
@@ -75,18 +79,27 @@
 }
 
 @media (max-width: 576px) {
+    .store-quantity,
+    .quantity-control,
+    .store-detail-form .store-button {
+        width: 100%;
+    }
+
     .quantity-control {
         height: 46px;
     }
 
     .quantity-button {
-        width: 46px;
-        min-width: 46px;
+        flex-basis: 48px;
+        width: 48px;
+        min-width: 48px;
     }
 
     .quantity-control input[type="number"] {
-        width: 56px;
-        min-width: 56px;
         font-size: 16px;
+    }
+
+    .store-detail-form .store-button {
+        display: block;
     }
 }
