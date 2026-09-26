@@ -42,17 +42,34 @@
                     <div class="store-quantity">
                         <label for="count_product">{{ $product->unit }}</label>
 
-                        <input
-                            id="count_product"
-                            type="number"
-                            name="count_product"
-                            value="1"
-                            min="1"
-                            max="{{ $product->available_stock }}"
-                            data-unit="{{ e($product->unit) }}"
-                            data-stock="{{ $product->available_stock }}"
-                            {{ $product->available_stock <= 0 ? "disabled" : "" }}
-                        >
+                        <div class="quantity-control" role="group" aria-label="تعداد">
+                            <button
+                                type="button"
+                                class="quantity-button quantity-decrease"
+                                aria-label="کاهش تعداد"
+                                {{ $product->available_stock <= 0 ? 'disabled' : '' }}
+                            >−</button>
+
+                            <input
+                                id="count_product"
+                                type="number"
+                                name="count_product"
+                                value="1"
+                                min="1"
+                                max="{{ $product->available_stock }}"
+                                inputmode="numeric"
+                                data-unit="{{ e($product->unit) }}"
+                                data-stock="{{ $product->available_stock }}"
+                                {{ $product->available_stock <= 0 ? 'disabled' : '' }}
+                            >
+
+                            <button
+                                type="button"
+                                class="quantity-button quantity-increase"
+                                aria-label="افزایش تعداد"
+                                {{ $product->available_stock <= 0 ? 'disabled' : '' }}
+                            >+</button>
+                        </div>
 
                         <small id="quantity-message" class="text-danger" style="display:none; margin-top:6px;"></small>
                     </div>
@@ -95,6 +112,25 @@
         }
 
         $quantity.on('input change', validateQuantity);
+
+        $('.quantity-decrease').on('click', function () {
+            const current = Number($quantity.val() || 1);
+
+            if (current > 1) {
+                $quantity.val(current - 1).trigger('change');
+            }
+        });
+
+        $('.quantity-increase').on('click', function () {
+            const current = Number($quantity.val() || 1);
+            const next = current + 1;
+
+            if (next <= stock) {
+                $quantity.val(next).trigger('change');
+            } else {
+                validateQuantity();
+            }
+        });
 
         $('.AddProduct').on('submit', function (event) {
             event.preventDefault();
