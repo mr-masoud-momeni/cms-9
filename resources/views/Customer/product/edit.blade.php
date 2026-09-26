@@ -49,7 +49,7 @@
                                     @endphp
                                     <select name="unit" id="unit" class="form-control" required>
                                         @foreach($units as $unit)
-                                            <option value="{{$unit}}" @selected($selectedUnit === $unit)>{{$unit}}</option>
+                                            <option value="{{$unit}}" {{ $selectedUnit === $unit ? "selected" : "" }}>{{$unit}}</option>
                                         @endforeach
                                     </select>
                                     <small class="text-muted">قیمت بر اساس هر واحد محاسبه می‌شود.</small>
