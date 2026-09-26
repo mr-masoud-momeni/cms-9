@@ -88,7 +88,7 @@ Route::prefix('shop/{path}')->group(function () {
 
 Route::group(
     [
-        'middleware'=>['auth:shop_admin' , 'verified', 'role:shop_owner' , 'check.shop'],
+        'middleware'=>['auth:shop_admin', 'role:shop_owner', 'check.shop'],
         'namespace'=> 'App\\Http\\Controllers\\customer',
         'prefix' => 'shop',
         'as' => 'shop.',
