@@ -1,0 +1,92 @@
+/* Product quantity control */
+.store-quantity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.store-quantity > label {
+    font-size: 13px;
+    color: #666;
+}
+
+.quantity-control {
+    display: inline-flex;
+    align-items: stretch;
+    height: 44px;
+    direction: ltr;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.quantity-button {
+    width: 44px;
+    min-width: 44px;
+    border: 0;
+    background: #f7f7f7;
+    color: #333;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.quantity-button:hover:not(:disabled) {
+    background: #eee;
+}
+
+.quantity-button:active:not(:disabled) {
+    background: #e5e5e5;
+}
+
+.quantity-button:disabled {
+    color: #bbb;
+    cursor: not-allowed;
+}
+
+.quantity-control input[type="number"] {
+    width: 52px;
+    min-width: 52px;
+    padding: 0 4px;
+    border: 0;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-radius: 0;
+    outline: 0;
+    background: #fff;
+    color: #222;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    -moz-appearance: textfield;
+}
+
+.quantity-control input[type="number"]::-webkit-inner-spin-button,
+.quantity-control input[type="number"]::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.quantity-control input[type="number"]:focus {
+    box-shadow: inset 0 0 0 1px #999;
+}
+
+@media (max-width: 576px) {
+    .quantity-control {
+        height: 46px;
+    }
+
+    .quantity-button {
+        width: 46px;
+        min-width: 46px;
+    }
+
+    .quantity-control input[type="number"] {
+        width: 56px;
+        min-width: 56px;
+        font-size: 16px;
+    }
+}
