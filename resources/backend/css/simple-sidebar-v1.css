@@ -151,12 +151,11 @@ i{font-family:fontawesome !important;}
     z-index: 2000;
 }
 
-
-
 @media(max-width:767px) {
-    /* Keep the sidebar background behind the fixed top bar. */
+    /* Mobile: sidebar overlays the page without resizing the content. */
     #sidebar-wrapper {
         top: 0;
+        right: 0;
         margin-top: 0;
         padding-top: 50px;
         box-sizing: border-box;
@@ -168,12 +167,15 @@ i{font-family:fontawesome !important;}
         width: 250px !important;
     }
 
-    .page-content-wrapper {
-        margin-right: 0;
+    #wrapper,
+    #wrapper.toggled {
+        padding-right: 0;
     }
 
+    .page-content-wrapper,
     #wrapper.toggled .page-content-wrapper {
-        margin-right: 0;
+        margin-right: 0 !important;
+        width: 100%;
     }
 
     .top-bar,
