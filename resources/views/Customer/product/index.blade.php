@@ -24,7 +24,6 @@
                             <th>عنوان محصول</th>
                             <th>موجودی</th>
                             <th>تاریخ ارسال</th>
-                            <th>دسته ها</th>
                             <th width="50px"></th>
                             <th width="50px"></th>
                         </tr>
@@ -40,14 +39,6 @@
                                     @endif
                                 </td>
                                 <td>{{$product->created_at}}</td>
-                                <td>
-                                    @foreach($product->categories()->get() as $cat)
-                                        {{$cat->name}}
-                                        @if (!$loop->last)
-                                            -
-                                        @endif
-                                    @endforeach
-                                </td>
                                 <td>
                                     <a href="{{route('shop.product.edit',$product->slug)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
