@@ -21,7 +21,6 @@
                         <tr>
                             <th>عنوان محصول</th>
                             <th>تاریخ ارسال</th>
-                            <th>دسته ها</th>
                             <th width="50px"></th>
                             <th width="50px"></th>
                         </tr>
@@ -32,14 +31,6 @@
                             <tr class="item{{$product->id}}">
                                 <td>{{$product->title}}</td>
                                 <td>{{$product->created_at}}</td>
-                                <td>
-                                    @foreach($product->categories()->get() as $cat)
-                                        {{$cat->name}}
-                                        @if (!$loop->last)
-                                            -
-                                        @endif
-                                    @endforeach
-                                </td>
                                 <td>
                                     <a href="{{route('product.edit',$product->slug)}}"><i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
