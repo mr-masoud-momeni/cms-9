@@ -15,7 +15,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">لیست محصولات</div>
                 <div class="panel-body">
-                    <table class="table table-striped">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>عنوان محصول</th>
@@ -48,7 +49,8 @@
                             </tr>
                         @endforeach
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
                 <div class="panel-footer">Panel Footer</div>
 
