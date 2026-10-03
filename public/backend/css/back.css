@@ -18,3 +18,11 @@
 
 /* Mobile sidebar overlay: keep page content at full width. */
 @media(max-width:767px){#wrapper,#wrapper.toggled{padding-right:0!important;width:100%;}#sidebar-wrapper{top:0;right:0;margin-top:0;padding-top:50px;box-sizing:border-box;z-index:1400;width:0!important;}#wrapper.toggled #sidebar-wrapper{width:250px!important;}.page-content-wrapper,#wrapper.toggled .page-content-wrapper{margin-right:0!important;width:100%!important;}.top-bar,#wrapper.toggled .top-bar{margin-right:0!important;}}
+
+
+/* Admin font: use the same IranYekanNum font as the frontend. */
+@font-face{font-family:'IRANYekanNum';src:url('/fonts/iranyekannum/woff/iranyekanwebregularfanum.woff') format('woff');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IRANYekanNum';src:url('/fonts/iranyekannum/woff/iranyekanweblightfanum.woff') format('woff');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:'IRANYekanNum';src:url('/fonts/iranyekannum/woff/iranyekanwebmediumfanum.woff') format('woff');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'IRANYekanNum';src:url('/fonts/iranyekannum/woff/iranyekanwebboldfanum.woff') format('woff');font-weight:700;font-style:normal;font-display:swap}
+body,:not(i){font-family:'IRANYekanNum'!important;}
