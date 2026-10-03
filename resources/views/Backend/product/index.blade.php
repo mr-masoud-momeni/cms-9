@@ -15,7 +15,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">لیست محصولات</div>
                 <div class="panel-body">
-                    <div class="product-list-table-wrap">
+                    <div class="table-responsive">
                         <table class="table table-striped product-list-table">
                         <thead>
                         <tr>
