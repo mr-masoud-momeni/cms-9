@@ -26,18 +26,24 @@
 @font-face{font-family:'IRANYekanNum';src:url('/fonts/iranyekannum/woff/iranyekanwebmediumfanum.woff') format('woff');font-weight:500;font-style:normal;font-display:swap}
 @font-face{font-family:'IRANYekanNum';src:url('/fonts/iranyekannum/woff/iranyekanwebboldfanum.woff') format('woff');font-weight:700;font-style:normal;font-display:swap}
 body,:not(i){font-family:'IRANYekanNum'!important;}
-
 /* Product list: keep the table inside the panel on small screens. */
-.product-list-table {
+.product-list-table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+.product-list-table-wrap .product-list-table {
     width: 100%;
 }
 @media(max-width:767px) {
-    .product-list-table {
+    .product-list-table-wrap .product-list-table {
         table-layout: fixed;
     }
-    .product-list-table th,
-    .product-list-table td {
-        white-space: normal;
+    .product-list-table-wrap .product-list-table th,
+    .product-list-table-wrap .product-list-table td {
+        white-space: normal !important;
         overflow-wrap: anywhere;
         word-break: break-word;
     }
