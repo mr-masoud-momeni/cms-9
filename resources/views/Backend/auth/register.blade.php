@@ -84,6 +84,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="content_limit">تعداد مجاز محصولات و مقاله‌ها (برای هرکدام)</label>
+                                    <input type="number" name="content_limit" class="form-control" id="content_limit"
+                                           value="{{ old('content_limit') }}" min="0" step="1" placeholder="خالی = نامحدود">
+                                    <small class="help-block">مثلاً عدد ۵ یعنی حداکثر ۵ محصول و جداگانه ۵ مقاله. خالی گذاشتن فیلد یعنی نامحدود؛ صفر یعنی امکان ثبت محصول یا مقاله جدید وجود ندارد.</small>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="logo">لوگوی فروشگاه</label>
                                     <input type="file" name="logo" class="form-control" id="logo" accept="image/jpeg,image/png,image/webp">
                                 </div>
