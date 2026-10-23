@@ -113,3 +113,22 @@ DEALLOCATE PREPARE stmt;
 ALTER TABLE users
     ADD COLUMN phone VARCHAR(20) NULL AFTER email,
     ADD UNIQUE KEY users_phone_unique (phone);
+
+
+-- 2026-10-23
+-- Add an optional per-shop limit, shared as a numeric value but enforced
+-- independently for products and articles. NULL means unlimited.
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        'ALTER TABLE shops ADD COLUMN content_limit INT UNSIGNED NULL AFTER description',
+        'SELECT 1'
+    )
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'shops'
+      AND COLUMN_NAME = 'content_limit'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
