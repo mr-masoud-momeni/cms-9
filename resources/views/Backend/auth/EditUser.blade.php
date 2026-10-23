@@ -85,6 +85,14 @@
                                     <label for="description">توضیحات فروشگاه</label>
                                     <textarea name="description" class="form-control" id="description" rows="3">{{ $User->shop->first()->description ?? '' }}</textarea>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="content_limit">تعداد مجاز محصولات و مقاله‌ها (برای هرکدام)</label>
+                                    <input type="number" name="content_limit" class="form-control" id="content_limit"
+                                           value="{{ old('content_limit', $User->shop->first()->content_limit ?? '') }}" min="0" step="1"
+                                           placeholder="خالی = نامحدود">
+                                    <small class="help-block">مثلاً عدد ۵ یعنی حداکثر ۵ محصول و جداگانه ۵ مقاله. خالی گذاشتن فیلد یعنی نامحدود؛ صفر یعنی امکان ثبت محصول یا مقاله جدید وجود ندارد.</small>
+                                </div>
                                 <div class="form-group">
                                     <label for="logo">لوگوی فروشگاه</label>
                                     @if($User->shop->first()->logo ?? null)<div style="margin-bottom:10px;"><img src="{{ asset($User->shop->first()->logo) }}" alt="لوگوی فروشگاه" style="max-width:100px;max-height:100px;"></div>@endif
