@@ -34,6 +34,12 @@ class ArticleController extends CustomerController
             'images' => 'required|image|mimes:jpeg,jpg,bmp,png,webp|max:5120',
         ]);
 
+        if ($shop->content_limit !== null && Article::where('shop_id', $shop->id)->count() >= $shop->content_limit) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['content_limit' => 'سقف تعداد مقاله‌های این فروشگاه تکمیل شده است.']);
+        }
+
         $imageUrl = $this->UploadImages($request->file('images'));
 
         Article::create([
