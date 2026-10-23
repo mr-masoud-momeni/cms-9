@@ -52,6 +52,13 @@ class ProductController extends CustomerController
         $userId = auth('shop_admin')->id();
         $shop = Shop::where('domain', request()->getHost())->firstOrFail();
         $shopId = $shop->id;
+
+        if ($shop->content_limit !== null && Product::where('shop_id', $shopId)->count() >= $shop->content_limit) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['content_limit' => 'سقف تعداد محصولات این فروشگاه تکمیل شده است.']);
+        }
+
         $imageUrl = $this->UploadImages($request->file('images'));
 
         $productData = array_merge($validated, [
