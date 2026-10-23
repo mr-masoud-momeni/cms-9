@@ -38,6 +38,15 @@ class ProductController extends CustomerController
 
     public function store(Request $request)
     {
+        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
+        $shopId = $shop->id;
+
+        if ($shop->content_limit !== null && Product::where('shop_id', $shopId)->count() >= $shop->content_limit) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['content_limit' => 'سقف تعداد محصولات این فروشگاه تکمیل شده است؛ امکان افزودن محصول جدید وجود ندارد.']);
+        }
+
         $validated = $request->validate([
             'price-type' => [new WhiteList(['non-membership' => 'non-membership', 'membership' => 'membership', 'special-membership' => 'special-membership', 'cash' => 'cash'])],
             'type' => [new WhiteList(['physical' => 'physical', 'virtual' => 'virtual'])],
@@ -50,15 +59,6 @@ class ProductController extends CustomerController
         ]);
 
         $userId = auth('shop_admin')->id();
-        $shop = Shop::where('domain', request()->getHost())->firstOrFail();
-        $shopId = $shop->id;
-
-        if ($shop->content_limit !== null && Product::where('shop_id', $shopId)->count() >= $shop->content_limit) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['content_limit' => 'سقف تعداد محصولات این فروشگاه تکمیل شده است.']);
-        }
-
         $imageUrl = $this->UploadImages($request->file('images'));
 
         $productData = array_merge($validated, [
