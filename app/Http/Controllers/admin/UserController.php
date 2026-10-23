@@ -185,6 +185,7 @@ class UserController extends Controller
             'nameStore' => ['required', 'string', 'max:255'],
             'domain' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
+            'content_limit' => ['nullable', 'integer', 'min:0'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ]);
         $user = auth()->user();
@@ -228,6 +229,7 @@ class UserController extends Controller
                 'slug' => $request->nameStoreEn,
                 'logo' => $newLogo,
                 'description' => $request->description,
+                'content_limit' => $request->input('content_limit'),
             ]);
             if ($request->file('logo') && $oldLogo) {
                 app(ShopLogoService::class)->delete($oldLogo);
@@ -241,6 +243,7 @@ class UserController extends Controller
                 'slug' => $request->nameStoreEn,
                 'logo' => $logo,
                 'description' => $request->description,
+                'content_limit' => $request->input('content_limit'),
             ]);
         }
         $user->save();
