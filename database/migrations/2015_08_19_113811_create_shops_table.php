@@ -20,6 +20,7 @@ class CreateShopsTable extends Migration
             $table->string('name');
             $table->string('logo')->nullable();
             $table->text('description')->nullable();
+            $table->unsignedInteger('content_limit')->nullable();
             $table->string('domain')->unique()->nullable(false);
             $table->boolean('buyer_login_required')->default(false);
             $table->string('slug')->nullable();
