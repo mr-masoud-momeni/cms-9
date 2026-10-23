@@ -50,6 +50,11 @@ class Shop extends Model
         'logo',
         'description',
         'shipping_cost',
+        'content_limit',
+    ];
+
+    protected $casts = [
+        'content_limit' => 'integer',
     ];
 
     public function getRoutekeyName(){
