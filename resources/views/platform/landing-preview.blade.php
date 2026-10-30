@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#0a192f">
     <title>اکتوشاپ | فروشگاه اینترنتی خودت را ساده راه‌اندازی کن</title>
     <style>
-        @font-face{font-family:IRANYekan;src:url('/fonts/iranyekannum/woff/IRANYekanWebRegular.woff') format('woff');font-weight:400;font-display:swap}
-        @font-face{font-family:IRANYekan;src:url('/fonts/iranyekannum/woff/IRANYekanWebBold.woff') format('woff');font-weight:700;font-display:swap}
+        @font-face{font-family:IRANYekan;src:url('/fonts/iranyekannum/woff/iranyekanwebregularfanum.woff') format('woff');font-weight:400;font-display:swap}
+        @font-face{font-family:IRANYekan;src:url('/fonts/iranyekannum/woff/iranyekanwebboldfanum.woff') format('woff');font-weight:700;font-display:swap}
         :root{--navy:#0a192f;--navy2:#102746;--cyan:#39d6c4;--ink:#15243a;--muted:#64748b;--line:#e6edf2;--paper:#f7fafb}
         *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:IRANYekan,Tahoma,sans-serif;color:var(--ink);background:#fff;line-height:1.9}a{text-decoration:none;color:inherit}.container{width:min(1160px,calc(100% - 40px));margin:auto}
         .topbar{height:82px;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.09);position:absolute;z-index:3;top:0;left:0;right:0;color:#fff}.nav{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:11px;font-size:21px;font-weight:700}.brand-mark{width:40px;height:40px;border-radius:13px;background:var(--cyan);display:grid;place-items:center;color:var(--navy);font-size:23px}.brand small{display:block;font-size:10px;line-height:1;color:#9db4c8;font-weight:400;letter-spacing:1px}.navlinks{display:flex;align-items:center;gap:30px;font-size:13px;color:#c4d2df}.navlinks a:hover{color:var(--cyan)}.nav-cta,.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:11px 20px;font:700 13px IRANYekan;transition:.2s}.nav-cta{background:var(--cyan);color:var(--navy)}.btn-primary{background:var(--cyan);color:var(--navy);box-shadow:0 8px 25px #39d6c42b}.btn-primary:hover,.nav-cta:hover{transform:translateY(-2px);filter:brightness(1.04)}.btn-ghost{border:1px solid #ffffff40;color:#fff}
@@ -21,6 +21,43 @@
         footer{background:var(--navy);color:#c3d1df;padding:34px 0}.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px}.footer-inner p{font-size:11px;margin:0;color:#91a6b9}.footer-brand{color:#fff;font-weight:700;font-size:16px}
         @media(max-width:900px){.hero-grid{gap:25px}.hero{padding-top:135px}.mockup-wrap{min-height:300px}.feature-grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.split{gap:30px}.request-grid{gap:28px}}
         @media(max-width:640px){.container{width:min(100% - 30px,520px)}.topbar{height:68px}.navlinks{display:none}.brand{font-size:18px}.brand-mark{width:36px;height:36px}.nav-cta{padding:9px 13px;font-size:11px}.hero{padding:112px 0 55px}.hero-grid{grid-template-columns:1fr;gap:30px}.hero h1{font-size:31px;line-height:1.65}.hero-copy{font-size:13px}.hero-actions .btn{flex:1;padding:12px 10px;font-size:11px}.mockup-wrap{min-height:275px;padding:0 8px}.shop-window{transform:none}.chip-one{right:-2px;top:8px}.chip-two{left:-2px;bottom:8px}.trust-items{grid-template-columns:1fr;gap:12px;padding:17px 0}.trust-item{justify-content:flex-start}.trust-item:not(:first-child){display:none}section{padding:60px 0}.section-head{margin-bottom:28px}.section-head h2,.split h2,.request-copy h2{font-size:24px}.feature-grid{grid-template-columns:1fr;gap:11px}.feature{padding:20px}.steps{grid-template-columns:1fr 1fr;gap:10px}.step{padding:16px}.step p{font-size:10px}.split,.request-grid{grid-template-columns:1fr;gap:25px}.info-panel{padding:23px}.request-form{padding:19px}.form-grid{grid-template-columns:1fr;gap:12px}.field.full{grid-column:auto}.footer-inner{flex-direction:column;align-items:flex-start}.footer-inner p{line-height:2}}
+
+        /* Octoopus brand palette */
+        :root{--navy:#0a192f;--navy2:#0e263a;--cyan:#41faf1;--ink:#eaf4f7;--muted:#a6bac8;--line:#20384b;--paper:#0e263a}
+        body{background:var(--navy);color:var(--ink)}
+        .topbar{background:rgba(10,25,47,.88);backdrop-filter:blur(12px);border-bottom-color:#ffffff12}
+        .brand-mark{background:var(--cyan);color:var(--navy)}
+        .nav-cta,.btn-primary{background:var(--cyan);color:var(--navy);box-shadow:0 8px 25px #41faf12b}
+        .btn-ghost{border-color:#41faf14d;color:#eaf4f7}
+        .hero{background:radial-gradient(ellipse at 80% 25%,#0e263a 0,transparent 48%),linear-gradient(125deg,#0a192f,#0e263a)}
+        .glow{background:#0e263a;box-shadow:0 0 85px 35px #0e263a}
+        .trust-strip{background:#0e263a;border-bottom-color:#ffffff12}
+        .trust-item{color:#a6bac8}.trust-item strong{color:#f1fbfc}
+        .trust-icon,.feature-icon{background:#12394a;color:var(--cyan)}
+        .section-head h2,.split h2,.request-copy h2{color:#f1fbfc}
+        .section-kicker{color:var(--cyan)}
+        .feature{background:#0e263a;border-color:#20384b}
+        .feature:hover{border-color:#41faf180;box-shadow:0 15px 35px #0002}
+        .feature p,.section-head p,.split p,.step p,.request-copy p,.faq p{color:#a6bac8}
+        .how{background:#0e263a}
+        .step{background:#0a192f;border-color:#20384b}
+        .step-num{background:#12394a;color:var(--cyan)}
+        .info-panel{background:linear-gradient(145deg,#0a192f,#0e263a);border:1px solid #20384b}
+        .info-row{border-bottom-color:#ffffff18}.info-row b{color:var(--cyan)}
+        .request{background:#0e263a}
+        .request-hint{background:#12394a;border-right-color:var(--cyan);color:#c3d8df}
+        .request-form{background:#0a192f;border-color:#20384b;box-shadow:0 15px 40px #0002}
+        .field label{color:#d8e7ed}
+        .field input,.field select,.field textarea{background:#0e263a;border-color:#294357;color:#f1fbfc}
+        .field input::placeholder,.field textarea::placeholder{color:#8299a9}
+        .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #41faf11c}
+        .form-foot{color:#8299a9}
+        .faq{border-color:#20384b;background:#0e263a}
+        .faq summary{color:#eaf4f7}
+        footer{background:#071426;border-top:1px solid #20384b}
+        .float-chip{color:#163044}
+        @media(max-width:640px){.trust-strip{background:#0e263a}}
+
     </style>
 </head>
 <body>
