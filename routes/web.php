@@ -190,3 +190,7 @@ Route::get('/payment', [PaymentController::class, 'index'])->middleware('shop.co
 Route::post('/payment/online', [PaymentController::class, 'init'])->middleware('shop.context')->name('payment.online');
 Route::get('/payment/card-to-card', [PaymentController::class, 'cardToCardForm'])->middleware('shop.context')->name('payment.card_to_card');
 Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])->middleware('shop.context')->name('payment.card_to_card.submit');
+
+
+// پیش‌نمایش صفحه معرفی اکتوشاپ (موقت)
+Route::view('/platform-preview', 'platform.landing-preview')->name('platform.landing.preview');
