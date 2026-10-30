@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\front\BuyerController;
 use App\Http\Controllers\front\OrderController;
 use App\Http\Controllers\front\PaymentController;
@@ -194,3 +196,28 @@ Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])->
 
 // پیش‌نمایش صفحه معرفی اکتوشاپ (موقت)
 Route::view('/platform-preview', 'platform.landing-preview')->name('platform.landing.preview');
+
+Route::post('/platform-request', function (Request $request) {
+    $data = $request->validate([
+        'full_name' => ['required', 'string', 'max:120'],
+        'phone' => ['required', 'string', 'max:20'],
+        'business' => ['nullable', 'string', 'max:150'],
+        'category' => ['nullable', 'string', 'max:100'],
+        'description' => ['nullable', 'string', 'max:2000'],
+    ]);
+
+    $body = "درخواست جدید راه‌اندازی فروشگاه اکتوشاپ\n\n"
+        . "نام: {$data['full_name']}\n"
+        . "شماره تماس: {$data['phone']}\n"
+        . "کسب‌وکار: " . ($data['business'] ?? 'ثبت نشده') . "\n"
+        . "زمینه فعالیت: " . ($data['category'] ?? 'ثبت نشده') . "\n"
+        . "توضیحات: " . ($data['description'] ?? 'ثبت نشده');
+
+    Mail::raw($body, function ($message) {
+        $message->to('masoud2525@gmail.com')
+            ->subject('درخواست جدید راه‌اندازی فروشگاه - اکتوشاپ');
+    });
+
+    return redirect()->route('platform.landing.preview')
+        ->with('platform_request_sent', true);
+})->middleware('throttle:5,10')->name('platform.request');
