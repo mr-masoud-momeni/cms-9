@@ -17,10 +17,11 @@
         .how{background:var(--paper)}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;counter-reset:step}.step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;position:relative}.step-num{width:34px;height:34px;border-radius:10px;background:var(--navy);color:var(--cyan);display:grid;place-items:center;font-weight:700;font-size:13px;margin-bottom:16px}.step h3{font-size:14px;margin:0 0 7px}.step p{font-size:11px;color:var(--muted);margin:0;line-height:2}
         .split{display:grid;grid-template-columns:1fr 1fr;gap:65px;align-items:center}.split h2{font-size:29px;line-height:1.7;margin:8px 0 14px;color:var(--navy)}.split p{font-size:13px;color:var(--muted);line-height:2.2}.check-list{list-style:none;padding:0;margin:22px 0}.check-list li{font-size:12px;margin:11px 0;display:flex;gap:10px;align-items:flex-start}.check{color:#159d8e;font-weight:700}.info-panel{background:linear-gradient(145deg,#0a192f,#153b59);border-radius:20px;padding:30px;color:#fff;position:relative;overflow:hidden}.info-panel:after{content:"";position:absolute;width:220px;height:220px;border:1px solid #ffffff18;border-radius:50%;left:-100px;bottom:-120px;box-shadow:0 0 0 30px #ffffff08,0 0 0 60px #ffffff05}.info-panel h3{font-size:17px;margin:0 0 18px}.info-row{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid #ffffff18;position:relative;z-index:1}.info-row:last-child{border:0}.info-row b{color:var(--cyan);font-size:17px}.info-row span{font-size:12px;color:#d2deea}
         .request{background:#f4f8fa}.request-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:55px;align-items:start}.request-copy h2{font-size:29px;color:var(--navy);line-height:1.7;margin:8px 0 12px}.request-copy p{font-size:13px;color:var(--muted);line-height:2.2}.request-hint{margin-top:25px;padding:15px;border-right:3px solid var(--cyan);background:#e9f8f5;border-radius:8px;font-size:11px;color:#42615f}.request-form{background:#fff;border:1px solid var(--line);border-radius:17px;padding:28px;box-shadow:0 15px 40px #0a192f08}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:700;color:#34465a}.field input,.field select,.field textarea{width:100%;border:1px solid #dfe7ec;border-radius:9px;padding:12px 13px;font:12px IRANYekan;color:var(--ink);background:#fff;outline:none;transition:.2s}.field input:focus,.field select:focus,.field textarea:focus{border-color:#48cabb;box-shadow:0 0 0 3px #39d6c41c}.field textarea{min-height:92px;resize:vertical}.form-submit{margin-top:18px;width:100%;border:0;cursor:pointer}.form-foot{font-size:10px;color:#82909c;text-align:center;margin:11px 0 0}
+        .sample-showcase{padding:58px 0;background:#0a192f;border-top:1px solid #20384b;border-bottom:1px solid #20384b}.sample-inner{display:flex;align-items:center;justify-content:space-between;gap:30px}.sample-copy{max-width:690px}.sample-copy .section-kicker{color:var(--cyan)}.sample-copy h2{font-size:23px;color:#f1fbfc;margin:7px 0}.sample-copy p{font-size:12px;color:#a6bac8;margin:0}.sample-link{white-space:nowrap;flex-shrink:0}
         .faq-list{max-width:800px;margin:auto;display:grid;gap:10px}.faq{border:1px solid var(--line);border-radius:11px;padding:16px 19px}.faq summary{font-size:13px;font-weight:700;cursor:pointer}.faq p{font-size:12px;color:var(--muted);margin:10px 0 0;line-height:2}
         footer{background:var(--navy);color:#c3d1df;padding:34px 0}.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px}.footer-inner p{font-size:11px;margin:0;color:#91a6b9}.footer-brand{color:#fff;font-weight:700;font-size:16px}
         @media(max-width:900px){.hero-grid{gap:25px}.hero{padding-top:135px}.mockup-wrap{min-height:300px}.feature-grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.split{gap:30px}.request-grid{gap:28px}}
-        @media(max-width:640px){.container{width:min(100% - 30px,520px)}.topbar{height:68px}.navlinks{display:none}.brand{font-size:18px}.brand-mark{width:36px;height:36px}.nav-cta{padding:9px 13px;font-size:11px}.hero{padding:112px 0 55px}.hero-grid{grid-template-columns:1fr;gap:30px}.hero h1{font-size:31px;line-height:1.65}.hero-copy{font-size:13px}.hero-actions .btn{flex:1;padding:12px 10px;font-size:11px}.mockup-wrap{min-height:275px;padding:0 8px}.shop-window{transform:none}.chip-one{right:-2px;top:8px}.chip-two{left:-2px;bottom:8px}.trust-items{grid-template-columns:1fr;gap:12px;padding:17px 0}.trust-item{justify-content:flex-start}.trust-item:not(:first-child){display:none}section{padding:60px 0}.section-head{margin-bottom:28px}.section-head h2,.split h2,.request-copy h2{font-size:24px}.feature-grid{grid-template-columns:1fr;gap:11px}.feature{padding:20px}.steps{grid-template-columns:1fr 1fr;gap:10px}.step{padding:16px}.step p{font-size:10px}.split,.request-grid{grid-template-columns:1fr;gap:25px}.info-panel{padding:23px}.request-form{padding:19px}.form-grid{grid-template-columns:1fr;gap:12px}.field.full{grid-column:auto}.footer-inner{flex-direction:column;align-items:flex-start}.footer-inner p{line-height:2}}
+        @media(max-width:640px){.sample-inner{align-items:flex-start;flex-direction:column;gap:18px}.sample-copy h2{font-size:20px}.container{width:min(100% - 30px,520px)}.topbar{height:68px}.navlinks{display:none}.brand{font-size:18px}.brand-mark{width:36px;height:36px}.nav-cta{padding:9px 13px;font-size:11px}.hero{padding:112px 0 55px}.hero-grid{grid-template-columns:1fr;gap:30px}.hero h1{font-size:31px;line-height:1.65}.hero-copy{font-size:13px}.hero-actions .btn{flex:1;padding:12px 10px;font-size:11px}.mockup-wrap{min-height:275px;padding:0 8px}.shop-window{transform:none}.chip-one{right:-2px;top:8px}.chip-two{left:-2px;bottom:8px}.trust-items{grid-template-columns:1fr;gap:12px;padding:17px 0}.trust-item{justify-content:flex-start}.trust-item:not(:first-child){display:none}section{padding:60px 0}.section-head{margin-bottom:28px}.section-head h2,.split h2,.request-copy h2{font-size:24px}.feature-grid{grid-template-columns:1fr;gap:11px}.feature{padding:20px}.steps{grid-template-columns:1fr 1fr;gap:10px}.step{padding:16px}.step p{font-size:10px}.split,.request-grid{grid-template-columns:1fr;gap:25px}.info-panel{padding:23px}.request-form{padding:19px}.form-grid{grid-template-columns:1fr;gap:12px}.field.full{grid-column:auto}.footer-inner{flex-direction:column;align-items:flex-start}.footer-inner p{line-height:2}}
 
         /* Octoopus brand palette */
         :root{--navy:#0a192f;--navy2:#0e263a;--cyan:#41faf1;--ink:#eaf4f7;--muted:#a6bac8;--line:#20384b;--paper:#0e263a}
@@ -100,6 +101,10 @@
         <article class="feature"><div class="feature-icon">▧</div><h3>ارتباط و اطلاع‌رسانی</h3><p>با ابزارهای اطلاع‌رسانی فروشگاه، از سفارش‌های جدید باخبر شو و وضعیت آن‌ها را به مشتری اعلام کن.</p></article>
     </div>
 </div></section>
+<section class="sample-showcase"><div class="container sample-inner">
+    <div class="sample-copy"><span class="section-kicker">یک نمونه واقعی از اکتوشاپ</span><h2>فروشگاه نمونه را از نزدیک ببین.</h2><p>برای اینکه با نتیجه کار آشنا شوی، می‌توانی نمونه فروشگاهی را که با اکتوشاپ راه‌اندازی کرده‌ایم بررسی کنی.</p></div>
+    <a class="btn btn-primary sample-link" href="https://chicmod.ir/" target="_blank" rel="noopener noreferrer">مشاهده فروشگاه نمونه ↗</a>
+</div></section>
 <section class="how" id="how"><div class="container">
     <div class="section-head"><span class="section-kicker">شروع کار در چند قدم</span><h2>از درخواست تا اولین سفارش</h2><p>قرار نیست با ده‌ها تنظیمات و اصطلاح فنی روبه‌رو شوی. مسیر شروع کوتاه و روشن است.</p></div>
     <div class="steps">
@@ -119,16 +124,23 @@
 </div></section>
 <section class="request" id="request"><div class="container request-grid">
     <div class="request-copy"><span class="section-kicker">قدم اول را بردار</span><h2>برای راه‌اندازی فروشگاهت درخواست بده.</h2><p>چند اطلاعات کوتاه از کسب‌وکارت برای ما بفرست. بعد از بررسی، برای توضیح شرایط و هماهنگی مراحل بعدی با تو تماس می‌گیریم.</p><div class="request-hint">ثبت این فرم به معنی خرید یا پرداخت نیست؛ فقط درخواستت را برای بررسی و هماهنگی دریافت می‌کنیم.</div></div>
-    <form class="request-form" id="demo-request">
+    <form class="request-form" id="platform-request" method="POST" action="{{ route('platform.request') }}">
+        @csrf
+        @if(session('platform_request_sent'))
+            <div role="status" style="padding:12px 14px;margin-bottom:16px;border:1px solid #41faf166;border-radius:9px;background:#12394a;color:#bafaf4;font-size:12px">درخواستت با موفقیت ارسال شد. به‌زودی برای هماهنگی با تو تماس می‌گیریم.</div>
+        @endif
+        @if($errors->any())
+            <div role="alert" style="padding:12px 14px;margin-bottom:16px;border:1px solid #b45309;border-radius:9px;background:#422f20;color:#ffdfb5;font-size:12px">لطفاً اطلاعات واردشده را بررسی کن و دوباره بفرست.</div>
+        @endif
         <div class="form-grid">
-            <div class="field"><label for="full_name">نام و نام خانوادگی *</label><input id="full_name" name="full_name" placeholder="مثلاً مسعود مومنی" required></div>
-            <div class="field"><label for="phone">شماره تماس *</label><input id="phone" name="phone" inputmode="tel" placeholder="09xxxxxxxxx" required></div>
-            <div class="field"><label for="business">نام کسب‌وکار یا فروشگاه</label><input id="business" name="business" placeholder="نام فروشگاهت"></div>
-            <div class="field"><label for="category">زمینه فعالیت</label><select id="category" name="category"><option value="">انتخاب کن</option><option>پوشاک و اکسسوری</option><option>کالای دیجیتال</option><option>خانه و آشپزخانه</option><option>مواد غذایی</option><option>محصولات دست‌ساز</option><option>سایر</option></select></div>
-            <div class="field full"><label for="description">کمی درباره چیزی که می‌فروشی یا نیازت بنویس</label><textarea id="description" name="description" placeholder="مثلاً چند محصول دارم و می‌خواهم فروش آنلاین را شروع کنم..."></textarea></div>
+            <div class="field"><label for="full_name">نام و نام خانوادگی *</label><input id="full_name" name="full_name" value="{{ old('full_name') }}" placeholder="مثلاً مسعود مومنی" maxlength="120" required></div>
+            <div class="field"><label for="phone">شماره تماس *</label><input id="phone" name="phone" value="{{ old('phone') }}" inputmode="tel" placeholder="09xxxxxxxxx" maxlength="20" required></div>
+            <div class="field"><label for="business">نام کسب‌وکار یا فروشگاه</label><input id="business" name="business" value="{{ old('business') }}" placeholder="نام فروشگاهت" maxlength="150"></div>
+            <div class="field"><label for="category">زمینه فعالیت</label><select id="category" name="category"><option value="">انتخاب کن</option><option value="">انتخاب کن</option><option>پوشاک و اکسسوری</option><option>کالای دیجیتال</option><option>خانه و آشپزخانه</option><option>مواد غذایی</option><option>محصولات دست‌ساز</option><option>سایر</option></select></div>
+            <div class="field full"><label for="description">کمی درباره چیزی که می‌فروشی یا نیازت بنویس</label><textarea id="description" name="description" maxlength="2000" placeholder="مثلاً چند محصول دارم و می‌خواهم فروش آنلاین را شروع کنم...">{{ old('description') }}</textarea></div>
         </div>
         <button class="btn btn-primary form-submit" type="submit">ثبت درخواست راه‌اندازی</button><p class="form-foot">اطلاعاتت فقط برای بررسی درخواست و تماس درباره راه‌اندازی استفاده می‌شود.</p>
-        <p id="demo-message" role="status" style="display:none;color:#a45b18;font-size:11px;margin:12px 0 0">این نسخه فقط پیش‌نمایش ظاهری فرم است؛ ارسال اطلاعات هنوز به سامانه متصل نشده است.</p>
+         
     </form>
 </div></section>
 <section id="faq"><div class="container"><div class="section-head"><span class="section-kicker">سؤالات متداول</span><h2>قبل از درخواست، این‌ها را بدان</h2></div>
@@ -142,7 +154,5 @@
 </div></section>
 </main>
 <footer><div class="container footer-inner"><div><div class="footer-brand">اکتوشاپ</div><p>راه ساده‌تر برای شروع فروش اینترنتی</p></div><p>© تمامی حقوق برای اکتوشاپ محفوظ است.</p></div></footer>
-<script>
-document.getElementById('demo-request').addEventListener('submit',function(e){e.preventDefault();document.getElementById('demo-message').style.display='block';});
-</script>
+ 
 </body></html>
