@@ -202,7 +202,7 @@ Route::get('/', function () {
         return view('platform.landing-preview');
     }
 
-    return app(\\App\\Http\\Controllers\\front\\IndexController::class)->shop();
+    return app(\App\Http\Controllers\front\IndexController::class)->shop();
 })->middleware('shop.context')->name('index.show');
 
 // آدرس قبلی پیش‌نمایش برای سازگاری به صفحه اصلی منتقل می‌شود
