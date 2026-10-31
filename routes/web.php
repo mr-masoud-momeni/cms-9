@@ -34,7 +34,6 @@ Route::group(
         'namespace'=> 'App\\Http\\Controllers\\front',
     ]
     , function () {
-        Route::get('/','IndexController@shop')->name('index.show');
         Route::get('/product/{product}', 'IndexController@product')->name('front.product.show');
 
         Route::post('/pay/callback','PaymentController@callback')->name('payments.callback');
@@ -194,8 +193,20 @@ Route::get('/payment/card-to-card', [PaymentController::class, 'cardToCardForm']
 Route::post('/payment/card-to-card', [PaymentController::class, 'cardToCard'])->middleware('shop.context')->name('payment.card_to_card.submit');
 
 
-// پیش‌نمایش صفحه معرفی اکتوشاپ (موقت)
-Route::view('/platform-preview', 'platform.landing-preview')->name('platform.landing.preview');
+// صفحه اصلی پلتفرم روی دامنه اصلی؛ دامنه فروشگاه‌ها همچنان صفحه فروشگاه را نمایش می‌دهد
+Route::get('/', function () {
+    $platformDomain = preg_replace('/^www\\./', '', config('app.platform_domain'));
+    $requestHost = preg_replace('/^www\\./', '', request()->getHost());
+
+    if ($requestHost === $platformDomain) {
+        return view('platform.landing-preview');
+    }
+
+    return app(\\App\\Http\\Controllers\\front\\IndexController::class)->shop();
+})->middleware('shop.context')->name('index.show');
+
+// آدرس قبلی پیش‌نمایش برای سازگاری به صفحه اصلی منتقل می‌شود
+Route::redirect('/platform-preview', '/', 301)->name('platform.landing.preview');
 
 Route::post('/platform-request', function (Request $request) {
     $data = $request->validate([
@@ -218,6 +229,6 @@ Route::post('/platform-request', function (Request $request) {
             ->subject('درخواست جدید راه‌اندازی فروشگاه - اکتوشاپ');
     });
 
-    return redirect()->route('platform.landing.preview')
+    return redirect()->route('index.show')
         ->with('platform_request_sent', true);
 })->middleware('throttle:5,10')->name('platform.request');
